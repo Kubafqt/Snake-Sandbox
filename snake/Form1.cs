@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Linq;
+using System.Security;
 using System.Security.Authentication.ExtendedProtection.Configuration;
 using System.Text;
 using System.Threading.Tasks;
@@ -62,35 +63,11 @@ namespace snake
             }
             try
             {
-                cmbSelectLevel.SelectedIndex = 80;
+                cmbSelectLevel.SelectedIndex = 0;
                 tbInterval.Text = game.interval.ToString();
                 tbFoodNumber.Text = game.foodNumber.ToString();
                 tbIntervalOpen.Text = game.interval.ToString();
             }catch (Exception e) { MessageBox.Show($"{e.GetType()}"); }
-            print<int>(10);
-            print<string>("lol");
-            print<bool>(false);
-            snakes snake = new snakes(10, 10, 10, Color.Black);
-            print<snakes>(snake);
-            printf0<int, snakes, string>(2, snake, "lol");
-            printf0(1.234, snake, "rofl");
-        }
-
-        static sad print<sad>(sad x)
-        {
-            sad temp = x;
-            if (temp is int)
-            { MessageBox.Show("it's int - " + x.ToString()); }
-            else { MessageBox.Show(x.ToString()); }
-            return x;
-        }
-
-        static void printf0<sad, das, bas>(sad x, das y, bas z)
-        {
-            sad temp = x;
-            if (temp is string)
-            { MessageBox.Show("it's string - " + x); }
-            else { MessageBox.Show($"{x} : {x.GetType()} - {y} - {z}"); }
         }
 
         #region Controls-UI
