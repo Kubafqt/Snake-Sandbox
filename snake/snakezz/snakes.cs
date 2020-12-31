@@ -330,7 +330,7 @@ namespace snakezz
       }
 
       /// <summary>
-      /// remove snake from game and "explode" him
+      /// remove snake from game and explode him
       /// </summary>
       /// <param name="s">snake to remove</param>
       public static void removeSnake(snakes s)
