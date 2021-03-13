@@ -67,7 +67,7 @@ namespace snakezz
             snake.snakePointQueue.Enqueue(new Point(snake.x, snake.y));
             if (snake != snakes.PlayerSnake)
             {
-               snake.checkClosestFood(ref snake.selectedFood);
+               snake.checkClosestFood();
                snake.getDirection();
             }
          }

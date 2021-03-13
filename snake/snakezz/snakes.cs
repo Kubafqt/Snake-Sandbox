@@ -174,27 +174,27 @@ namespace snakezz
 
 			if (vectTracking == "x" && direction == "r" && cX > tX && (game.passableEdges || insideSnake || acrossX > cX - tX)) //change direction, when going wrong way
 			{
-				if (checkClosestFood(ref selectedFood))
+				if (checkClosestFood())
 				{ getDirection(); }
 			}
 			else if (vectTracking == "x" && direction == "l" && cX < tX && (!game.passableEdges || insideSnake || acrossX > tX - cX))
 			{
-				if (checkClosestFood(ref selectedFood))
+				if (checkClosestFood())
 				{ getDirection(); }
 			}
 			else if (vectTracking == "y" && direction == "d" && cY > tY && (game.passableEdges || insideSnake || acrossY > cY - tY))
 			{
-				if (checkClosestFood(ref selectedFood))
+				if (checkClosestFood())
 				{ getDirection(); }
 			}
 			else if (vectTracking == "y" && direction == "u" && cY < tY && (game.passableEdges || insideSnake || acrossY > tY - cY))
 			{
-				if (checkClosestFood(ref selectedFood))
+				if (checkClosestFood())
 				{ getDirection(); }
 			}
 			if (superSnake)
 			{
-				checkClosestFood(ref selectedFood);
+				checkClosestFood();
 				getDirection();
 			}
 			else if (CurrentTracker[vectTracking] == TargetTracker[vectTracking] && new Point(x, y) != Form1.foodPoint[selectedFood]) //change direction of bot-snake when the coordinates are reached 
@@ -202,16 +202,44 @@ namespace snakezz
 
 		}
 
-		//bot-snakes tracking food:
+      #region bot-snakes tracking food
+      /// <summary>
+      /// Bot snakes check for closest food around them. (usually called when some food is eaten, can be called only when tracked food is eaten, but this is not effective for bot snake)
+      /// </summary>
+      public static void BotSnakesCheckClosestFood()
+		{
+			foreach (snakes snake in snakes.Snakes.ToList()) //every snakes is checking closest food after spawn of food
+			{
+				if (snake != snakes.PlayerSnake)//&& lfPoint.X == s.TargetTracker["x"] && lfPoint.Y == s.TargetTracker["y"]) 
+				{ //&& zda bylo sežráno pouze trackovaný jídlo - lepší checkovat každé jídlo, kvůli spawnu nového
+					if (snake.checkClosestFood())
+					{ snake.getDirection(); }
+				}
+			}
+		}
+
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="snake"></param>
+		public static void CheckClosestFoodAfterPassEdge(snakes snake)
+		{ 
+			if (snake != snakes.PlayerSnake && snake.checkClosestFood())// && snake.insideSnake)
+			{
+				snake.getDirection();
+			}
+		}
+
+		//private void
+
 		/// <summary>
 		/// bot choose closest food
 		/// </summary>
 		/// <param name="select">ref selectedFood (id)</param>
-		public bool checkClosestFood(ref int select)
+		public bool checkClosestFood()
 		{
 			int lastCount = -1;
 			int foodNumber = 0;
-			select = 0; //id of selected food
 			int selectedfullCount = 0;
 			int fullCount = 0;
 			foreach (Point p in Form1.foodPoint.ToList())  //for more foods in list
@@ -233,15 +261,16 @@ namespace snakezz
 				//choosing the nearest food:
 				if (lastCount == -1)
 				{
-					select = foodNumber;
+					selectedFood = foodNumber;
 					lastCount = fullCount;
 				}
 				else if (fullCount < lastCount)
 				{
-					select = foodNumber;
+					selectedFood = foodNumber;
 					lastCount = fullCount;
 				}
 				foodNumber++;
+				
 			}
 			return true;
 			//if (selectedFood == -1) { selectedfullCount = lastCount; }
@@ -312,16 +341,17 @@ namespace snakezz
 				//snake.lastDirChanged = snake.direction; //pro neopakování pohybů
 			}
 		}
+      #endregion
 
-		//add-remove snake:
-		/// <summary>
-		/// add new snake to game (Snakes list)
-		/// </summary>
-		/// <param name="startX">snake starting X position in snakeArr[]</param>
-		/// <param name="startY">snake starting Y position in snakeArr[]</param>
-		/// <param name="inside">snake travel only inside (not searchin for passsing edges)</param>
-		/// <param name="super">snake travel diagonaly (super-fast, unreal)</param>
-		public static void addSnake(int startX, int startY, int startSnakeLength, Color colour, string direction = "", bool inside = false, bool super = false, bool itselfKill = true)
+      #region add-remove snake
+      /// <summary>
+      /// add new snake to game (Snakes list)
+      /// </summary>
+      /// <param name="startX">snake starting X position in snakeArr[]</param>
+      /// <param name="startY">snake starting Y position in snakeArr[]</param>
+      /// <param name="inside">snake travel only inside (not searchin for passsing edges)</param>
+      /// <param name="super">snake travel diagonaly (super-fast, unreal movement)</param>
+      public static void addSnake(int startX, int startY, int startSnakeLength, Color colour, string direction = "", bool inside = false, bool super = false, bool itselfKill = true)
 		{
 			Snakes.Add(new snakes(startX, startY, startSnakeLength, colour, game.snakeNumber));
 			Snakes[game.snakeNumber - 1].insideSnake = inside;
@@ -347,6 +377,6 @@ namespace snakezz
 			}
 			Snakes.Remove(snake);
 		}
-
-	}
+      #endregion
+   }
 }
