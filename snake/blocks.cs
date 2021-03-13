@@ -16,7 +16,7 @@ namespace snakezz
       public static Size clearBlockSize;
 
       /// <summary>
-      /// 
+      /// Clear all blocks in selected clearblock rectangle.
       /// </summary>
       /// <param name="clearPoint"></param>
       /// <param name="clearSize"></param>
@@ -33,35 +33,35 @@ namespace snakezz
       }
 
       /// <summary>
-      /// 
+      /// Assign blockpoint at selected position.
       /// </summary>
-      /// <param name="blockPoint"></param>
-      /// <param name="x"></param>
-      /// <param name="y"></param>
-      public static void AssignBlockValues(out Point blockPoint, int x, int y)
+      /// <param name="blockPoint">point of block u want to assign</param>
+      /// <param name="x">x position of block</param>
+      /// <param name="y">y position of block</param>
+      public static void AssignBlockValues(out Point blockPoint, int x, int y) //out protože se to assignuje do různých proměnných
       {
          blockPoint = new Point(x, y);
       }
 
       /// <summary>
-      /// 
+      /// Assign blocksize on selected size.
       /// </summary>
-      /// <param name="blockSize"></param>
-      /// <param name="x"></param>
-      /// <param name="y"></param>
+      /// <param name="blockSize">size of block u want to assign</param>
+      /// <param name="x">x size of block</param>
+      /// <param name="y">y size of block</param>
       public static void AssignBlockValues(out Size blockSize, int x, int y)
       {
          blockSize = new Size(x, y);
       }
 
       /// <summary>
-      /// 
+      /// Test if currently assigning block have not across border values.
       /// </summary>
-      /// <param name="x"></param>
-      /// <param name="y"></param>
-      /// <param name="testPoint"></param>
-      /// <param name="splitText"></param>
-      /// <returns></returns>
+      /// <param name="x">x position</param>
+      /// <param name="y">y position</param>
+      /// <param name="testPoint">point of testing</param>
+      /// <param name="splitText">splited text from textbox</param>
+      /// <returns>True: its across borders, False: is not across borders</returns>
       public static bool NotAcrossBorderValues(out int x, ref int y, Point testPoint, string[] splitText)
       {
          if (int.TryParse(splitText[0], out x) && x >= 0 && testPoint.X + x <= Form1.width && int.TryParse(splitText[1], out y) && y >= 0 && testPoint.Y + y <= Form1.height)
@@ -72,13 +72,13 @@ namespace snakezz
       }
 
       /// <summary>
-      /// 
+      /// Test if currently assigning block have not across border values.
       /// </summary>
-      /// <param name="x"></param>
-      /// <param name="y"></param>
-      /// <param name="testSize"></param>
-      /// <param name="splitText"></param>
-      /// <returns></returns>
+      /// <param name="x">x size (width)</param>
+      /// <param name="y">y size (height)</param>
+      /// <param name="testSize">size of testing</param>
+      /// <param name="splitText">splited text from textbox</param>
+      /// <returns>True: its across borders, False: is not across borders</returns>
       public static bool NotAcrossBorderValues(out int x, ref int y, Size testSize, string[] splitText)
       {
          if (int.TryParse(splitText[0], out x) && x >= 0 && testSize.Width + x <= Form1.width && int.TryParse(splitText[1], out y) && testSize.Height + y >= 0 && y <= Form1.height)

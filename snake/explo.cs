@@ -13,8 +13,8 @@ namespace snakezz
 
       //explosions:
       public static List<explo> explosions = new List<explo>();
-      public readonly static Dictionary<string, int> smerDictX = new Dictionary<string, int>() { { "l", 1 }, { "r", -1 }, { "u", 0 }, { "d", 0 } }; //směr výbuchu
-      public readonly static Dictionary<string, int> smerDictY = new Dictionary<string, int>() { { "l", 0 }, { "r", 0 }, { "u", -1 }, { "d", 1 } }; //směr výbuchu
+      public readonly static Dictionary<string, int> smerDictX = new Dictionary<string, int>() { { "left", 1 }, { "right", -1 }, { "up", 0 }, { "down", 0 } }; //směr výbuchu
+      public readonly static Dictionary<string, int> smerDictY = new Dictionary<string, int>() { { "left", 0 }, { "right", 0 }, { "up", -1 }, { "down", 1 } }; //směr výbuchu
 
       /// <summary>
       /// explosion constructor

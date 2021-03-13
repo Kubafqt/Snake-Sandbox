@@ -33,7 +33,7 @@ namespace snakezz
 		public Queue<Point> snakePointQueue = new Queue<Point>(); //for snake movement history delete
 		public static List<Color> snakeColorsList = new List<Color>() { Color.Black, Color.Red, Color.Orange, Color.Yellow, Color.DeepSkyBlue, Color.Brown, Color.Indigo, Color.DarkOrange, Color.DarkOliveGreen, Color.DarkGoldenrod, Color.IndianRed };
 
-		#region variables to properties
+		#region variables to properties test
 		//public int x { get; set; } //snake current position
 		//public int y { get; set; } 
 		//public int startX { get; set; }
@@ -58,48 +58,48 @@ namespace snakezz
 		}
 
 		//bot-snakes:
-		public List<string> changeDirection = new List<string>();
+		public List<string> changeDirectionList = new List<string>();
 		public string lastDirXChanged = "";
 		public string lastDirYChanged = "";
 		public string lastDirChanged = "";
 		/// <summary>
-		/// bot change direction if next position is not free
+		/// Bot change direction if next position is not free. - old function
 		/// </summary>
-		public void changeDirectionection() //when hardblock or snake in front of
+		public void ChangeDirection() //when hardblock or snake in front of
 		{
 			string change;
-			if (lastDirChanged != "" && changeDirection.Contains(lastDirChanged)) //ošetření proti "zaklubíčkování se" snaka
+			if (lastDirChanged != "" && changeDirectionList.Contains(lastDirChanged)) //ošetření proti "zaklubíčkování se" snaka
 			{
 				change = lastDirChanged;
 			}
-			else { change = changeDirection[random.Next(changeDirection.Count)]; }
+			else { change = changeDirectionList[random.Next(changeDirectionList.Count)]; }
 			switch (change)
 			{
-				case "l":
+				case "left":
 					{
 						int testLeft = x != 0 ? x - 1 : Form1.width - 1;
 						if (Form1.blockArr[testLeft, y] != "hardblock" && Form1.snakeArr[testLeft, y] == 0 && (game.passableEdges || x != 0))
-						{ lastDirChanged = direction; direction = "l"; }
+						{ lastDirChanged = direction; direction = "left"; }
 						else if (game.passableEdges || x != Form1.width - 1)
-						{ lastDirChanged = direction; direction = "r"; }
+						{ lastDirChanged = direction; direction = "right"; }
 						vectTracking = "x";
 						break;
 					}
-				case "r":
+				case "right":
 					{
 						int testRight = x != Form1.width - 1 ? x + 1 : 0;
 						if (Form1.blockArr[testRight, y] != "hardblock" && Form1.snakeArr[testRight, y] == 0 && (game.passableEdges || x != Form1.width - 1))
-						{ lastDirChanged = direction; direction = "r"; }
+						{ lastDirChanged = direction; direction = "right"; }
 						else if (game.passableEdges || x != 0)
-						{ lastDirChanged = direction; direction = "l"; }
+						{ lastDirChanged = direction; direction = "left"; }
 						vectTracking = "x";
 						break;
 					}
-				case "u":
+				case "up":
 					{
 						int testUp = y != 0 ? y - 1 : Form1.height - 1;
 						if (Form1.blockArr[x, testUp] != "hardblock" && Form1.snakeArr[x, testUp] == 0 && (game.passableEdges || y != 0))
-						{ lastDirChanged = direction; direction = "u"; }
+						{ lastDirChanged = direction; direction = "up"; }
 						else if (game.passableEdges || y != Form1.height - 1)
 						{ lastDirChanged = direction; direction = "d"; }
 						vectTracking = "y";
@@ -111,35 +111,35 @@ namespace snakezz
 						if (Form1.blockArr[x, testDown] != "hardblock" && Form1.snakeArr[x, testDown] == 0 && (game.passableEdges || y != Form1.height - 1))
 						{ lastDirChanged = direction; direction = "d"; }
 						else if (game.passableEdges || y != 0)
-						{ lastDirChanged = direction; direction = "u"; }
+						{ lastDirChanged = direction; direction = "up"; }
 						vectTracking = "y";
 						break;
 					}
 				default: break;
 			}
-			changeDirection.Clear();
+			changeDirectionList.Clear();
 			changedDirection = true;
 		}
 
 		/// <summary>
-		/// bot check if next position in direction is free
+		/// Bot check if next position in direction is free. - old function
 		/// </summary>
-		public void checkDirection() //bot-movement
+		public void CheckDirection() //bot movement
 		{
 			int testLeft = x > 0 ? x - 1 : Form1.width - 1; //edge positions of array
 			int testRight = x < Form1.width - 1 ? x + 1 : 0;
-			if ((direction == "l" && (Form1.blockArr[testLeft, y] == "hardblock" || //collision with hardblock
+			if ((direction == "left" && (Form1.blockArr[testLeft, y] == "hardblock" || //collision with hardblock
 				(Form1.snakeArr[testLeft, y] != 0 && game.killOnMyself && killonItself) || //kill snake on itself
 				(Form1.snakeArr[testLeft, y] != snakeNumber && (!game.killOnMyself || !killonItself)) || //kill snake on other snake
 				(!game.passableEdges && x == 0))) || //collision with edge
-				(direction == "r" && (Form1.blockArr[testRight, y] == "hardblock" ||
+				(direction == "right" && (Form1.blockArr[testRight, y] == "hardblock" ||
 				(Form1.snakeArr[testRight, y] != 0 && game.killOnMyself && killonItself) ||
 				(Form1.snakeArr[testRight, y] != snakeNumber && (!game.killOnMyself || !killonItself)) ||
 				(!game.passableEdges && x == Form1.width - 1))))
 			{
-				changeDirection.Add("u");
-				changeDirection.Add("d");
-				changeDirectionection();
+				changeDirectionList.Add("up");
+				changeDirectionList.Add("d");
+				ChangeDirection();
 			}
 			int testUp = y > 0 ? y - 1 : Form1.height - 1;
 			int testDown = y < Form1.height - 1 ? y + 1 : 0;
@@ -147,21 +147,21 @@ namespace snakezz
 				(Form1.snakeArr[x, testDown] != 0 && (game.killOnMyself || killonItself)) ||
 				(Form1.snakeArr[x, testDown] != snakeNumber && !game.killOnMyself && !killonItself) ||
 				(!game.passableEdges && y == Form1.height - 1))) ||
-				(direction == "u" && (Form1.blockArr[x, testUp] == "hardblock" ||
+				(direction == "up" && (Form1.blockArr[x, testUp] == "hardblock" ||
 				(Form1.snakeArr[x, testUp] != 0 && (game.killOnMyself || killonItself)) ||
 				(Form1.snakeArr[x, testUp] != snakeNumber && !game.killOnMyself && !killonItself) ||
 				(!game.passableEdges && y == 0))))
 			{
-				changeDirection.Add("r");
-				changeDirection.Add("l");
-				changeDirectionection();
+				changeDirectionList.Add("right");
+				changeDirectionList.Add("left");
+				ChangeDirection();
 			}
 		}
 
 		/// <summary>
-		/// bot-track food direction
+		/// Bot tracking food direction. - old function
 		/// </summary>
-		public void moving() //bot-tracking food every timer tick
+		public void Moving() //bot tracking food every timer tick
 		{
 			CurrentTracker["x"] = x;
 			CurrentTracker["y"] = y;
@@ -172,33 +172,28 @@ namespace snakezz
 			int acrossX = cX >= tX ? Form1.width - 1 - cX + tX : Form1.width - 1 - tX + cX; //distance across-border
 			int acrossY = cY >= tY ? Form1.height - 1 - cY + tY : Form1.height - 1 - tY + cY; //distance across-border
 
-			if (vectTracking == "x" && direction == "r" && cX > tX && (game.passableEdges || insideSnake || acrossX > cX - tX)) //change direction, when going wrong way
+			if (vectTracking == "x" && direction == "right" && cX > tX && (game.passableEdges || insideSnake || acrossX > cX - tX)) //change direction, when going wrong way
 			{
-				if (checkClosestFood())
-				{ getDirection(); }
+				CheckClosestFoodAndGetDirection();
 			}
-			else if (vectTracking == "x" && direction == "l" && cX < tX && (!game.passableEdges || insideSnake || acrossX > tX - cX))
+			else if (vectTracking == "x" && direction == "left" && cX < tX && (!game.passableEdges || insideSnake || acrossX > tX - cX))
 			{
-				if (checkClosestFood())
-				{ getDirection(); }
+				CheckClosestFoodAndGetDirection();
 			}
 			else if (vectTracking == "y" && direction == "d" && cY > tY && (game.passableEdges || insideSnake || acrossY > cY - tY))
 			{
-				if (checkClosestFood())
-				{ getDirection(); }
+				CheckClosestFoodAndGetDirection();
 			}
-			else if (vectTracking == "y" && direction == "u" && cY < tY && (game.passableEdges || insideSnake || acrossY > tY - cY))
+			else if (vectTracking == "y" && direction == "up" && cY < tY && (game.passableEdges || insideSnake || acrossY > tY - cY))
 			{
-				if (checkClosestFood())
-				{ getDirection(); }
+				CheckClosestFoodAndGetDirection();
 			}
 			if (superSnake)
 			{
-				checkClosestFood();
-				getDirection();
+				CheckClosestFoodAndGetDirection();
 			}
 			else if (CurrentTracker[vectTracking] == TargetTracker[vectTracking] && new Point(x, y) != Form1.foodPoint[selectedFood]) //change direction of bot-snake when the coordinates are reached 
-			{ getDirection(); }
+			{ GetDirection(); }
 
 		}
 
@@ -212,8 +207,8 @@ namespace snakezz
 			{
 				if (snake != snakes.PlayerSnake)//&& lfPoint.X == s.TargetTracker["x"] && lfPoint.Y == s.TargetTracker["y"]) 
 				{ //&& zda bylo sežráno pouze trackovaný jídlo - lepší checkovat každé jídlo, kvůli spawnu nového
-					if (snake.checkClosestFood())
-					{ snake.getDirection(); }
+					snake.CheckClosestFood();
+					snake.GetDirection();
 				}
 			}
 		}
@@ -224,19 +219,26 @@ namespace snakezz
 		/// <param name="snake"></param>
 		public static void CheckClosestFoodAfterPassEdge(snakes snake)
 		{ 
-			if (snake != snakes.PlayerSnake && snake.checkClosestFood())// && snake.insideSnake)
+			if (snake != PlayerSnake)// && snake.insideSnake)
 			{
-				snake.getDirection();
+				snake.CheckClosestFood();
+				snake.GetDirection();
 			}
 		}
 
-		//private void
+		/// <summary>
+		/// temporary for now
+		/// </summary>
+		private void CheckClosestFoodAndGetDirection()
+      {
+			CheckClosestFood();
+			GetDirection();
+		}
 
 		/// <summary>
-		/// bot choose closest food
+		/// bot choose closest food - old function (nevím teď, proč to bylo bool původně)
 		/// </summary>
-		/// <param name="select">ref selectedFood (id)</param>
-		public bool checkClosestFood()
+		public void CheckClosestFood()
 		{
 			int lastCount = -1;
 			int foodNumber = 0;
@@ -269,25 +271,20 @@ namespace snakezz
 					selectedFood = foodNumber;
 					lastCount = fullCount;
 				}
-				foodNumber++;
-				
+				foodNumber++;	
 			}
-			return true;
-			//if (selectedFood == -1) { selectedfullCount = lastCount; }
-			//if (selectedfullCount != 1 && selectedfullCount <= fullCount) { return false; }
-			//else { return true; } //for get direction
 		}
 
 		/// <summary>
-		/// get direction for closest food & switch bot "x" & "y" vector
+		/// get direction for closest food & switch bot "x" & "y" vector - old function
 		/// </summary>
-		public void getDirection() //for closest food
+		public void GetDirection() //for closest food
 		{
 			Point fPoint = Form1.foodPoint[selectedFood];
 			TargetTracker["x"] = fPoint.X;
 			TargetTracker["y"] = fPoint.Y;
 			lastDirChanged = direction;
-			if (direction == "u" || direction == "d") //snake movement in vertical direction - change to horizontal
+			if (direction == "up" || direction == "d") //snake movement in vertical direction - change to horizontal
 			{
 				int testLeft = x != 0 ? x - 1 : Form1.width - 1;   //with-out passableEdges
 				int testRight = x != Form1.width - 1 ? x + 1 : 0;
@@ -296,19 +293,19 @@ namespace snakezz
 				if (insideSnake || !game.passableEdges || acrossX > noacrossX) //inside snake
 				{
 					if (x > fPoint.X && Form1.snakeArr[testLeft, y] == 0 && Form1.blockArr[testLeft, y] != "hardblock" && x != 0)
-					{ direction = "l"; vectTracking = "x"; }
+					{ direction = "left"; vectTracking = "x"; }
 					else if (x < fPoint.X && Form1.snakeArr[testRight, y] == 0 && Form1.blockArr[testRight, y] != "hardblock" && x != Form1.width - 1)
-					{ direction = "r"; vectTracking = "x"; }
+					{ direction = "right"; vectTracking = "x"; }
 				}
 				else //snake through edges
 				{
 					if (x < fPoint.X && Form1.snakeArr[testLeft, y] == 0 && Form1.blockArr[testLeft, y] != "hardblock")
 					{
-						direction = "l"; vectTracking = "x";
+						direction = "left"; vectTracking = "x";
 					}
 					else if (x > fPoint.X && Form1.snakeArr[testRight, y] == 0 && Form1.blockArr[testRight, y] != "hardblock")
 					{
-						direction = "r"; vectTracking = "x";
+						direction = "right"; vectTracking = "x";
 					}
 				}
 				//snake.lastDirChanged = snake.direction; //pro neopakování pohybů
@@ -323,7 +320,7 @@ namespace snakezz
 				if (insideSnake || !game.passableEdges || acrossY > noacrossY) //inside snake
 				{
 					if (y > fPoint.Y && Form1.snakeArr[x, testUp] == 0 && Form1.blockArr[x, testUp] != "hardblock" && y != 0)
-					{ direction = "u"; vectTracking = "y"; }
+					{ direction = "up"; vectTracking = "y"; }
 					else if (y < fPoint.Y && Form1.snakeArr[x, testDown] == 0 && Form1.blockArr[x, testDown] != "hardblock" && y != Form1.height - 1)
 					{ direction = "d"; vectTracking = "y"; }
 				}
@@ -331,7 +328,7 @@ namespace snakezz
 				{
 					if (y < fPoint.Y && Form1.snakeArr[x, testUp] == 0 && Form1.blockArr[x, testUp] != "hardblock")
 					{
-						direction = "u"; vectTracking = "y";
+						direction = "up"; vectTracking = "y";
 					}
 					else if (y > fPoint.Y && Form1.snakeArr[x, testDown] == 0 && Form1.blockArr[x, testDown] != "hardblock")
 					{
@@ -351,7 +348,7 @@ namespace snakezz
       /// <param name="startY">snake starting Y position in snakeArr[]</param>
       /// <param name="inside">snake travel only inside (not searchin for passsing edges)</param>
       /// <param name="super">snake travel diagonaly (super-fast, unreal movement)</param>
-      public static void addSnake(int startX, int startY, int startSnakeLength, Color colour, string direction = "", bool inside = false, bool super = false, bool itselfKill = true)
+      public static void AddSnake(int startX, int startY, int startSnakeLength, Color colour, string direction = "", bool inside = false, bool super = false, bool itselfKill = true)
 		{
 			Snakes.Add(new snakes(startX, startY, startSnakeLength, colour, game.snakeNumber));
 			Snakes[game.snakeNumber - 1].insideSnake = inside;
@@ -361,12 +358,12 @@ namespace snakezz
 		}
 
 		/// <summary>
-		/// remove snake from game and explode him
+		/// Remove snake from game and explode him.
 		/// </summary>
-		/// <param name="s">snake to remove</param>
-		public static void removeSnake(snakes snake)
+		/// <param name="snake">snake to remove</param>
+		public static void RemoveSnake(snakes snake)
 		{
-			explo.explosions.Add(new explo(4, 150, (snake.x + explo.smerDictX[snake.direction]) * Form1.sizeX, (snake.y + explo.smerDictY[snake.direction]) * Form1.sizeY, Color.OrangeRed));
+			//explo.explosions.Add(new explo(4, 150, (snake.x + explo.smerDictX[snake.direction]) * Form1.sizeX, (snake.y + explo.smerDictY[snake.direction]) * Form1.sizeY, Color.OrangeRed));
 			for (int a = 0; a < Form1.width; a++) //remove snake from array
 			{
 				for (int b = 0; b < Form1.height; b++)

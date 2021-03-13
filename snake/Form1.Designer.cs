@@ -292,7 +292,7 @@
          this.btStartLevel.TabIndex = 0;
          this.btStartLevel.Text = "Start";
          this.btStartLevel.UseVisualStyleBackColor = true;
-         this.btStartLevel.Click += new System.EventHandler(this.btStartLevel_Click);
+         this.btStartLevel.Click += new System.EventHandler(this.btnStartLevel_Click);
          // 
          // createpanel
          // 
@@ -417,7 +417,7 @@
          this.btClearBlock.TabIndex = 2;
          this.btClearBlock.Text = "Clear block";
          this.btClearBlock.UseVisualStyleBackColor = true;
-         this.btClearBlock.Click += new System.EventHandler(this.btClearBlock_Click);
+         this.btClearBlock.Click += new System.EventHandler(this.btnClearBlock_Click);
          // 
          // btAddBlock
          // 
@@ -428,7 +428,7 @@
          this.btAddBlock.TabIndex = 1;
          this.btAddBlock.Text = "Add block";
          this.btAddBlock.UseVisualStyleBackColor = true;
-         this.btAddBlock.Click += new System.EventHandler(this.btAddBlock_Click);
+         this.btAddBlock.Click += new System.EventHandler(this.btnAddBlock_Click);
          // 
          // btnCreateLvl
          // 
@@ -469,8 +469,8 @@
          this.btSelectIntervalOpen.TabIndex = 9;
          this.btSelectIntervalOpen.Text = "Select";
          this.btSelectIntervalOpen.UseVisualStyleBackColor = true;
-         this.btSelectIntervalOpen.Click += new System.EventHandler(this.btSelectIntervalOpen_Click);
-         this.btSelectIntervalOpen.MouseHover += new System.EventHandler(this.btSelectIntervalOpen_MouseHover);
+         this.btSelectIntervalOpen.Click += new System.EventHandler(this.btnSelectIntervalOpen_Click);
+         this.btSelectIntervalOpen.MouseHover += new System.EventHandler(this.btnSelectIntervalOpen_MouseHover);
          // 
          // Form1
          // 

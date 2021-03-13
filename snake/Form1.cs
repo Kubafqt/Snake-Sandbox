@@ -51,7 +51,7 @@ namespace snakezz
          snakeArr = new int[width, height]; //+1?
          blockArr = new string[width, height]; //+1?
          timer = new Timer();
-         timer.Tick += new EventHandler(tick);
+         timer.Tick += new EventHandler(timer_tick);
          timer.Interval = game.interval;
          //add player snake to game:
          snakes.PlayerSnake = new snakes(width / 2, height / 2, 20, Color.Black)
@@ -150,7 +150,7 @@ namespace snakezz
             HideControls<Panel>();
             panel.Show();
             game.activePanel = panel.Name;
-            game.pause(1);
+            game.Pause(1);
          }
       }
 
@@ -166,13 +166,14 @@ namespace snakezz
             { c.Hide(); }
          }
       }
+
       #endregion menustrip
 
       #region interval setting
       /// <summary>
       /// Select/change timer interval button. (speed of game)
       /// </summary>
-      private void btSelectIntervalOpen_Click(object sender, EventArgs e)
+      private void btnSelectIntervalOpen_Click(object sender, EventArgs e)
       {
          int interval = 0;
          int.TryParse(tbIntervalOpen.Text, out interval);
@@ -189,7 +190,7 @@ namespace snakezz
       /// <summary>
       /// Disable change timer interval textbox on MouseHover on SelectInterval button.
       /// </summary>
-      private void btSelectIntervalOpen_MouseHover(object sender, EventArgs e)
+      private void btnSelectIntervalOpen_MouseHover(object sender, EventArgs e)
       {
          tbIntervalOpen.ReadOnly = true;
       }
@@ -248,7 +249,7 @@ namespace snakezz
       private void btnLoadGame_Click(object sender, EventArgs e)
       {
          if (!game.gameIsRunning) //determine if some game is already running
-         { game.resetGame(); }
+         { game.Resetgame(); }
          else
          {
             DialogResult dialogResult = MessageBox.Show("Nějaká hra již běží, chcete ji nejdříve uložit?", "nějaká hra již běží", MessageBoxButtons.YesNo);
@@ -263,7 +264,7 @@ namespace snakezz
             gameSaveLoad.LoadGame(cmbLoadGame.SelectedItem.ToString());
             ChangePanel(gamepanel);
             snakes.BotSnakesCheckClosestFood();
-            game.pause(1);
+            game.Pause(1);
          }
          else //combobox cmbLoadGame is empty
          {
@@ -298,13 +299,14 @@ namespace snakezz
          btnLoadGame.Enabled = enable;
          btnDeleteSave.Enabled = enable;
       }
+
       #endregion save/load
 
       #region level select
       /// <summary>
       /// Start selected level button.
       /// </summary>
-      private void btStartLevel_Click(object sender, EventArgs e)
+      private void btnStartLevel_Click(object sender, EventArgs e)
       {
          BasicGameAttribs();
          if (cmbSelectLevel.SelectedIndex != 0)
@@ -327,7 +329,7 @@ namespace snakezz
          selectpanel.Hide();
          gamepanel.Show();
          game.activePanel = "gamepanel";
-         game.newgame();
+         game.Newgame();
       }
 
       /// <summary>
@@ -350,7 +352,7 @@ namespace snakezz
          int.TryParse(tbInterval.Text, out interval);
          game.foodNumber = foodNumber > 0 ? foodNumber : game.foodNumber;
          game.interval = interval > 0 ? interval : game.interval;
-         game.spawnAllFood();
+         game.SpawnAllFood();
          timer.Interval = game.interval;
       }
 
@@ -368,13 +370,14 @@ namespace snakezz
 
          }
       }
+
       #endregion level select
 
       #endregion selectpanel
 
       #region createpanel
       /// <summary>
-      /// Create level button.
+      /// Create level.
       /// </summary>
       private void btnCreateLvl_Click(object sender, EventArgs e)
       {
@@ -382,9 +385,9 @@ namespace snakezz
       }
 
       /// <summary>
-      /// Add block to new level button.
+      /// Add block to new level.
       /// </summary>
-      private void btAddBlock_Click(object sender, EventArgs e)
+      private void btnAddBlock_Click(object sender, EventArgs e)
       {
          lbBlockSize.Text = "Block size:";
          lbBlockTitle.Text = "Add block:";
@@ -415,9 +418,9 @@ namespace snakezz
       }
 
       /// <summary>
-      /// Clear blocks from new level button.
+      /// Clear blocks from new level.
       /// </summary>
-      private void btClearBlock_Click(object sender, EventArgs e)
+      private void btnClearBlock_Click(object sender, EventArgs e)
       {
          lbBlockSize.Text = "Clear size:";
          lbBlockTitle.Text = "Clear block:";
@@ -454,7 +457,7 @@ namespace snakezz
       }
 
       /// <summary>
-      /// Add snake to new level button.
+      /// Add snake to new level.
       /// </summary>
       private void btnAddSnake_Click(object sender, EventArgs e)
       {
@@ -498,7 +501,7 @@ namespace snakezz
       }
 
       /// <summary>
-      /// 
+      /// Try asssing add/clear block size when text in textbox is changed.
       /// </summary>
       private void tbBlockPoint_TextChanged(object sender, EventArgs e)
       {
@@ -519,7 +522,7 @@ namespace snakezz
       }
 
       /// <summary>
-      /// 
+      /// Try asssing add/clear block size when text in textbox is changed.
       /// </summary>
       private void tbBlockSize_TextChanged(object sender, EventArgs e)
       {
@@ -546,43 +549,43 @@ namespace snakezz
       #endregion UI-Controls
 
       /// <summary>
-      /// main game keydown
+      /// game keydown
       /// </summary>
       private void Form1_KeyDown(object sender, KeyEventArgs e)
       {
          Keys key = e.KeyCode;
-         if ((key == Keys.D || key == Keys.Right) && (snakes.PlayerSnake.direction != "l" || snakes.PlayerSnake.snakeLength == 0)) 
+         if ((key == Keys.D || key == Keys.Right) && (snakes.PlayerSnake.direction != "left" || snakes.PlayerSnake.snakeLength == 0)) 
          {
-            directKeyDown = "r"; //right
+            directKeyDown = "right"; //right
             if (!game.gameover || !timer.Enabled)  //disable pause when not gameover or when keydown
-            { game.pause(2); } 
+            { game.Pause(2); } 
          }
-         if ((key == Keys.A || key == Keys.Left) && (snakes.PlayerSnake.direction != "r" || snakes.PlayerSnake.snakeLength == 0)) 
+         if ((key == Keys.A || key == Keys.Left) && (snakes.PlayerSnake.direction != "right" || snakes.PlayerSnake.snakeLength == 0)) 
          { 
-            directKeyDown = "l"; //left
+            directKeyDown = "left"; //left
             if (!game.gameover || !timer.Enabled) //disable pause when not gameover or when keydown
-            { game.pause(2); } 
+            { game.Pause(2); } 
          }
-         if ((key == Keys.W || key == Keys.Up) && (snakes.PlayerSnake.direction != "d" || snakes.PlayerSnake.snakeLength == 0)) 
+         if ((key == Keys.W || key == Keys.Up) && (snakes.PlayerSnake.direction != "down" || snakes.PlayerSnake.snakeLength == 0)) 
          { 
-            directKeyDown = "u"; //up
+            directKeyDown = "up"; //up
             if (!game.gameover || !timer.Enabled) //disable pause when not gameover or when keydown
-            { game.pause(2); }
+            { game.Pause(2); }
          }
-         if ((key == Keys.S || key == Keys.Down) && (snakes.PlayerSnake.direction != "u" || snakes.PlayerSnake.snakeLength == 0)) 
+         if ((key == Keys.S || key == Keys.Down) && (snakes.PlayerSnake.direction != "up" || snakes.PlayerSnake.snakeLength == 0)) 
          { 
-            directKeyDown = "d"; //down
+            directKeyDown = "down"; //down
             if (!game.gameover || !timer.Enabled) //disable pause when not gameover or when keydown
-            { game.pause(2); }
+            { game.Pause(2); }
          }
-         if (key == Keys.R) { game.newgame(); }
-         if (key == Keys.P || key == Keys.G) { game.pause(); }
+         if (key == Keys.R) { game.Newgame(); }
+         if (key == Keys.P || key == Keys.G) { game.Pause(); }
       }
 
       /// <summary>
-      /// main game timer
+      /// game timer
       /// </summary>
-      private void tick(object sender, EventArgs e)
+      private void timer_tick(object sender, EventArgs e)
       {
          snakes.PlayerSnake.direction = directKeyDown;
          foreach (snakes snake in snakes.Snakes.ToList())
@@ -592,30 +595,35 @@ namespace snakezz
             {
                //bot check free way to change direction:
                if (snake != snakes.PlayerSnake)
-               { snake.checkDirection(); }
+               { snake.CheckDirection(); }
 
                //snake move coordinates:
                switch (snake.direction) //snake move
                {
-                  case "l":
+                  case "left":
                      {
                         if (snake.x != 0) { snake.x--; }
                         else if (game.passableEdges) //edges of gamepanel can be passed
                         {
                            snake.x = width - 1;
-                           if (snake != snakes.PlayerSnake)// && snake.insideSnake) //check new food after pass edge
-                           { if (snake.checkClosestFood(ref snake.selectedFood)) { snake.getDirection(); } }
+                           if (snake != snakes.PlayerSnake)// && snake.insideSnake) //check for food after pass the edge
+                           {
+                              snakes.CheckClosestFoodAfterPassEdge(snake);
+                           } 
                         }
                         else { game.GameOver(snake); }
                         break;
                      }
-                  case "r":
+                  case "right":
                      {
                         if (snake.x != width - 1) { snake.x++; }
                         else if (game.passableEdges) //edges of gamepanel can be passed
                         {
                            snake.x = 0;
-                           snakes.CheckClosestFoodAfterPassEdge(snake);
+                           if (snake != snakes.PlayerSnake)
+                           {
+                              snakes.CheckClosestFoodAfterPassEdge(snake);
+                           }
                         }
                         else 
                         { 
@@ -623,26 +631,30 @@ namespace snakezz
                         }
                         break;
                      }
-                  case "u":
+                  case "up":
                      {
                         if (snake.y != 0) { snake.y--; }
                         else if (game.passableEdges) //edges of gamepanel can be passed
                         {
                            snake.y = height - 1;
-                           if (snake != snakes.PlayerSnake)// && snake.insideSnake)
-                           { if (snake.checkClosestFood(ref snake.selectedFood)) { snake.getDirection(); } }
+                           if (snake != snakes.PlayerSnake)
+                           {
+                              snakes.CheckClosestFoodAfterPassEdge(snake);
+                           }
                         }
                         else { game.GameOver(snake); }
                         break;
                      }
-                  case "d":
+                  case "down":
                      {
                         if (snake.y != height - 1) { snake.y++; }
                         else if (game.passableEdges) //edges of gamepanel can be passed
                         {
                            snake.y = 0;
-                           if (snake != snakes.PlayerSnake)// && snake.insideSnake)
-                           { if (snake.checkClosestFood(ref snake.selectedFood)) { snake.getDirection(); } }
+                           if (snake != snakes.PlayerSnake)
+                           {
+                              snakes.CheckClosestFoodAfterPassEdge(snake);
+                           }
                         }
                         else { game.GameOver(snake); }
                         break;
@@ -664,16 +676,15 @@ namespace snakezz
                else if (snakeArr[snake.x, snake.y] != snake.snakeNumber || blockArr[snake.x, snake.y] == "hardblock") //snake collision with other snake or hardblock
                { game.GameOver(snake); } 
 
-               if (snake != snakes.PlayerSnake) //bot-snakes
+               if (snake != snakes.PlayerSnake) //it's bot snake
                {
-                  if (snake.changedDirection) //bot tracking food
+                  if (snake.changedDirection) //bot tracking food after change direction
                   {
                      snake.changedDirection = false;
-                     if (snake.checkClosestFood(ref snake.selectedFood))
-                     { snake.getDirection(); }
+                     snake.CheckClosestFood();
+                     snake.GetDirection();
                   }
-                  //if (s.checkClosestFood(s, ref s.selectedFood)) { s.getDirection(s); }
-                  snake.moving(); //checking for food
+                  snake.Moving(); //checking for food
                }
 
                //food/tail works:
@@ -706,6 +717,8 @@ namespace snakezz
          }
          Refresh();
       }
+
+      #region Paint on panels
 
       /// <summary>
       /// gamepanel paint
@@ -792,7 +805,9 @@ namespace snakezz
          sizeY = gamepanel.Size.Height / height;
       }
 
-      #region double-buffering
+      #endregion
+
+      #region Double-buffering
       protected override CreateParams CreateParams
       {
          get
