@@ -32,15 +32,7 @@ namespace snakezz
 		static Random random = new Random();
 		public Queue<Point> snakePointQueue = new Queue<Point>(); //for snake movement history delete
 		public static List<Color> snakeColorsList = new List<Color>() { Color.Black, Color.Red, Color.Orange, Color.Yellow, Color.DeepSkyBlue, Color.Brown, Color.Indigo, Color.DarkOrange, Color.DarkOliveGreen, Color.DarkGoldenrod, Color.IndianRed };
-
-		#region variables to properties test
-		//public int x { get; set; } //snake current position
-		//public int y { get; set; } 
-		//public int startX { get; set; }
-		//public int startY { get; set; }
-		//public int snakeLength { get; set; }
-		//public int startSnakeLength { get; set; }
-		#endregion
+		public int thisStartSnakeLength; //helping variable for have longer snake when food is eaten when snake is growing to startSnakeLength
 
 		/// <summary>
 		/// snakes constructor
@@ -55,9 +47,10 @@ namespace snakezz
 			this.startX = startX;
 			this.startY = startY;
 			this.startSnakeLength = startSnakeLength;
+			thisStartSnakeLength = startSnakeLength;
 		}
 
-		//bot-snakes:
+		#region bot snakes and food tracking
 		public List<string> changeDirectionList = new List<string>();
 		public string lastDirXChanged = "";
 		public string lastDirYChanged = "";
@@ -197,27 +190,29 @@ namespace snakezz
 
 		}
 
-      #region bot-snakes tracking food
-      /// <summary>
-      /// Bot snakes check for closest food around them. (usually called when some food is eaten, can be called only when tracked food is eaten, but this is not effective for bot snake)
-      /// </summary>
-      public static void BotSnakesCheckClosestFood()
+		
+		/// <summary>
+		/// Bot snake check for closest food around him. - usually called when some food is eaten
+		/// - tested calling only when currently tracked food is eaten, but this is less efective snake type.
+		/// </summary>
+		public static void BotSnakesCheckClosestFood() //good idea - more alternative or dumb snake types, eg. more types of tracking food in type of snake, switchable
 		{
 			foreach (snakes snake in snakes.Snakes.ToList()) //every snakes is checking closest food after spawn of food
 			{
-				if (snake != snakes.PlayerSnake)//&& lfPoint.X == s.TargetTracker["x"] && lfPoint.Y == s.TargetTracker["y"]) 
+				if (snake != snakes.PlayerSnake)//&& lfPoint.X == s.TargetTracker["x"] && lfPoint.Y == s.TargetTracker["yb 
 				{ //&& zda bylo sežráno pouze trackovaný jídlo - lepší checkovat každé jídlo, kvůli spawnu nového
 					snake.CheckClosestFood();
 					snake.GetDirection();
+				
 				}
 			}
 		}
 
 		/// <summary>
-		/// 
+		/// Bot check closest food and get direction.
 		/// </summary>
-		/// <param name="snake"></param>
-		public static void CheckClosestFoodAfterPassEdge(snakes snake)
+		/// <param name="snake">snake instance which checking closest food</param>
+		public static void CheckClosestFoodAndGetDirection(snakes snake)
 		{ 
 			if (snake != PlayerSnake)// && snake.insideSnake)
 			{
@@ -363,7 +358,7 @@ namespace snakezz
 		/// <param name="snake">snake to remove</param>
 		public static void RemoveSnake(snakes snake)
 		{
-			//explo.explosions.Add(new explo(4, 150, (snake.x + explo.smerDictX[snake.direction]) * Form1.sizeX, (snake.y + explo.smerDictY[snake.direction]) * Form1.sizeY, Color.OrangeRed));
+			explo.explosions.Add(new explo(4, 150, (snake.x + explo.smerDictX[snake.direction]) * Form1.sizeX, (snake.y + explo.smerDictY[snake.direction]) * Form1.sizeY, Color.OrangeRed));
 			for (int a = 0; a < Form1.width; a++) //remove snake from array
 			{
 				for (int b = 0; b < Form1.height; b++)
@@ -374,6 +369,8 @@ namespace snakezz
 			}
 			Snakes.Remove(snake);
 		}
+
       #endregion
+
    }
 }

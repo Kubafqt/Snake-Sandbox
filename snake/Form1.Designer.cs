@@ -66,6 +66,9 @@
          this.lbIntervalOpen = new System.Windows.Forms.Label();
          this.tbIntervalOpen = new System.Windows.Forms.TextBox();
          this.btSelectIntervalOpen = new System.Windows.Forms.Button();
+         this.tbLevelName = new System.Windows.Forms.TextBox();
+         this.lbLevelName = new System.Windows.Forms.Label();
+         this.btnDeleteLevel = new System.Windows.Forms.Button();
          this.menuStrip1.SuspendLayout();
          this.selectpanel.SuspendLayout();
          this.createpanel.SuspendLayout();
@@ -84,7 +87,7 @@
          // 
          this.lbScore.AutoSize = true;
          this.lbScore.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-         this.lbScore.Location = new System.Drawing.Point(104, 32);
+         this.lbScore.Location = new System.Drawing.Point(106, 32);
          this.lbScore.Name = "lbScore";
          this.lbScore.Size = new System.Drawing.Size(62, 16);
          this.lbScore.TabIndex = 2;
@@ -125,6 +128,7 @@
          // 
          // selectpanel
          // 
+         this.selectpanel.Controls.Add(this.btnDeleteLevel);
          this.selectpanel.Controls.Add(this.btnDeleteSave);
          this.selectpanel.Controls.Add(this.lbSaveGame);
          this.selectpanel.Controls.Add(this.tbSaveGame);
@@ -140,9 +144,9 @@
          this.selectpanel.Controls.Add(this.lbSelectlevel);
          this.selectpanel.Controls.Add(this.cmbSelectLevel);
          this.selectpanel.Controls.Add(this.btStartLevel);
-         this.selectpanel.Location = new System.Drawing.Point(241, 18);
+         this.selectpanel.Location = new System.Drawing.Point(316, 27);
          this.selectpanel.Name = "selectpanel";
-         this.selectpanel.Size = new System.Drawing.Size(35, 33);
+         this.selectpanel.Size = new System.Drawing.Size(28, 24);
          this.selectpanel.TabIndex = 1;
          this.selectpanel.Visible = false;
          this.selectpanel.Paint += new System.Windows.Forms.PaintEventHandler(this.selectpanel_Paint);
@@ -150,7 +154,7 @@
          // btnDeleteSave
          // 
          this.btnDeleteSave.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-         this.btnDeleteSave.Location = new System.Drawing.Point(885, 98);
+         this.btnDeleteSave.Location = new System.Drawing.Point(1033, 82);
          this.btnDeleteSave.Name = "btnDeleteSave";
          this.btnDeleteSave.Size = new System.Drawing.Size(144, 25);
          this.btnDeleteSave.TabIndex = 15;
@@ -162,7 +166,7 @@
          // 
          this.lbSaveGame.AutoSize = true;
          this.lbSaveGame.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-         this.lbSaveGame.Location = new System.Drawing.Point(641, 35);
+         this.lbSaveGame.Location = new System.Drawing.Point(789, 19);
          this.lbSaveGame.Name = "lbSaveGame";
          this.lbSaveGame.Size = new System.Drawing.Size(88, 16);
          this.lbSaveGame.TabIndex = 14;
@@ -170,7 +174,7 @@
          // 
          // tbSaveGame
          // 
-         this.tbSaveGame.Location = new System.Drawing.Point(735, 34);
+         this.tbSaveGame.Location = new System.Drawing.Point(883, 18);
          this.tbSaveGame.Name = "tbSaveGame";
          this.tbSaveGame.Size = new System.Drawing.Size(144, 20);
          this.tbSaveGame.TabIndex = 13;
@@ -180,7 +184,7 @@
          // 
          this.lbLoadGame.AutoSize = true;
          this.lbLoadGame.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-         this.lbLoadGame.Location = new System.Drawing.Point(673, 69);
+         this.lbLoadGame.Location = new System.Drawing.Point(821, 53);
          this.lbLoadGame.Name = "lbLoadGame";
          this.lbLoadGame.Size = new System.Drawing.Size(55, 16);
          this.lbLoadGame.TabIndex = 12;
@@ -190,7 +194,7 @@
          // 
          this.cmbLoadGame.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
          this.cmbLoadGame.FormattingEnabled = true;
-         this.cmbLoadGame.Location = new System.Drawing.Point(734, 68);
+         this.cmbLoadGame.Location = new System.Drawing.Point(882, 52);
          this.cmbLoadGame.Name = "cmbLoadGame";
          this.cmbLoadGame.Size = new System.Drawing.Size(144, 21);
          this.cmbLoadGame.TabIndex = 11;
@@ -198,7 +202,7 @@
          // btnLoadGame
          // 
          this.btnLoadGame.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-         this.btnLoadGame.Location = new System.Drawing.Point(885, 66);
+         this.btnLoadGame.Location = new System.Drawing.Point(1033, 50);
          this.btnLoadGame.Name = "btnLoadGame";
          this.btnLoadGame.Size = new System.Drawing.Size(144, 25);
          this.btnLoadGame.TabIndex = 10;
@@ -210,7 +214,7 @@
          // 
          this.btnSaveGame.Enabled = false;
          this.btnSaveGame.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-         this.btnSaveGame.Location = new System.Drawing.Point(885, 32);
+         this.btnSaveGame.Location = new System.Drawing.Point(1033, 16);
          this.btnSaveGame.Name = "btnSaveGame";
          this.btnSaveGame.Size = new System.Drawing.Size(144, 25);
          this.btnSaveGame.TabIndex = 9;
@@ -296,6 +300,8 @@
          // 
          // createpanel
          // 
+         this.createpanel.Controls.Add(this.tbLevelName);
+         this.createpanel.Controls.Add(this.lbLevelName);
          this.createpanel.Controls.Add(this.blockPanel);
          this.createpanel.Controls.Add(this.btnAddSnake);
          this.createpanel.Controls.Add(this.btClearBlock);
@@ -472,11 +478,42 @@
          this.btSelectIntervalOpen.Click += new System.EventHandler(this.btnSelectIntervalOpen_Click);
          this.btSelectIntervalOpen.MouseHover += new System.EventHandler(this.btnSelectIntervalOpen_MouseHover);
          // 
+         // tbLevelName
+         // 
+         this.tbLevelName.Location = new System.Drawing.Point(119, 159);
+         this.tbLevelName.Name = "tbLevelName";
+         this.tbLevelName.Size = new System.Drawing.Size(159, 20);
+         this.tbLevelName.TabIndex = 13;
+         this.tbLevelName.Visible = false;
+         // 
+         // lbLevelName
+         // 
+         this.lbLevelName.AutoSize = true;
+         this.lbLevelName.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+         this.lbLevelName.Location = new System.Drawing.Point(28, 160);
+         this.lbLevelName.Name = "lbLevelName";
+         this.lbLevelName.Size = new System.Drawing.Size(85, 15);
+         this.lbLevelName.TabIndex = 14;
+         this.lbLevelName.Text = "Level name:";
+         this.lbLevelName.Visible = false;
+         // 
+         // btnDeleteLevel
+         // 
+         this.btnDeleteLevel.Enabled = false;
+         this.btnDeleteLevel.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+         this.btnDeleteLevel.Location = new System.Drawing.Point(270, 28);
+         this.btnDeleteLevel.Name = "btnDeleteLevel";
+         this.btnDeleteLevel.Size = new System.Drawing.Size(144, 24);
+         this.btnDeleteLevel.TabIndex = 16;
+         this.btnDeleteLevel.Text = "Delete Level";
+         this.btnDeleteLevel.UseVisualStyleBackColor = true;
+         this.btnDeleteLevel.Click += new System.EventHandler(this.btnDeleteLevel_Click);
+         // 
          // Form1
          // 
          this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
          this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-         this.ClientSize = new System.Drawing.Size(1232, 699);
+         this.ClientSize = new System.Drawing.Size(1232, 683);
          this.Controls.Add(this.createpanel);
          this.Controls.Add(this.btSelectIntervalOpen);
          this.Controls.Add(this.lbIntervalOpen);
@@ -496,6 +533,7 @@
          this.selectpanel.ResumeLayout(false);
          this.selectpanel.PerformLayout();
          this.createpanel.ResumeLayout(false);
+         this.createpanel.PerformLayout();
          this.blockPanel.ResumeLayout(false);
          this.blockPanel.PerformLayout();
          this.ResumeLayout(false);
@@ -542,6 +580,9 @@
       private System.Windows.Forms.Label lbSaveGame;
       private System.Windows.Forms.TextBox tbSaveGame;
       private System.Windows.Forms.Button btnDeleteSave;
+      private System.Windows.Forms.TextBox tbLevelName;
+      private System.Windows.Forms.Label lbLevelName;
+      private System.Windows.Forms.Button btnDeleteLevel;
    }
 }
 
