@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Drawing;
 
-namespace snake
+namespace snakezz
 {
    class explo
    {
@@ -32,5 +32,6 @@ namespace snake
          this.y = y;
          this.color = color;
       }
+
    }
 }
