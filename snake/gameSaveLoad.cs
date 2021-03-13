@@ -25,13 +25,7 @@ namespace snakezz
 
          //try
          //{
-
          SqlConnection connection = new SqlConnection(game.connString);
-         //test:
-         //string cmdText = $"INSERT INTO savegame_info (saveGameNameID, foodNumber, passableEdges) VALUES (@saveName, {25}, {0})";
-         //SqlCommand cmd = new SqlCommand(cmdText, connection);
-         //cmd.Parameters.AddWithValue("@saveName", saveName);
-         //check if level exists first:
          string testSaveExistCmd = $"SELECT saveGameNameID FROM savegame_info WHERE saveGameNameID = @saveName";
          SqlCommand commd = new SqlCommand(testSaveExistCmd, connection);
          commd.Parameters.AddWithValue("@saveName", saveName);
@@ -67,14 +61,6 @@ namespace snakezz
          //save all snakes:
          foreach (snakes snake in snakes.Snakes.ToList())
          {
-            //string commandText = !saveExists ? 
-            //   "INSERT INTO savegame_snakes " +
-            //   "(saveGameNameID, snakeID, snakeLenght, posX, posY, direction, insideSnake, superSnake)" + 
-            //   $"VALUES (@saveName, {snake.snakeNumber}, {snake.snakeLength}, {snake.x}, {snake.y}, {snake.direction}, {snake.superSnake}, {snake.insideSnake})"
-            //   : 
-            //   "UPDATE savegame_snakes " +
-            //   $"SET saveGameNameID = @saveName, snakeID = {snake.snakeNumber}, snakeLenght = {snake.snakeLength}, posX = {snake.x}, posY = {snake.y}, direction = {snake.direction}, insideSnake = {snake.superSnake}, superSnake = {snake.insideSnake})" +
-            //   "WHERE saveGameNameID = @saveName";
             int superSnake = snake.superSnake ? 1 : 0;
             int insideSnake = snake.insideSnake ? 1 : 0;
             int isPlayerSnake = snake == snakes.PlayerSnake ? 1 : 0;
@@ -111,9 +97,7 @@ namespace snakezz
                $" VALUES (@saveName, {p.X}, {p.Y}, 'food')";
             SqlCommand command = new SqlCommand(commandText, connection);
             command.Parameters.AddWithValue("@saveName", saveName);
-            //connection.Open();
             command.ExecuteNonQuery();
-            //connection.Close();
          }
          connection.Close();
          proceed = true;
@@ -133,24 +117,20 @@ namespace snakezz
       /// </summary>
       /// <param name="loadName">SaveGameNameID - ID name of saved game.</param>
       public static void LoadGame(string loadName)
-      {         
-         SqlConnection connection = new SqlConnection(game.connString);
-         //test:
-         //string cmdtext = "SELECT saveGameNameID FROM savegame_info";
-         //SqlCommand cmd = new SqlCommand(cmdtext, connection);
-         //connection.Open();
-         //SqlDataReader reader = cmd.ExecuteReader();
-         //while (reader.Read())
+      {
+         //try
          //{
-         //   MessageBox.Show((string)reader["saveGameNameID"]);
+            SqlConnection connection = new SqlConnection(game.connString);
+            game.resetGame();
+            LoadSaveGame_info(loadName, connection);
+            LoadSaveGame_snakes(loadName, connection);
+            LoadSaveGame_snakesPointQueue(loadName, connection);
+            LoadSaveGame_blocks(loadName, connection);
          //}
-         //connection.Close();
-         game.resetGame();
-         LoadSaveGame_info(loadName, connection);
-         LoadSaveGame_snakes(loadName, connection);
-         LoadSaveGame_snakesPointQueue(loadName, connection);
-         LoadSaveGame_blocks(loadName, connection);
-         
+         //catch (Exception e)
+         //{
+         //   MessageBox.Show($"Vyskytla se chyba při pokus o nahrání saveGame záznamu z DB: {e.GetType()}");
+         //}
       }
 
       /// <summary>
@@ -168,7 +148,7 @@ namespace snakezz
          while (reader.Read())
          {
             game.foodNumber = (int)reader["foodNumber"];
-            //game.passableEdges = (int)reader["passableEdges"] == 1 ? true : false;
+            game.passableEdges = (bool)reader["passableEdges"];
             game.interval = (int)reader["interval"];
          }
          game.passableEdges = true;

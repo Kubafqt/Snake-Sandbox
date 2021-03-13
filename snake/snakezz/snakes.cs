@@ -31,7 +31,6 @@ namespace snakezz
 		public bool superSnake = false;
 		static Random random = new Random();
 		public Queue<Point> snakePointQueue = new Queue<Point>(); //for snake movement history delete
-		//public static Color[] snakeColorsArray = new Color[] {Color.Black, Color.Red, Color.Orange, Color.Yellow, Color.DeepSkyBlue, Color.Brown, Color.Indigo, Color.DarkOrange, Color.DarkOliveGreen, Color.DarkGoldenrod, Color.IndianRed };
 		public static List<Color> snakeColorsList = new List<Color>() { Color.Black, Color.Red, Color.Orange, Color.Yellow, Color.DeepSkyBlue, Color.Brown, Color.Indigo, Color.DarkOrange, Color.DarkOliveGreen, Color.DarkGoldenrod, Color.IndianRed };
 
 		#region variables to properties

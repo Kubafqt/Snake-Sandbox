@@ -78,20 +78,6 @@ namespace snakezz
       /// <summary>
       /// 
       /// </summary>
-      //private void addPanelsToList()
-      //{
-      //   foreach(Control control in Controls)
-      //   {
-      //      if (control is Panel)
-      //      {
-      //         panelList.Add(control as Panel);
-      //      }
-      //   }
-      //}
-
-      /// <summary>
-      /// 
-      /// </summary>
       private void FillComboBoxWithSaveGames()
       {
          SqlConnection connection = new SqlConnection(game.connString);
@@ -133,13 +119,6 @@ namespace snakezz
       private void gameToolStripMenuItem_Click(object sender, EventArgs e)
       {
          ChangePanel(gamepanel);
-         //if (game.activePanel != "game")
-         //{
-         //   HideControls<Panel>();
-         //   gamepanel.Show();
-         //   game.activePanel = "game";
-         //   game.pause(1);
-         //}
       }
 
       /// <summary>
@@ -148,13 +127,6 @@ namespace snakezz
       private void selectLevelToolStripMenuItem_Click(object sender, EventArgs e)
       {
          ChangePanel(selectpanel);
-         //if (game.activePanel != "select_level")
-         //{
-         //   HideControls<Panel>();
-         //   selectpanel.Show();
-         //   game.activePanel = "select_level";
-         //   game.pause(1);
-         //}
       }
 
       /// <summary>
@@ -163,13 +135,6 @@ namespace snakezz
       private void createLevelsToolStripMenuItem_Click(object sender, EventArgs e)
       {
          ChangePanel(createpanel);
-         //if (game.activePanel != "create_level") //better panel.Name -> changePanel(Panel panel) method
-         //{
-         //   HideControls<Panel>();
-         //   createpanel.Show();
-         //   game.activePanel = "create_level";
-         //   game.pause(1);
-         //}
       }
 
       /// <summary>
@@ -278,14 +243,6 @@ namespace snakezz
                snake.getDirection();
             }
          }
-         //if (cmbSelectLevel.SelectedIndex != 0)
-         //{
-         //    game.lvl = cmbSelectLevel.SelectedIndex - 1;
-         //}
-         //else //custom level
-         //{
-         //    //game.lvl = cmbSelectLevel.SelectedIndex - 1;
-         //}
       }
 
       /// <summary>
@@ -537,7 +494,6 @@ namespace snakezz
          {
             if (pan.Name == panel.Name)
             {
-               //return show ? true : false;
                if (!show)
                {
                   panel.Hide();
@@ -741,7 +697,6 @@ namespace snakezz
                   lbScore.Text = $"SnakeLenght : { snakes.PlayerSnake.snakeLength}";
                   //new-food:
                   blockArr[snake.x, snake.y] = string.Empty;
-                  //blockArr[random.Next(width), random.Next(height)] = "food";
                   int i = foodPoint.IndexOf(new Point(snake.x, snake.y));
                   if (i >= 0) //for sure - now
                   {
