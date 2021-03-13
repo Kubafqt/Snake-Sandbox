@@ -728,17 +728,17 @@ namespace snakezz
          Graphics gfx = e.Graphics;
          gfx.DrawRectangle(Pens.Black, 0, 0, gamepanel.Width - 1, gamepanel.Height - 1); //panel border
          int i = 0;
-         foreach (explo ex in explo.explosions.ToList()) //explosion (after snakes death)
-         {
-            if (ex.size < ex.fullSize)
-            {
-               SolidBrush brush = new SolidBrush(ex.color);
-               gfx.FillEllipse(brush, ex.x - ex.size / 2 + ex.startSize, ex.y - ex.size / 2 + ex.startSize, ex.size, ex.size);
-               ex.size += 5;
-            }
-            else { explo.explosions.RemoveAt(i); }
-            i++;
-         }
+         //foreach (explo ex in explo.explosions.ToList()) //explosion (after snakes death)
+         //{
+         //   if (ex.size < ex.fullSize)
+         //   {
+         //      SolidBrush brush = new SolidBrush(ex.color);
+         //      gfx.FillEllipse(brush, ex.x - ex.size / 2 + ex.startSize, ex.y - ex.size / 2 + ex.startSize, ex.size, ex.size);
+         //      ex.size += 5;
+         //   }
+         //   else { explo.explosions.RemoveAt(i); }
+         //   i++;
+         //}
          foreach (snakes snake in snakes.Snakes.ToList()) //all snakes
          {
             foreach (Point p in snake.snakePointQueue.ToList()) //snakes + array for colours

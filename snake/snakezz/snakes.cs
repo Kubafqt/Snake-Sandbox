@@ -101,15 +101,15 @@ namespace snakezz
 						if (Form1.blockArr[x, testUp] != "hardblock" && Form1.snakeArr[x, testUp] == 0 && (game.passableEdges || y != 0))
 						{ lastDirChanged = direction; direction = "up"; }
 						else if (game.passableEdges || y != Form1.height - 1)
-						{ lastDirChanged = direction; direction = "d"; }
+						{ lastDirChanged = direction; direction = "down"; }
 						vectTracking = "y";
 						break;
 					}
-				case "d":
+				case "down":
 					{
 						int testDown = y != Form1.height - 1 ? y + 1 : 0;
 						if (Form1.blockArr[x, testDown] != "hardblock" && Form1.snakeArr[x, testDown] == 0 && (game.passableEdges || y != Form1.height - 1))
-						{ lastDirChanged = direction; direction = "d"; }
+						{ lastDirChanged = direction; direction = "down"; }
 						else if (game.passableEdges || y != 0)
 						{ lastDirChanged = direction; direction = "up"; }
 						vectTracking = "y";
@@ -138,12 +138,12 @@ namespace snakezz
 				(!game.passableEdges && x == Form1.width - 1))))
 			{
 				changeDirectionList.Add("up");
-				changeDirectionList.Add("d");
+				changeDirectionList.Add("down");
 				ChangeDirection();
 			}
 			int testUp = y > 0 ? y - 1 : Form1.height - 1;
 			int testDown = y < Form1.height - 1 ? y + 1 : 0;
-			if ((direction == "d" && (Form1.blockArr[x, testDown] == "hardblock" ||
+			if ((direction == "down" && (Form1.blockArr[x, testDown] == "hardblock" ||
 				(Form1.snakeArr[x, testDown] != 0 && (game.killOnMyself || killonItself)) ||
 				(Form1.snakeArr[x, testDown] != snakeNumber && !game.killOnMyself && !killonItself) ||
 				(!game.passableEdges && y == Form1.height - 1))) ||
@@ -180,7 +180,7 @@ namespace snakezz
 			{
 				CheckClosestFoodAndGetDirection();
 			}
-			else if (vectTracking == "y" && direction == "d" && cY > tY && (game.passableEdges || insideSnake || acrossY > cY - tY))
+			else if (vectTracking == "y" && direction == "down" && cY > tY && (game.passableEdges || insideSnake || acrossY > cY - tY))
 			{
 				CheckClosestFoodAndGetDirection();
 			}
@@ -284,7 +284,7 @@ namespace snakezz
 			TargetTracker["x"] = fPoint.X;
 			TargetTracker["y"] = fPoint.Y;
 			lastDirChanged = direction;
-			if (direction == "up" || direction == "d") //snake movement in vertical direction - change to horizontal
+			if (direction == "up" || direction == "down") //snake movement in vertical direction - change to horizontal
 			{
 				int testLeft = x != 0 ? x - 1 : Form1.width - 1;   //with-out passableEdges
 				int testRight = x != Form1.width - 1 ? x + 1 : 0;
@@ -322,7 +322,7 @@ namespace snakezz
 					if (y > fPoint.Y && Form1.snakeArr[x, testUp] == 0 && Form1.blockArr[x, testUp] != "hardblock" && y != 0)
 					{ direction = "up"; vectTracking = "y"; }
 					else if (y < fPoint.Y && Form1.snakeArr[x, testDown] == 0 && Form1.blockArr[x, testDown] != "hardblock" && y != Form1.height - 1)
-					{ direction = "d"; vectTracking = "y"; }
+					{ direction = "down"; vectTracking = "y"; }
 				}
 				else  //snake through edges
 				{
@@ -332,7 +332,7 @@ namespace snakezz
 					}
 					else if (y > fPoint.Y && Form1.snakeArr[x, testDown] == 0 && Form1.blockArr[x, testDown] != "hardblock")
 					{
-						direction = "d"; vectTracking = "y";
+						direction = "down"; vectTracking = "y";
 					}
 				}
 				//snake.lastDirChanged = snake.direction; //pro neopakování pohybů
