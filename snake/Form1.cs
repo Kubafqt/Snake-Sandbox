@@ -89,7 +89,7 @@ namespace snake_sandbox01
       }
       #endregion
 
-      #region form keydown
+      #region Form keydown
       private void Form1_KeyDown(object sender, KeyEventArgs e)
       {
          Keys key = e.KeyCode;
