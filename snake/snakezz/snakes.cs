@@ -185,17 +185,16 @@ namespace snakezz
 			{
 				CheckClosestFoodAndGetDirection();
 			}
-			else if (CurrentTracker[vectTracking] == TargetTracker[vectTracking] && new Point(x, y) != Form1.foodPoint[selectedFood]) //change direction of bot-snake when the coordinates are reached 
+			else if (CurrentTracker[vectTracking] == TargetTracker[vectTracking] && new Point(x, y) != Form1.foodPointList[selectedFood]) //change direction of bot-snake when the coordinates are reached 
 			{ GetDirection(); }
 
 		}
-
-		
+	
 		/// <summary>
 		/// Bot snake check for closest food around him. - usually called when some food is eaten
 		/// - tested calling only when currently tracked food is eaten, but this is less efective snake type.
 		/// </summary>
-		public static void BotSnakesCheckClosestFood() //good idea - more alternative or dumb snake types, eg. more types of tracking food in type of snake, switchable
+		public static void AllBotSnakesCheckClosestFood() //good idea - more alternative or dumb snake types, eg. more types of tracking food in type of snake, switchable
 		{
 			foreach (snakes snake in snakes.Snakes.ToList()) //every snakes is checking closest food after spawn of food
 			{
@@ -211,20 +210,7 @@ namespace snakezz
 		/// <summary>
 		/// Bot check closest food and get direction.
 		/// </summary>
-		/// <param name="snake">snake instance which checking closest food</param>
-		public static void CheckClosestFoodAndGetDirection(snakes snake)
-		{ 
-			if (snake != PlayerSnake)// && snake.insideSnake)
-			{
-				snake.CheckClosestFood();
-				snake.GetDirection();
-			}
-		}
-
-		/// <summary>
-		/// temporary for now
-		/// </summary>
-		private void CheckClosestFoodAndGetDirection()
+		public void CheckClosestFoodAndGetDirection()
       {
 			CheckClosestFood();
 			GetDirection();
@@ -239,7 +225,7 @@ namespace snakezz
 			int foodNumber = 0;
 			int selectedfullCount = 0;
 			int fullCount = 0;
-			foreach (Point p in Form1.foodPoint.ToList())  //for more foods in list
+			foreach (Point p in Form1.foodPointList.ToList())  //for more foods in list
 			{
 				if (!insideSnake && game.passableEdges)
 				{
@@ -253,7 +239,7 @@ namespace snakezz
 				{ fullCount = Math.Abs(p.X - x) + Math.Abs(p.Y - y); }
 
 				//for not changing the direction with same food:
-				if (selectedFood != -1 && p == Form1.foodPoint[selectedFood])
+				if (selectedFood != -1 && p == Form1.foodPointList[selectedFood])
 				{ selectedfullCount = fullCount; }
 				//choosing the nearest food:
 				if (lastCount == -1)
@@ -275,7 +261,7 @@ namespace snakezz
 		/// </summary>
 		public void GetDirection() //for closest food
 		{
-			Point fPoint = Form1.foodPoint[selectedFood];
+			Point fPoint = Form1.foodPointList[selectedFood];
 			TargetTracker["x"] = fPoint.X;
 			TargetTracker["y"] = fPoint.Y;
 			lastDirChanged = direction;
@@ -333,9 +319,11 @@ namespace snakezz
 				//snake.lastDirChanged = snake.direction; //pro neopakování pohybů
 			}
 		}
+
       #endregion
 
-      #region add-remove snake
+      #region add-remove snakes
+
       /// <summary>
       /// add new snake to game (Snakes list)
       /// </summary>
@@ -346,9 +334,9 @@ namespace snakezz
       public static void AddSnake(int startX, int startY, int startSnakeLength, Color colour, string direction = "", bool inside = false, bool super = false, bool itselfKill = true)
 		{
 			Snakes.Add(new snakes(startX, startY, startSnakeLength, colour, game.snakeNumber));
-			Snakes[game.snakeNumber - 1].insideSnake = inside;
-			Snakes[game.snakeNumber - 1].superSnake = super;
-			Snakes[game.snakeNumber - 1].killonItself = itselfKill;
+			Snakes[game.snakeNumber].insideSnake = inside;
+			Snakes[game.snakeNumber].superSnake = super;
+			Snakes[game.snakeNumber].killonItself = itselfKill;
 			game.snakeNumber++;
 		}
 

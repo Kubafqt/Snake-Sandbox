@@ -9,60 +9,37 @@ namespace snakezz
    class game
    {
       public static readonly string connString = $"Data Source=(LocalDB)\\MSSQLLocalDB;AttachDbFilename={Application.StartupPath}\\GameDatabase.mdf;Integrated Security = True; Connect Timeout = 30";
-      public static int lvl = 4;
+      public static int defaultLevel = 4;
       public static int levelsNumb = 5; //number of levels (for now)
       public static int foodNumber = 25;
       public static bool gameover = false;
       public static bool passableEdges = true;
       public static bool killOnMyself = true;
       static Random random = new Random();
-      readonly static string[] direction = new string[] { "right", "left", "up", "down" }; //possible directions of snake
-      static Color[] colorArr = new Color[] { Color.Black, Color.DarkOrange, Color.DarkOliveGreen, Color.DarkGoldenrod, Color.Indigo, Color.IndianRed }; //for snake or anything else
+      //readonly static string[] direction = new string[] { "right", "left", "up", "down" }; //possible directions of snake
+      static Color[] colorArr = new Color[] { Color.Black, Color.DarkOrange, Color.DarkOliveGreen, Color.DarkGoldenrod, Color.Indigo, Color.IndianRed }; //for snake or anything else (alternative array of colors)
       public static int snakeNumber = 0; //snakes ID
       public static int interval = 42; //snakespeed
-      //public static bool gameIsRunning = false;
+      public static bool levelCreating = false; //determine if creating new level
+      public static bool gameIsRunning = false; //determine if some game is running
 
       public static string activePanel = "game";
       public static Size gamepanelSize = new Size(1200, 600);
       public static Size settingsPanelSize = new Size(1200, 600);
-      public static Point panelLocation = new Point(12, 60);
+      public static Point panelLocation = new Point(19, 75);
 
       //game-control:
-      /// <summary>
-      /// reset all game arrays and game
-      /// </summary>
-      public static void ResetGame()
-      {
-         Form1.directKeyDown = "";
-         Array.Clear(Form1.snakeArr, 0, Form1.snakeArr.Length);
-         Array.Clear(Form1.blockArr, 0, Form1.blockArr.Length);
-         Form1.blockPoint.Clear();
-         Form1.foodPoint.Clear();
-         passableEdges = true;
-         killOnMyself = true;
-         //gameIsRunning = false;
-         snakeNumber = 2; //for other snakes
-         foreach (snakes snake in snakes.Snakes.ToList())
-         {
-            snake.snakeLength = 0;
-            snake.failPos.X = 2500; //hide failpos
-            snake.snakePointQueue.Clear();
-         }
-         snakes.Snakes.Clear();
-      }
-
       /// <summary>
       /// start new game [will reset game/arrays first, then get level, then spawnAllFood]
       /// </summary>
       public static void NewGame()
       {
-         ResetGame();     
+         ResetGame();
          snakes.Snakes.Add(snakes.PlayerSnake); //on position 0     
-         Levels(lvl);
          SpawnAllFood();
          foreach (snakes snake in snakes.Snakes.ToList())
          {
-            snake.x = snake.startX; 
+            snake.x = snake.startX;
             snake.y = snake.startY;
             Form1.snakeArr[snake.x, snake.y] = 1; //snakeLength;
             snake.snakePointQueue.Enqueue(new Point(snake.x, snake.y));
@@ -73,9 +50,33 @@ namespace snakezz
                snake.GetDirection();
             }
          }
-         //gameIsRunning = true; //zatím basic
          Form1.timer.Enabled = true;
          gameover = false;
+         gameIsRunning = true;
+      }
+
+      /// <summary>
+      /// reset all game arrays and game
+      /// </summary>
+      public static void ResetGame()
+      {
+         gameIsRunning = false;
+         Form1.directKeyDown = "";
+         Array.Clear(Form1.snakeArr, 0, Form1.snakeArr.Length);
+         Array.Clear(Form1.blockArr, 0, Form1.blockArr.Length);
+         Form1.blockPointList.Clear();
+         Form1.foodPointList.Clear();
+         passableEdges = true;
+         killOnMyself = true;
+         snakeNumber = 2; //for other snakes
+         foreach (snakes snake in snakes.Snakes.ToList())
+         {
+            snake.snakeLength = 0;
+            snake.failPos.X = 2500; //hide failpos
+            snake.snakePointQueue.Clear();
+         }
+         snakes.Snakes.Clear();
+        
       }
 
       /// <summary>
@@ -83,7 +84,7 @@ namespace snakezz
       /// </summary>
       public static void SpawnAllFood()
       {
-         Form1.foodPoint.Clear();
+         Form1.foodPointList.Clear();
          for (int x = 0; x < Form1.width; x++) //delete old food
          {
             for (int y = 0; y < Form1.height; y++)
@@ -95,7 +96,7 @@ namespace snakezz
             Point fPoint = new Point(random.Next(Form1.width), random.Next(Form1.height));
             if (Form1.blockArr[fPoint.X, fPoint.Y] == "hardblock" || Form1.blockArr[fPoint.X, fPoint.Y] == "food" || Form1.snakeArr[fPoint.X, fPoint.Y] > 1)
             { goto spawnNewFood; } //food in hardblock || food in food || food in snake (nebo dvojitá / vícečetná porce jídla?? - new nápady)
-            Form1.foodPoint.Add(fPoint);
+            Form1.foodPointList.Add(fPoint);
             Form1.blockArr[fPoint.X, fPoint.Y] = "food";
          }
       }
@@ -114,6 +115,7 @@ namespace snakezz
          {
             Form1.timer.Enabled = false;
             gameover = true;
+            gameIsRunning = false;
             return true;
          }
          return false;
@@ -122,7 +124,7 @@ namespace snakezz
       /// <summary>
       /// stop/start game timer
       /// </summary>
-      /// <param name="pause">nothing or 0 - switch pause, 1 - enable pause, 2 - disable pause</param>
+      /// <param name="pause">0 or nothing - switch pause, 1 - enable pause, 2 - disable pause</param>
       public static void Pause(int pause = 0)
       {
          if (pause == 0) //switch pause
@@ -138,13 +140,13 @@ namespace snakezz
       /// select game level
       /// </summary>
       /// <param name="lvl">selected level</param>
-      public static void Levels(int lvl)
+      public static void SelectLevel(int lvl)
       {
          switch (lvl)
          {
             case 1: //custom level
                {
-                  //CreateBlocks(400, 200, 200, 200);
+        
                   break;
                }
             case 2:
@@ -152,7 +154,7 @@ namespace snakezz
                   passableEdges = false;
                   for (int i = 0; i < 4; i++)
                   {
-                     snakes.AddSnake(random.Next(Form1.width - 1), random.Next(Form1.height - 1), 10, Color.Black);
+                     snakes.AddSnake(random.Next(Form1.width - 1), random.Next(Form1.height - 1), 10, colorArr[random.Next(colorArr.Length)]);
                      //snakes.AddSnake(random.Next(Form1.width - 1), random.Next(Form1.height - 1), 0, colorArr[random.Next(colorArr.Length)]);
                   }
                   CreateBlocks(Form1.width / 3 - 5, Form1.height / 3, 42, 2);
@@ -164,7 +166,7 @@ namespace snakezz
                   for (int i = 0; i < 32; i++)
                   {
                      snakes.AddSnake(random.Next(Form1.width - 1), random.Next(Form1.height - 1), 10, Color.Black);
-                     snakes.AddSnake(random.Next(Form1.width - 1), random.Next(Form1.height - 1), 0, colorArr[random.Next(colorArr.Length)], super: true);
+                     snakes.AddSnake(random.Next(Form1.width - 1), random.Next(Form1.height - 1), 0, snakes.snakeColorsList[random.Next(snakes.snakeColorsList.Count)], super: true); ;
                   }
                   CreateBlocks(Form1.width / 2 + 10, 0, 4, Form1.height);
                   break;
@@ -186,11 +188,12 @@ namespace snakezz
             case 5:
                {
                   //killOnMyself = false;
-                  for (int i = 0; i < 1; i++)
+                  for (int i = 0; i < 4; i++) //some snakes to game
                   {
-                     snakes.AddSnake(random.Next(Form1.width - 1), random.Next(Form1.height - 1), 0, colorArr[random.Next(colorArr.Length)]);
-                     //snakes.AddSnake(random.Next(Form1.width - 1), random.Next(Form1.height - 1), 0, colorArr[random.Next(colorArr.Length)]);
+                     snakes.AddSnake(random.Next(Form1.width - 1), random.Next(Form1.height - 1), 10, snakes.snakeColorsList[random.Next(snakes.snakeColorsList.Count)]);
                   }
+                  CreateBlocks(Form1.width / 3 - 5, Form1.height / 3, 42, 2);
+                  CreateBlocks(Form1.width / 3 - 5, Form1.height / 3 + 12, 42, 2);
                   break;
                }
             default: { snakes.AddSnake(random.Next(Form1.width - 1), random.Next(Form1.height - 1), 0, Color.Black, inside: false); } break;
@@ -198,7 +201,7 @@ namespace snakezz
       }
 
       /// <summary>
-      /// create hardblocks to game-level
+      /// Create hardblocks to game-level - add hardblock to block array and block list.
       /// </summary>
       /// <param name="x">x position in array</param>
       /// <param name="y">y position in array</param>
@@ -211,8 +214,8 @@ namespace snakezz
             for (int b = y; b < y + sizeY; b++)
             {
                Form1.blockArr[a, b] = "hardblock"; //hardblock (type)
-               Form1.blockPoint.Add(new Point(a, b));
-               int i = Form1.blockPoint.IndexOf(new Point(10, 20));
+               Form1.blockPointList.Add(new Point(a, b));
+               int i = Form1.blockPointList.IndexOf(new Point(10, 20));
             }
          }
       }

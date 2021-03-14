@@ -27,7 +27,7 @@ namespace snakezz
             for (int y = clearPoint.Y; y < clearPoint.Y + clearSize.Height; y++)
             {
                Form1.blockArr[x, y] = string.Empty;
-               Form1.blockPoint.Remove(new Point(x, y));
+               Form1.blockPointList.Remove(new Point(x, y));
             }
          }
       }
@@ -35,12 +35,12 @@ namespace snakezz
       /// <summary>
       /// Assign blockpoint at selected position.
       /// </summary>
-      /// <param name="blockPoint">point of block u want to assign</param>
+      /// <param name="blockPointList">point of block u want to assign</param>
       /// <param name="x">x position of block</param>
       /// <param name="y">y position of block</param>
-      public static void AssignBlockValues(out Point blockPoint, int x, int y) //out protože se to assignuje do různých proměnných
+      public static void AssignBlockValues(out Point blockPointList, int x, int y) //out protože se to assignuje do různých proměnných
       {
-         blockPoint = new Point(x, y);
+         blockPointList = new Point(x, y);
       }
 
       /// <summary>
@@ -55,13 +55,13 @@ namespace snakezz
       }
 
       /// <summary>
-      /// Test if currently assigning block have not across border values.
+      /// Test if currently assigning block is not across border values.
       /// </summary>
       /// <param name="x">x position</param>
       /// <param name="y">y position</param>
       /// <param name="testPoint">point of testing</param>
       /// <param name="splitText">splited text from textbox</param>
-      /// <returns>True: its across borders, False: is not across borders</returns>
+      /// <returns>True: it is across borders, False: it is not across borders</returns>
       public static bool NotAcrossBorderValues(out int x, ref int y, Point testPoint, string[] splitText)
       {
          if (int.TryParse(splitText[0], out x) && x >= 0 && testPoint.X + x <= Form1.width && int.TryParse(splitText[1], out y) && y >= 0 && testPoint.Y + y <= Form1.height)

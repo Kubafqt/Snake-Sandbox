@@ -10,13 +10,13 @@ using System.Drawing;
 
 namespace snakezz
 {
-   class gameSaveLoad
+   class GameSaveLoad
    {
       private static Random random = new Random();
 
       #region SaveGame
       /// <summary>
-      /// Save game
+      /// Save game to database.
       /// </summary>
       /// <param name="saveName">save game name (ID)</param>
       /// <param name="proceed">True: everything proceed fine. False: not everything proceed fine.</param>
@@ -34,6 +34,7 @@ namespace snakezz
             while (reader.Read()) //check if saved game (saveGameNameID) already exists in database
             {
                saveExist = true; //save on this name exists
+               break;
             }
             connection.Close();
             if (saveExist) //check if save game name already exist, then ask if overwrite level or not
@@ -85,7 +86,7 @@ namespace snakezz
             }
 
             //save all blocks (for now, then can be level only):
-            foreach (Point p in Form1.blockPoint.ToList())
+            foreach (Point p in Form1.blockPointList.ToList())
             {
                string commandText = $"INSERT INTO savegame_blocks " + "(saveGameNameID, blockPosX, blockPosY, blockType)" +
                   $" VALUES (@saveName, {p.X}, {p.Y}, 'hardblock')";
@@ -95,7 +96,7 @@ namespace snakezz
             }
 
             //save all food blocks:
-            foreach (Point p in Form1.foodPoint.ToList())
+            foreach (Point p in Form1.foodPointList.ToList())
             {
                string commandText = $"INSERT INTO savegame_blocks " + "(saveGameNameID, blockPosX, blockPosY, blockType)" +
                   $" VALUES (@saveName, {p.X}, {p.Y}, 'food')";
@@ -116,12 +117,12 @@ namespace snakezz
 
       #endregion
 
-      #region LoadGame methods
+      #region LoadGame
       /// <summary>
       /// Load selected saved game in combobox from database.
       /// </summary>
       /// <param name="loadName">saveGameNameID (name ID of saved game)</param>
-      public static void LoadGame(string loadName)
+      public static bool LoadGame(string loadName)
       {
          try
          {
@@ -131,16 +132,17 @@ namespace snakezz
             LoadSaveGame_snakes(loadName, connection);
             LoadSaveGame_snakePointQueue(loadName, connection);
             LoadSaveGame_blocks(loadName, connection);
+            return true;
          }
          catch (Exception e)
          {
             MessageBox.Show($"Vyskytla se chyba při pokus o nahrání saveGame záznamu z DB: {e.GetType()}");
+            return false;
          }
       }
 
-
       /// <summary>
-      /// Load saved game properties from database. (savegame_info table)
+      /// Load saved game info properties from database. (savegame_info table)
       /// </summary>
       /// <param name="loadName">saveGameNameID (name ID of saved game)</param>
       /// <param name="connection">MSSQL server connection</param>
@@ -202,7 +204,7 @@ namespace snakezz
       }
 
       /// <summary>
-      /// Load saved snakePointQueues from database. (savegame_snakesPointQueue table)
+      /// Load saved snakePointQueue from database. (savegame_snakesPointQueue table)
       /// </summary>
       /// <param name="loadName">saveGameNameID (name ID of saved game)</param>
       /// <param name="connection">MSSQL server connection</param>
@@ -247,11 +249,11 @@ namespace snakezz
             Form1.blockArr[posX, posY] = type;
             if (type == "food")
             {
-               Form1.foodPoint.Add(new Point(posX, posY));
+               Form1.foodPointList.Add(new Point(posX, posY));
             }
             else if (type == "hardblock")
             {
-               Form1.blockPoint.Add(new Point(posX, posY));
+               Form1.blockPointList.Add(new Point(posX, posY));
             }
          }
          connection.Close();
@@ -259,7 +261,7 @@ namespace snakezz
 
       #endregion
 
-      #region DeleteSave methods
+      #region DeleteSave
       /// <summary>
       /// First ask if user want really delete selected saved game, then delete selected saved game.
       /// </summary>
@@ -286,7 +288,7 @@ namespace snakezz
       }
 
       /// <summary>
-      /// Delete selected saved game.
+      /// Delete selected saved game from database.
       /// </summary>
       /// <param name="deleteName">saveGameNameID to delete</param>
       public static void DeleteSave(string deleteName)
@@ -306,5 +308,6 @@ namespace snakezz
       }
 
       #endregion
+
    }
 }
