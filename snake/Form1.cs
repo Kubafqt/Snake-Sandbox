@@ -1,16 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
 using System.Linq;
-using System.Security.Authentication.ExtendedProtection.Configuration;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Text.RegularExpressions;
 using System.Data.SqlClient;
-using System.IO;
 
 namespace snake_sandbox01
 {
@@ -135,7 +129,7 @@ namespace snake_sandbox01
       }
 
       /// <summary>
-      /// Disable pause when gamepanel is active and not gameover. 
+      /// Disable pause when gamepanel is active and gameover is not. 
       /// </summary>
       private void DisablePauseOnMovementKeydown()
       {
@@ -408,6 +402,7 @@ namespace snake_sandbox01
       #region selectpanelUI
 
       #region save and load
+
       /// <summary>
       /// Button for save game.
       /// </summary>
@@ -516,6 +511,7 @@ namespace snake_sandbox01
       #endregion save and load
 
       #region select level
+
       /// <summary>
       /// Button for start selected level.
       /// </summary>
@@ -544,7 +540,7 @@ namespace snake_sandbox01
       }
 
       /// <summary>
-      /// Change level details - select and edit some level parameters like interaval and foodnumber.
+      /// Button for change level details - select and edit some level parameters like interval, foodnumber and passable edges.
       /// </summary>
       private void btnChangeDetail_Click(object sender, EventArgs e)
       {
@@ -628,6 +624,7 @@ namespace snake_sandbox01
       #endregion select level
 
       #region createpanelUI
+
       /// <summary>
       /// Button to enable start creating level.
       /// </summary>
@@ -702,7 +699,7 @@ namespace snake_sandbox01
       }
 
       /// <summary>
-      /// Add block to new level.
+      /// Button for add block to new level.
       /// </summary>
       private void btnAddBlock_Click(object sender, EventArgs e)
       {
@@ -736,7 +733,7 @@ namespace snake_sandbox01
       }
 
       /// <summary>
-      /// Clear blocks from new level.
+      /// Button for clear blocks from new level.
       /// </summary>
       private void btnClearBlock_Click(object sender, EventArgs e)
       {
@@ -835,7 +832,7 @@ namespace snake_sandbox01
       }
 
       /// <summary>
-      /// Add snake to new level.
+      /// Button for add snake to new level.
       /// </summary>
       private void btnAddSnake_Click(object sender, EventArgs e)
       {
@@ -897,6 +894,7 @@ namespace snake_sandbox01
       #region open-controls
 
       #region main menustrip
+
       /// <summary>
       /// Button for changing panel to gamepanel.
       /// </summary>
@@ -932,7 +930,7 @@ namespace snake_sandbox01
             HideControls<Panel>(); //hide alls panels
             panel.Show();
             game.activePanel = panel.Name;
-            if (panel == createpanel) //it is create panel
+            if (panel == createpanel) //it's create panel
             { 
                this.Size = new Size(createFormWidth, defaultFormHeight);
                createpanelUI.Show();
@@ -961,6 +959,7 @@ namespace snake_sandbox01
       #endregion main menustrip
 
       #region interval setting
+
       /// <summary>
       /// Button for select timer interval. (speed of game)
       /// </summary>
@@ -991,7 +990,7 @@ namespace snake_sandbox01
       #endregion interval setting
 
       /// <summary>
-      /// Ask if user want to save currently playing game.
+      /// Ask if user want to save currently running game.
       /// </summary>
       /// <param name="messageBoxInfo">Show info about save game in message box.</param>
       /// <returns>True: user want to save game., False: user dont want to save game.</returns>

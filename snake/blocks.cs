@@ -13,8 +13,8 @@ namespace snake_sandbox01
       /// <summary>
       /// Clear all blocks in selected clearblock rectangle.
       /// </summary>
-      /// <param name="clearPoint"></param>
-      /// <param name="clearSize"></param>
+      /// <param name="clearPoint">clear block starting point</param>
+      /// <param name="clearSize">clear block size</param>
       public static void PerformClearBlocks(Point clearPoint, Size clearSize)
       {
          for (int x = clearPoint.X; x < clearPoint.X + clearSize.Width; x++)

@@ -10,7 +10,7 @@ namespace snake_sandbox01
       }
 
       /// <summary>
-      /// shoot slowing poison on target snake (advaced project)
+      /// shoot slowing poison on target snake (advaced project).
       /// </summary>
       public void castSlowingPoison()
       {

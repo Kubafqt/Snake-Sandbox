@@ -29,7 +29,7 @@ namespace snake_sandbox01
 
       //game-control:
       /// <summary>
-      /// start new game [will reset game/arrays first, then get level, then spawnAllFood]
+      /// Start new game [will reset game and its arrays/lists first, then start new level, then spawnAllFood].
       /// </summary>
       public static void NewGame()
       {
@@ -70,7 +70,7 @@ namespace snake_sandbox01
       }
 
       /// <summary>
-      /// reset all game arrays and game
+      /// Reset game, all game arrays and lists.
       /// </summary>
       public static void ResetGame()
       {
@@ -94,7 +94,7 @@ namespace snake_sandbox01
       }
 
       /// <summary>
-      /// spawn food to game
+      /// Spawn all food to game.
       /// </summary>
       public static void SpawnAllFood(bool deleteOldFoods = false)
       {
@@ -119,7 +119,7 @@ namespace snake_sandbox01
       }
 
       /// <summary>
-      /// remove crashed (snakes snake), playerSnake "game over" annoucement on crash
+      /// Remove crashed bot snake, when playerSnake - "game over" annoucement on crash.
       /// </summary>
       /// <param name="snake">crashed snake</param>
       /// <returns>true when playerSnake crashed, false when any else snake crashed</returns>
@@ -154,7 +154,7 @@ namespace snake_sandbox01
 
       //level-control:
       /// <summary>
-      /// select game level
+      /// Select default defined game level.
       /// </summary>
       /// <param name="lvl">selected level</param>
       public static void SelectLevel(int lvl)
@@ -218,7 +218,7 @@ namespace snake_sandbox01
       }
 
       /// <summary>
-      /// Create hardblocks to game-level - add hardblock to block array and block list.
+      /// Create hardblocks to game level - add hardblock to block array and block list.
       /// </summary>
       /// <param name="x">x position in array</param>
       /// <param name="y">y position in array</param>
