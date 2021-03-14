@@ -81,7 +81,7 @@ namespace snakezz
                   SqlCommand cmd = new SqlCommand(queueCmdText, connection);
                   cmd.Parameters.AddWithValue("@saveName", saveName);
                   cmd.ExecuteNonQuery();
-                  queuePos++; //otázka jestli to jde odzadu nebo odpředu (!)
+                  queuePos++; //otázka jestli to jde odzadu nebo odpředu (asi ok zatím)
                }
             }
 
@@ -262,6 +262,7 @@ namespace snakezz
       #endregion
 
       #region DeleteSave
+
       /// <summary>
       /// First ask if user want really delete selected saved game, then delete selected saved game.
       /// </summary>

@@ -76,7 +76,7 @@
       <DependentUpon>GameDatabaseDataSet.xsd</DependentUpon>
     </Compile>
     <Compile Include="GameSaveLoad.cs" />
-    <Compile Include="Levels.cs" />
+    <Compile Include="CustomLevels.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="snakezz\snakes.cs" />

@@ -10,6 +10,7 @@ namespace snakezz
    {
       public static readonly string connString = $"Data Source=(LocalDB)\\MSSQLLocalDB;AttachDbFilename={Application.StartupPath}\\GameDatabase.mdf;Integrated Security = True; Connect Timeout = 30";
       public static int defaultLevel = 4;
+      public static string selectedLevelName = "";
       public static int levelsNumb = 5; //number of levels (for now)
       public static int foodNumber = 25;
       public static bool gameover = false;
@@ -18,15 +19,14 @@ namespace snakezz
       static Random random = new Random();
       //readonly static string[] direction = new string[] { "right", "left", "up", "down" }; //possible directions of snake
       static Color[] colorArr = new Color[] { Color.Black, Color.DarkOrange, Color.DarkOliveGreen, Color.DarkGoldenrod, Color.Indigo, Color.IndianRed }; //for snake or anything else (alternative array of colors)
-      public static int snakeNumber = 0; //snakes ID
       public static int interval = 42; //snakespeed
       public static bool levelCreating = false; //determine if creating new level
       public static bool gameIsRunning = false; //determine if some game is running
-
+      public static int snakeCountNumber = 1; //snakes ID
       public static string activePanel = "game";
       public static Size gamepanelSize = new Size(1200, 600);
       public static Size settingsPanelSize = new Size(1200, 600);
-      public static Point panelLocation = new Point(19, 75);
+      public static Point panelLocation = new Point(18, 70);
 
       //game-control:
       /// <summary>
@@ -37,8 +37,23 @@ namespace snakezz
          ResetGame();
          snakes.Snakes.Add(snakes.PlayerSnake); //on position 0     
          SpawnAllFood();
+         if (CustomLevels.TestLevelExist(selectedLevelName))
+         {
+            CustomLevels.LoadLevel(selectedLevelName, true);
+         }
+         else
+         {
+            SelectLevel(defaultLevel);
+         }
          foreach (snakes snake in snakes.Snakes.ToList())
          {
+            newStartPoint:  //basic for now
+            if (Form1.blockArr[snake.startX, snake.startY] == "hardblock") //try another random start point when snake starting in hardblock (basic)
+            {
+               snake.startX = random.Next(Form1.width);
+               snake.startY = random.Next(Form1.height);
+               goto newStartPoint;
+            }
             snake.x = snake.startX;
             snake.y = snake.startY;
             Form1.snakeArr[snake.x, snake.y] = 1; //snakeLength;
@@ -68,7 +83,7 @@ namespace snakezz
          Form1.foodPointList.Clear();
          passableEdges = true;
          killOnMyself = true;
-         snakeNumber = 2; //for other snakes
+         snakeCountNumber = 2; //for other snakes
          foreach (snakes snake in snakes.Snakes.ToList())
          {
             snake.snakeLength = 0;

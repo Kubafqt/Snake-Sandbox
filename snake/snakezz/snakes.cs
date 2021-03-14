@@ -23,7 +23,7 @@ namespace snakezz
 		public string vectTracking = ""; //bot snake current moving vector
 		public Dictionary<string, int> CurrentTracker = new Dictionary<string, int>() { { "x", 0 }, { "y", 0 } }; //bot snake position
 		public Dictionary<string, int> TargetTracker = new Dictionary<string, int>() { { "x", 0 }, { "y", 0 } }; //bot snake food position
-		public int snakeNumber;
+		public int snakeNumber; //snake ID
 		public Color color;
 
 		public bool killonItself = true;
@@ -48,6 +48,17 @@ namespace snakezz
 			this.startY = startY;
 			this.startSnakeLength = startSnakeLength;
 			thisStartSnakeLength = startSnakeLength;
+		}
+		
+		/// <summary>
+		///  Add player snake to game.
+		/// </summary>
+		public static void AddPlayerSnake(int startSnakeLength = 20)
+		{
+			snakes.PlayerSnake = new snakes(Form1.width / 2, Form1.height / 2, startSnakeLength, Color.Black)
+			{
+				snakeLength = 0
+			};
 		}
 
 		#region bot snakes and food tracking
@@ -196,13 +207,24 @@ namespace snakezz
 		/// </summary>
 		public static void AllBotSnakesCheckClosestFood() //good idea - more alternative or dumb snake types, eg. more types of tracking food in type of snake, switchable
 		{
-			foreach (snakes snake in snakes.Snakes.ToList()) //every snakes is checking closest food after spawn of food
+			foreach (snakes snake in Snakes.ToList()) //every snakes is checking closest food after spawn of food
 			{
-				if (snake != snakes.PlayerSnake)//&& lfPoint.X == s.TargetTracker["x"] && lfPoint.Y == s.TargetTracker["yb 
-				{ //&& zda bylo sežráno pouze trackovaný jídlo - lepší checkovat každé jídlo, kvůli spawnu nového
+				if (snake != PlayerSnake)//&& lfPoint.X == s.TargetTracker["x"] && lfPoint.Y == s.TargetTracker["y"] - zda bylo sežráno pouze trackovaný jídlo (lepší checkovat každé jídlo, kvůli spawnu nového, teoreticky bližšího)
+				{ 
 					snake.CheckClosestFood();
 					snake.GetDirection();
 				
+				}
+			}
+		}
+
+		public static void FoodCountChanged()
+		{
+			foreach (snakes snake in Snakes.ToList()) //every snakes is checking closest food after spawn of food
+			{
+				if (snake != PlayerSnake)
+				{
+					snake.selectedFood = -1; //basic
 				}
 			}
 		}
@@ -227,7 +249,7 @@ namespace snakezz
 			int fullCount = 0;
 			foreach (Point p in Form1.foodPointList.ToList())  //for more foods in list
 			{
-				if (!insideSnake && game.passableEdges)
+				if (!insideSnake && game.passableEdges) //is passable edges and it is not insideSnake (which cannnot pass the edges)
 				{
 					int acrossX = p.X >= x ? Form1.width - 1 - p.X + x : Form1.width - 1 - x + p.X;
 					int acrossY = p.Y >= y ? Form1.height - 1 - p.Y + y : Form1.height - 1 - y + p.Y;
@@ -333,11 +355,11 @@ namespace snakezz
       /// <param name="super">snake travel diagonaly (super-fast, unreal movement)</param>
       public static void AddSnake(int startX, int startY, int startSnakeLength, Color colour, string direction = "", bool inside = false, bool super = false, bool itselfKill = true)
 		{
-			Snakes.Add(new snakes(startX, startY, startSnakeLength, colour, game.snakeNumber));
-			Snakes[game.snakeNumber].insideSnake = inside;
-			Snakes[game.snakeNumber].superSnake = super;
-			Snakes[game.snakeNumber].killonItself = itselfKill;
-			game.snakeNumber++;
+			Snakes.Add(new snakes(startX, startY, startSnakeLength, colour, game.snakeCountNumber));
+			Snakes[game.snakeCountNumber - 1].insideSnake = inside;
+			Snakes[game.snakeCountNumber - 1].superSnake = super;
+			Snakes[game.snakeCountNumber - 1].killonItself = itselfKill;
+			game.snakeCountNumber++;
 		}
 
 		/// <summary>

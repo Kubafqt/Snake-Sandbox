@@ -25,7 +25,7 @@ namespace snakezz
       public static List<Point> foodPointList = new List<Point>();
       public static string directKeyDown = "";
       private int defaultFormWidth = 1256; //default width of form
-      private int defaultFormHeight = 736; //default height of form
+      private int defaultFormHeight = 732; //default height of form
       private int createFormWidth = 1529; //width of form on createpanel active
 
       Random random;
@@ -59,17 +59,18 @@ namespace snakezz
          sizeY = gamepanel.Height / height; //height of the blocks
          snakeArr = new int[width, height]; //asi not +1
          blockArr = new string[width, height]; //asi not +1
-         FillComboBoxWithSaveGames(); //add save games to cmbSaveGame
-         AddPlayerSnake();  //add player snake to game
+         snakes.AddPlayerSnake(); //add player snake to game
          //fill select levels combobox with levels: 
-         cmbSelectLevel.Items.Add("Custom level");
+         cmbSelectedLevel.Items.Add("Custom level");
          for (int i = 0; i <= game.levelsNumb; i++) //without new levels in database yet
          {
-            cmbSelectLevel.Items.Add($"level " + i);
+            cmbSelectedLevel.Items.Add($"level " + i);
          }
-         try //get basic game properties from select level
+         FillComboBoxWithSaveGames(); //add save games to cmbSaveGame
+         FillComboBoxWithLevels(); //add created levels to cmbSelectedLevel
+         try //get basic game properties from default loaded level
          {
-            cmbSelectLevel.SelectedIndex = 0;
+            cmbSelectedLevel.SelectedIndex = 0;
             tbInterval.Text = game.interval.ToString();
             tbFoodNumber.Text = game.foodNumber.ToString();
             tbIntervalOpen.Text = game.interval.ToString();
@@ -80,21 +81,11 @@ namespace snakezz
          this.KeyPreview = true;
       }
 
-      /// <summary>
-      ///  Add player snake to game. (constructor)
-      /// </summary>
-      private void AddPlayerSnake()
-      {
-         snakes.PlayerSnake = new snakes(width / 2, height / 2, 20, Color.Black)
-         {
-            snakeLength = 0
-         };
-      }
-
       //keydown:
       private void Form1_KeyDown(object sender, KeyEventArgs e)
       {
          Keys key = e.KeyCode;
+         //change direction of player snake movement:
          if ((key == Keys.D || key == Keys.Right) && (snakes.PlayerSnake.direction != "left" || snakes.PlayerSnake.snakeLength == 0)) //right
          {
             directKeyDown = "right";
@@ -115,15 +106,15 @@ namespace snakezz
             directKeyDown = "down";
             DisablePauseOnMovementKeydown();
          }
-         if (game.activePanel == gamepanel.Name && key == Keys.R)
+         if (game.activePanel == gamepanel.Name && key == Keys.R) //new games
          {
-            if (!game.levelCreating || !SaveCurrentCreatingLevel())
+            if (!game.levelCreating || !SaveCurrentCreatingLevel()) //zeptej se jestli uložit právě vytvářený level, pokud se právě vytváří
             {
                game.NewGame();
                lbScore.Text = $"SnakeLenght : { snakes.PlayerSnake.snakeLength}";
             }
          }
-         if (game.activePanel == gamepanel.Name && (key == Keys.P || key == Keys.G)) 
+         if (game.activePanel == gamepanel.Name && (key == Keys.P || key == Keys.G)) //switch pause game
          { 
             game.Pause(); 
          }
@@ -138,7 +129,9 @@ namespace snakezz
          { game.Pause(2); }
       }
 
-      //game timer:
+      /// <summary>
+      /// game timer
+      /// </summary>
       private void timer_tick(object sender, EventArgs e)
       {
          snakes.PlayerSnake.direction = directKeyDown;
@@ -150,7 +143,7 @@ namespace snakezz
                if (snake != snakes.PlayerSnake)
                { snake.CheckDirection(); }
 
-               //snake move coordinates:
+               //snake movement on coordinates:
                switch (snake.direction) //snake move
                {
                   case "left": //left
@@ -224,7 +217,7 @@ namespace snakezz
                   default: break;
                }
 
-               //snake movement:
+               //snake movement in arrays and list:
                if (snakeArr[snake.x, snake.y] == 0 && blockArr[snake.x, snake.y] != "hardblock") //snake movement
                {
                   snakeArr[snake.x, snake.y] = snake.snakeNumber; //add snake to snake array
@@ -249,7 +242,7 @@ namespace snakezz
                   snake.Moving(); //checking for food
                }
 
-               //food/snake works:
+               //food and snake works:
                if (blockArr[snake.x, snake.y] != "food" && blockArr[snake.x, snake.y] != "hardblock" && snake.snakeLength >= snake.startSnakeLength) //food not eaten
                {
                   Point del = snake.snakePointQueue.Dequeue(); //end position
@@ -257,7 +250,7 @@ namespace snakezz
                }
                else if (blockArr[snake.x, snake.y] != "food" && snake.snakeLength <= snake.startSnakeLength)//snake.thisStartSnakeLength && snake == snakes.PlayerSnake) //snake growth
                {
-                  //if (blockArr[snake.x, snake.y] == "food") //food eaten when growth - later, for now is not properly functional
+                  //if (blockArr[snake.x, snake.y] == "food") //food eaten when growth - later, not properly functional now
                   //{
                   //   snake.thisStartSnakeLength++;
                   //   FoodEaten(snake);
@@ -504,10 +497,9 @@ namespace snakezz
       /// </summary>
       private void btnStartLevel_Click(object sender, EventArgs e)
       {
-         if (!Levels.LoadLevel(cmbSelectLevel.SelectedItem.ToString())) //true: load created level from db, false: this is not user created level
+         if (!CustomLevels.LoadLevel(cmbSelectedLevel.SelectedItem.ToString())) //true: load created level from db, false: this is not user created level
          {
-            game.defaultLevel = cmbSelectLevel.SelectedIndex - 1 < 6 ? cmbSelectLevel.SelectedIndex - 1 : 1;
-            game.SelectLevel(game.defaultLevel);
+            game.defaultLevel = cmbSelectedLevel.SelectedIndex - 1 < 6 ? cmbSelectedLevel.SelectedIndex - 1 : 1;
          }
          StartSelectedLevel();
       }
@@ -524,13 +516,15 @@ namespace snakezz
          levelpanel.Hide();
          gamepanel.Show();
          game.activePanel = "gamepanel";
+         game.selectedLevelName = cmbSelectedLevel.Text;
          game.NewGame();
+         selectChBoxPassableEdges.Checked = game.passableEdges;
       }
 
       /// <summary>
-      /// Select level button - select and edit some level parameters.
+      /// Change level details - select and edit some level parameters like interaval and foodnumber.
       /// </summary>
-      private void btnSelectLevel_Click(object sender, EventArgs e)
+      private void btnChangeDetail_Click(object sender, EventArgs e)
       {
          SelectedLevelGameAttribs();
          snakes.AllBotSnakesCheckClosestFood();
@@ -545,26 +539,14 @@ namespace snakezz
          int interval = 0;
          int.TryParse(tbFoodNumber.Text, out foodNumber);
          int.TryParse(tbInterval.Text, out interval);
+         if (foodNumber > 0 && foodNumber < game.foodNumber) //change tracked food, when is less (not index out of range exception)
+         { snakes.FoodCountChanged(); }
          game.foodNumber = foodNumber > 0 ? foodNumber : game.foodNumber;
          game.interval = interval > 0 ? interval : game.interval;
          game.SpawnAllFood();
          timer.Interval = game.interval;
          tbIntervalOpen.Text = game.interval.ToString();
-      }
-
-      /// <summary>
-      /// selected level in combobox changed
-      /// </summary>
-      private void cmbSelectLevel_SelectedIndexChanged(object sender, EventArgs e) //not important yet
-      {
-         //if (cmbSelectLevel.SelectedIndex != 0) //is not the custom level - lock other lvl settings controls
-         //{
-
-         //}
-         //else
-         //{
-
-         //}
+         game.passableEdges = selectChBoxPassableEdges.Checked;
       }
 
       /// <summary>
@@ -573,9 +555,9 @@ namespace snakezz
       private void btnDeleteLevel_Click(object sender, EventArgs e)
       {
          DialogResult dialogResult = MessageBox.Show("Opravdu vymazat uložený level?", "potvrdit vymazání levelu", MessageBoxButtons.YesNo);
-         if (dialogResult == DialogResult.Yes) //user choose to save game first
+         if (dialogResult == DialogResult.Yes && CustomLevels.DeleteLevel(cmbSelectedLevel.SelectedItem.ToString())) //user choose to save game first
          {
-            Levels.DeleteLevel(cmbSelectLevel.SelectedItem.ToString());
+            cmbSelectedLevel.Items.Remove(cmbSelectedLevel.SelectedItem.ToString());
          }
       }
 
@@ -585,30 +567,37 @@ namespace snakezz
       /// </summary>
       private void FillComboBoxWithSaveGames()
       {
-         SqlConnection connection = new SqlConnection(game.connString);
-         string cmdText = $"SELECT saveGameNameID FROM savegame_info";
-         SqlCommand cmd = new SqlCommand(cmdText, connection);
-         connection.Open();
-         SqlDataReader sqlReader = cmd.ExecuteReader();
-         bool someSaveIsThere = false;
-         while (sqlReader.Read()) //putting in save games
+         try
          {
-            cmbLoadGame.Items.Add((string)sqlReader["saveGameNameID"]);
-            someSaveIsThere = true;
+            SqlConnection connection = new SqlConnection(game.connString);
+            string cmdText = $"SELECT saveGameNameID FROM savegame_info";
+            SqlCommand cmd = new SqlCommand(cmdText, connection);
+            connection.Open();
+            SqlDataReader reader = cmd.ExecuteReader();
+            bool someSaveIsThere = false;
+            while (reader.Read()) //putting in save games
+            {
+               cmbLoadGame.Items.Add((string)reader["saveGameNameID"]);
+               someSaveIsThere = true;
+            }
+            connection.Close();
+            if (someSaveIsThere) //some save game is there
+            {
+               cmbLoadGame.Enabled = true;
+               btnLoadGame.Enabled = true;
+               btnDeleteSave.Enabled = true;
+               cmbLoadGame.SelectedIndex = 0;
+            }
+            else //any save game is not there
+            {
+               cmbLoadGame.Enabled = false;
+               btnLoadGame.Enabled = false;
+               btnDeleteSave.Enabled = false;
+            }
          }
-         connection.Close();
-         if (someSaveIsThere) //some save game is there
+         catch (Exception e)
          {
-            cmbLoadGame.Enabled = true;
-            btnLoadGame.Enabled = true;
-            btnDeleteSave.Enabled = true;
-            cmbLoadGame.SelectedIndex = 0;
-         }
-         else //any save game is not there
-         {
-            cmbLoadGame.Enabled = false;
-            btnLoadGame.Enabled = false;
-            btnDeleteSave.Enabled = false;
+            MessageBox.Show($"V metodě FillComboBoxWithSaveGames se vyskytla vyjímka - {e.GetType()}.");
          }
       }
 
@@ -645,26 +634,44 @@ namespace snakezz
          tbCFoodnumber.Enabled = enable;
          btAddBlock.Enabled = enable;
          btClearBlock.Enabled = enable;
-         btnAddSnake.Enabled = enable;
+         checkBoxPassableEdges.Checked = enable;
+         checkBoxPassableEdges.Enabled = enable;
+         //btnAddSnake.Enabled = enable; //develop this later (will be very good)
          btnCreateLvl.Enabled = enable;
+         if (!enable)
+         {
+            ResetCreateLevelControls();
+         }
       }
 
       /// <summary>
-      /// Create level button.
+      /// Reset create level controls.
+      /// </summary>
+      private void ResetCreateLevelControls()
+      {
+         tbLevelName.Clear();
+         tbCFoodnumber.Clear();
+         game.ResetGame();
+      }
+
+      /// <summary>
+      /// Create level to database button.
       /// </summary>
       private void btnCreateLvl_Click(object sender, EventArgs e)
       {
-         int foodnumber = int.TryParse(tbCFoodnumber.Text, out foodnumber) ? 1 : foodnumber; //default value is 1
+         int foodnumber = int.TryParse(tbCFoodnumber.Text, out foodnumber) ? foodnumber : 1; //default value is 1
          string levelName = tbLevelName.Text;
          if (levelName == string.Empty)
          { MessageBox.Show("Nejdříve vyplň název levelu!"); }
-         if (Levels.AddLevel(levelName, foodnumber)) //add level to combobox when everything proceed
+         if (CustomLevels.AddLevel(levelName, foodnumber, checkBoxPassableEdges.Checked)) //add level to combobox when everything proceed
          {
-            cmbSelectLevel.Items.Add(levelName);
-            cmbSelectLevel.SelectedItem = levelName;
+            cmbSelectedLevel.Items.Insert(cmbSelectedLevel.Items.Count, levelName); //insert at the end of levels combobox
+            cmbSelectedLevel.SelectedItem = levelName;
             LevelCreateControlsEnabled(false);
             //ChangePanel(levelpanel); //not now here, think better
             MessageBox.Show($"Level {levelName} has successfully created!");
+            game.ResetGame(); //reset viewing of level
+            Refresh();
          }
          else //not everything proceed good
          {
@@ -700,9 +707,10 @@ namespace snakezz
                game.CreateBlocks(blocks.newBlockPoint.X, blocks.newBlockPoint.Y, blocks.newBlockSize.Width, blocks.newBlockSize.Height);
                ResetBlockPointSizeText(out blocks.newBlockPoint, out blocks.newBlockSize);
                blockPanel.Hide();
-               Refresh();
+               //Refresh();
             }
          }
+         Refresh();
       }
 
       /// <summary>
@@ -739,9 +747,10 @@ namespace snakezz
                ResetBlockPointSizeText(out blocks.clearBlockPoint, out blocks.clearBlockSize);
                blockPanel.Hide();
                blocks.clearBlocks = false;
-               Refresh();
+               //Refresh();
             }
          }
+         Refresh();
       }
 
       /// <summary>
@@ -795,7 +804,7 @@ namespace snakezz
       /// </summary>
       /// <param name="point">return empty point</param>
       /// <param name="size">return empty size</param>
-      private void ResetBlockPointSizeText(out Point point, out Size size)
+      private void ResetBlockPointSizeText(out Point point, out Size size) //not reset last blockPoint text - better for user, but working weird
       {
          point = new Point(-1, -1); //as empty point
          size = Size.Empty;
@@ -828,6 +837,30 @@ namespace snakezz
             //game.levelCreating = false;
             LevelCreateControlsEnabled(false);
             return false;
+         }
+      }
+
+      /// <summary>
+      /// Fill levels combobox with created level records from database.
+      /// </summary>
+      private void FillComboBoxWithLevels()
+      {
+         try
+         {
+            SqlConnection connection = new SqlConnection(game.connString);
+            string cmdText = $"SELECT levelNameID FROM level_info";
+            SqlCommand cmd = new SqlCommand(cmdText, connection);
+            connection.Open();
+            SqlDataReader sqlReader = cmd.ExecuteReader();
+            while (sqlReader.Read()) //putting in save games
+            {
+               cmbSelectedLevel.Items.Insert(cmbSelectedLevel.Items.Count, (string)sqlReader["levelNameID"]);
+            }
+            connection.Close();
+         }
+         catch (Exception e)
+         {
+            MessageBox.Show($"V metodě FillComboBoxWithLevels se vyskytla vyjímka - {e.GetType()}.");
          }
       }
 
@@ -972,12 +1005,11 @@ namespace snakezz
          get
          {
             CreateParams handleParam = base.CreateParams;
-            handleParam.ExStyle &= ~0x02000000;  //Turn off WS_CLIPCHILDREN
+            //handleParam.ExStyle &= ~0x02000000;  //Turn off WS_CLIPCHILDREN
             handleParam.ExStyle |= 0x02000000;   // WS_EX_COMPOSITED
             return handleParam;
          }
       }
-
       #endregion
 
    }
