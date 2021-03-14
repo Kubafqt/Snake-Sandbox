@@ -356,7 +356,7 @@ namespace snake_sandbox01
          if (game.gameover) //gameover
          {
             gfx.FillRectangle(Brushes.PaleVioletRed, snakes.PlayerSnake.failPos.X * sizeX, snakes.PlayerSnake.failPos.Y * sizeY, sizeX, sizeY);
-            gfx.DrawString($"Game OveR! - SnakeLenght : {snakes.PlayerSnake.snakeLength}", font, Brushes.Black, width / 2 - 50, height / 2);
+            gfx.DrawString($"GameOver! - SnakeLenght : {snakes.PlayerSnake.snakeLength}", font, Brushes.Black, width / 2 - 50, height / 2);
          }
       }
 
