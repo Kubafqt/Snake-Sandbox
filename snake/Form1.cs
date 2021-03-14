@@ -309,17 +309,21 @@ namespace snake_sandbox01
          gfx.DrawRectangle(Pens.Black, 0, 0, gamepanel.Width - 1, gamepanel.Height - 1); //panel border
          int i = 0;
          //paint explosion (after bot snake death):
-         foreach (explo ex in explo.explosions.ToList())
+         try //can be weird
          {
-            if (ex.size < ex.fullSize)
+            foreach (explo ex in explo.explosions.ToList())
             {
-               SolidBrush brush = new SolidBrush(ex.color);
-               gfx.FillEllipse(brush, ex.x - ex.size / 2 + ex.startSize, ex.y - ex.size / 2 + ex.startSize, ex.size, ex.size);
-               ex.size += 5;
+               if (ex.size < ex.fullSize)
+               {
+                  SolidBrush brush = new SolidBrush(ex.color);
+                  gfx.FillEllipse(brush, ex.x - ex.size / 2 + ex.startSize, ex.y - ex.size / 2 + ex.startSize, ex.size, ex.size);
+                  ex.size += 5;
+               }
+               else { explo.explosions.RemoveAt(i); }
+               i++;
             }
-            else { explo.explosions.RemoveAt(i); }
-            i++;
          }
+         catch { }
          //paint all snakes:
          foreach (snakes snake in snakes.Snakes.ToList()) //all snakes
          {
@@ -713,7 +717,7 @@ namespace snake_sandbox01
          }
          else //show blockPanel and create block procedure
          {
-            if (!lbBlockPoint.Visible) //show when not visible
+            if (!blockPanel.Visible) //show when not visible
             {
                blockPanel.Show();
             }
@@ -743,15 +747,15 @@ namespace snake_sandbox01
          {
             blocks.clearBlocks = true;
             ResetBlockPointSizeText(out blocks.newBlockPoint, out blocks.newBlockSize); //reset block controls
-            if (!lbBlockPoint.Visible)
+            if (!blockPanel.Visible)
             {
                blockPanel.Show(); //show block controls
             }
-            Refresh();
+            //Refresh();
          }
          else //block procedure
          {
-            if (!lbBlockPoint.Visible)
+            if (!blockPanel.Visible)
             {
                blockPanel.Show(); //show block controls
             }
@@ -770,6 +774,17 @@ namespace snake_sandbox01
             }
          }
          Refresh();
+      }
+
+      /// <summary>
+      /// Mousedown to get locations.
+      /// </summary>
+      private void createpanel_MouseDown(object sender, MouseEventArgs e)
+      {
+         if (blockPanel.Visible)
+         {
+            tbBlockPoint.Text = $"{(e.X) / sizeX};{(e.Y) / sizeY}";
+         }
       }
 
       /// <summary>
@@ -987,7 +1002,28 @@ namespace snake_sandbox01
          tbIntervalOpen.ReadOnly = true;
       }
 
+      /// <summary>
+      /// Keydown in textbox interval.
+      /// </summary>
+      private void tbIntervalOpen_KeyDown(object sender, KeyEventArgs e)
+      {
+         if (e.KeyCode == Keys.Enter)
+         {
+            btnSelectIntervalOpen.PerformClick();
+            tbIntervalOpen.ReadOnly = true;
+         }
+      }
+
       #endregion interval setting
+
+      /// <summary>
+      /// Button for show help.
+      /// </summary>
+      private void btnHelp_Click(object sender, EventArgs e)
+      {
+         lbHelp.Visible = lbHelp.Visible ? false : true;
+         lbHelp.Text = lbHelp.Text == "help text" ? "Nápověda:\n\n W / up arrow - nahoru, S / down arrow - dolu\r\nA / left arrow - doleva, D / right arrow - doprava\r\nR - nová hra, P / G - pozastavení hry" : lbHelp.Text;
+      }
 
       /// <summary>
       /// Ask if user want to save currently running game.

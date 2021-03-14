@@ -73,10 +73,12 @@
          this.btnCreateLevel = new System.Windows.Forms.Button();
          this.lbIntervalOpen = new System.Windows.Forms.Label();
          this.tbIntervalOpen = new System.Windows.Forms.TextBox();
-         this.btSelectIntervalOpen = new System.Windows.Forms.Button();
+         this.btnSelectIntervalOpen = new System.Windows.Forms.Button();
          this.createpanelUI = new System.Windows.Forms.Panel();
          this.checkBoxPassableEdges = new System.Windows.Forms.CheckBox();
          this.btnCreateLevelStart = new System.Windows.Forms.Button();
+         this.btnHelp = new System.Windows.Forms.Button();
+         this.lbHelp = new System.Windows.Forms.Label();
          this.menuStrip1.SuspendLayout();
          this.levelpanel.SuspendLayout();
          this.blockPanel.SuspendLayout();
@@ -136,6 +138,8 @@
          // 
          // levelpanel
          // 
+         this.levelpanel.Controls.Add(this.lbHelp);
+         this.levelpanel.Controls.Add(this.btnHelp);
          this.levelpanel.Controls.Add(this.selectChBoxPassableEdges);
          this.levelpanel.Controls.Add(this.btnEditLevel);
          this.levelpanel.Controls.Add(this.btnDeleteLevel);
@@ -156,7 +160,7 @@
          this.levelpanel.Controls.Add(this.btStartLevel);
          this.levelpanel.Location = new System.Drawing.Point(227, 37);
          this.levelpanel.Name = "levelpanel";
-         this.levelpanel.Size = new System.Drawing.Size(32, 21);
+         this.levelpanel.Size = new System.Drawing.Size(29, 24);
          this.levelpanel.TabIndex = 1;
          this.levelpanel.Visible = false;
          this.levelpanel.Paint += new System.Windows.Forms.PaintEventHandler(this.levelpanel_Paint);
@@ -349,6 +353,7 @@
          this.createpanel.TabIndex = 2;
          this.createpanel.Visible = false;
          this.createpanel.Paint += new System.Windows.Forms.PaintEventHandler(this.createpanel_Paint);
+         this.createpanel.MouseDown += new System.Windows.Forms.MouseEventHandler(this.createpanel_MouseDown);
          // 
          // tbCFoodnumber
          // 
@@ -519,7 +524,7 @@
          // 
          this.btnCreateLevel.Enabled = false;
          this.btnCreateLevel.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-         this.btnCreateLevel.Location = new System.Drawing.Point(73, 423);
+         this.btnCreateLevel.Location = new System.Drawing.Point(72, 423);
          this.btnCreateLevel.Name = "btnCreateLevel";
          this.btnCreateLevel.Size = new System.Drawing.Size(123, 32);
          this.btnCreateLevel.TabIndex = 8;
@@ -544,19 +549,20 @@
          this.tbIntervalOpen.ReadOnly = true;
          this.tbIntervalOpen.Size = new System.Drawing.Size(156, 20);
          this.tbIntervalOpen.TabIndex = 8;
+         this.tbIntervalOpen.KeyDown += new System.Windows.Forms.KeyEventHandler(this.tbIntervalOpen_KeyDown);
          this.tbIntervalOpen.MouseHover += new System.EventHandler(this.tbIntervalOpen_MouseHover);
          // 
-         // btSelectIntervalOpen
+         // btnSelectIntervalOpen
          // 
-         this.btSelectIntervalOpen.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-         this.btSelectIntervalOpen.Location = new System.Drawing.Point(1120, 35);
-         this.btSelectIntervalOpen.Name = "btSelectIntervalOpen";
-         this.btSelectIntervalOpen.Size = new System.Drawing.Size(69, 23);
-         this.btSelectIntervalOpen.TabIndex = 9;
-         this.btSelectIntervalOpen.Text = "Select";
-         this.btSelectIntervalOpen.UseVisualStyleBackColor = true;
-         this.btSelectIntervalOpen.Click += new System.EventHandler(this.btnSelectIntervalOpen_Click);
-         this.btSelectIntervalOpen.MouseHover += new System.EventHandler(this.btnSelectIntervalOpen_MouseHover);
+         this.btnSelectIntervalOpen.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+         this.btnSelectIntervalOpen.Location = new System.Drawing.Point(1120, 35);
+         this.btnSelectIntervalOpen.Name = "btnSelectIntervalOpen";
+         this.btnSelectIntervalOpen.Size = new System.Drawing.Size(69, 23);
+         this.btnSelectIntervalOpen.TabIndex = 9;
+         this.btnSelectIntervalOpen.Text = "Select";
+         this.btnSelectIntervalOpen.UseVisualStyleBackColor = true;
+         this.btnSelectIntervalOpen.Click += new System.EventHandler(this.btnSelectIntervalOpen_Click);
+         this.btnSelectIntervalOpen.MouseHover += new System.EventHandler(this.btnSelectIntervalOpen_MouseHover);
          // 
          // createpanelUI
          // 
@@ -601,6 +607,28 @@
          this.btnCreateLevelStart.UseVisualStyleBackColor = true;
          this.btnCreateLevelStart.Click += new System.EventHandler(this.btnCreateLevelStart_Click);
          // 
+         // btnHelp
+         // 
+         this.btnHelp.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+         this.btnHelp.Location = new System.Drawing.Point(70, 214);
+         this.btnHelp.Name = "btnHelp";
+         this.btnHelp.Size = new System.Drawing.Size(106, 37);
+         this.btnHelp.TabIndex = 19;
+         this.btnHelp.Text = "Help ";
+         this.btnHelp.UseVisualStyleBackColor = true;
+         this.btnHelp.Click += new System.EventHandler(this.btnHelp_Click);
+         // 
+         // lbHelp
+         // 
+         this.lbHelp.AutoSize = true;
+         this.lbHelp.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+         this.lbHelp.Location = new System.Drawing.Point(82, 275);
+         this.lbHelp.Name = "lbHelp";
+         this.lbHelp.Size = new System.Drawing.Size(66, 16);
+         this.lbHelp.TabIndex = 20;
+         this.lbHelp.Text = "help text";
+         this.lbHelp.Visible = false;
+         // 
          // Form1
          // 
          this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -609,7 +637,7 @@
          this.Controls.Add(this.levelpanel);
          this.Controls.Add(this.createpanelUI);
          this.Controls.Add(this.createpanel);
-         this.Controls.Add(this.btSelectIntervalOpen);
+         this.Controls.Add(this.btnSelectIntervalOpen);
          this.Controls.Add(this.lbIntervalOpen);
          this.Controls.Add(this.tbIntervalOpen);
          this.Controls.Add(this.lbScore);
@@ -654,7 +682,7 @@
       private System.Windows.Forms.TextBox tbFoodNumber;
       private System.Windows.Forms.Label lbIntervalOpen;
       private System.Windows.Forms.TextBox tbIntervalOpen;
-      private System.Windows.Forms.Button btSelectIntervalOpen;
+      private System.Windows.Forms.Button btnSelectIntervalOpen;
       private System.Windows.Forms.Button btnCreateLevel;
       private System.Windows.Forms.Button btAddBlock;
       private System.Windows.Forms.Button btClearBlock;
@@ -685,6 +713,8 @@
       private System.Windows.Forms.Button btnEditLevel;
       private System.Windows.Forms.CheckBox checkBoxPassableEdges;
       private System.Windows.Forms.CheckBox selectChBoxPassableEdges;
+      private System.Windows.Forms.Label lbHelp;
+      private System.Windows.Forms.Button btnHelp;
    }
 }
 
