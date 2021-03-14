@@ -10,7 +10,7 @@ namespace snake_sandbox01
 {
    public partial class Form1 : Form
    {
-      public static int sizeX, sizeY; //možná později: možnost určit vel. kostky - dle toho vel. pole (aktual: vel. pole určuje vel. kostky)
+      public static int sizeX, sizeY; //maybe later: možnost určit vel. kostky - dle toho vel. pole (aktual: vel. pole určuje vel. kostky)
       public static int width, height; //of array
       public static int[,] snakeArr; //snakes
       public static string[,] blockArr; //foods/blocks
@@ -19,7 +19,7 @@ namespace snake_sandbox01
       public static string directKeyDown = "";
       private int defaultFormWidth = 1256; //default width of form
       private int defaultFormHeight = 732; //default height of form
-      private int createFormWidth = 1529; //width of form on createpanel active
+      private int createFormWidth = 1529; //width of form when createpanel is active
 
       Random random;
       public static Timer timer;
@@ -86,6 +86,10 @@ namespace snake_sandbox01
          game.activePanel = gamepanel.Name;
          gamepanel.Location = game.panelLocation;
          gamepanel.Size = game.gamepanelSize;
+         blockPanel.Location = new Point(19, 290);
+         blockPanel.Size = new Size(222, 118);
+         addSnakePanel.Location = new Point(19, 290);
+         addSnakePanel.Size = new Size(227, 118);
       }
       #endregion
 
@@ -119,7 +123,7 @@ namespace snake_sandbox01
             if (!game.levelCreating || !SaveCurrentCreatingLevel()) //zeptej se jestli uložit právě vytvářený level, pokud se právě vytváří
             {
                game.NewGame();
-               lbScore.Text = $"SnakeLenght : { snakes.PlayerSnake.snakeLength}";
+               lbScore.Text = $"SnakeLength : { snakes.PlayerSnake.snakeLength}";
             }
          }
          if (game.activePanel == gamepanel.Name && (key == Keys.P || key == Keys.G)) //switch pause game
@@ -262,7 +266,7 @@ namespace snake_sandbox01
                else if (blockArr[snake.x, snake.y] != "food" && snake.snakeLength <= snake.startSnakeLength)//snake.thisStartSnakeLength && snake == snakes.PlayerSnake) //snake growth
                {
                   snake.snakeLength++;
-                  lbScore.Text = $"SnakeLenght : { snakes.PlayerSnake.snakeLength}";
+                  lbScore.Text = $"SnakeLength : { snakes.PlayerSnake.snakeLength}";
                }
                else
                {
@@ -280,7 +284,7 @@ namespace snake_sandbox01
       private void FoodEaten(snakes snake)
       {
          snake.snakeLength++;
-         lbScore.Text = $"SnakeLenght : { snakes.PlayerSnake.snakeLength}";
+         lbScore.Text = $"SnakeLength : { snakes.PlayerSnake.snakeLength}";
          //new-food:
          blockArr[snake.x, snake.y] = string.Empty;
          int i = foodPointList.IndexOf(new Point(snake.x, snake.y));
@@ -352,7 +356,7 @@ namespace snake_sandbox01
          if (game.gameover) //gameover
          {
             gfx.FillRectangle(Brushes.PaleVioletRed, snakes.PlayerSnake.failPos.X * sizeX, snakes.PlayerSnake.failPos.Y * sizeY, sizeX, sizeY);
-            gfx.DrawString($"GameOver! - SnakeLenght : {snakes.PlayerSnake.snakeLength}", font, Brushes.Black, width / 2 - 50, height / 2);
+            gfx.DrawString($"GameOver! - SnakeLength : {snakes.PlayerSnake.snakeLength}", font, Brushes.Black, width / 2 - 50, height / 2);
          }
       }
 
@@ -466,7 +470,7 @@ namespace snake_sandbox01
             if (GameSaveLoad.LoadGame(cmbLoadGame.SelectedItem.ToString())) //try load game from database
             {
                ChangePanel(gamepanel); //switch panel in form app
-               lbScore.Text = $"SnakeLenght : { snakes.PlayerSnake.snakeLength}";
+               lbScore.Text = $"SnakeLength : { snakes.PlayerSnake.snakeLength}";
                snakes.AllBotSnakesCheckClosestFood();
             }
          }
@@ -638,7 +642,7 @@ namespace snake_sandbox01
             }
             game.ResetGame(); //also disable gameIsRunning (false)
             LevelCreateControlsEnabled();
-            lbScore.Text = $"SnakeLenght : { snakes.PlayerSnake.snakeLength}";
+            lbScore.Text = $"SnakeLength : { snakes.PlayerSnake.snakeLength}";
          }
       }
 
@@ -773,17 +777,6 @@ namespace snake_sandbox01
       }
 
       /// <summary>
-      /// Mousedown to get locations.
-      /// </summary>
-      private void createpanel_MouseDown(object sender, MouseEventArgs e)
-      {
-         if (blockPanel.Visible)
-         {
-            tbBlockPoint.Text = $"{(e.X) / sizeX};{(e.Y) / sizeY}";
-         }
-      }
-
-      /// <summary>
       /// Try asssing add/clear block size when text in textbox is changed.
       /// </summary>
       private void tbBlockPoint_TextChanged(object sender, EventArgs e)
@@ -848,6 +841,21 @@ namespace snake_sandbox01
       private void btnAddSnake_Click(object sender, EventArgs e)
       {
 
+      }
+
+      /// <summary>
+      /// Mousedown to get locations.
+      /// </summary>
+      private void createpanel_MouseDown(object sender, MouseEventArgs e)
+      {
+         if (blockPanel.Visible)
+         {
+            tbBlockPoint.Text = $"{(e.X) / sizeX};{(e.Y) / sizeY}";
+         }
+         if (addSnakePanel.Visible)
+         {
+            tb.Text = $"{(e.X) / sizeX};{(e.Y) / sizeY}";
+         }
       }
 
       /// <summary>

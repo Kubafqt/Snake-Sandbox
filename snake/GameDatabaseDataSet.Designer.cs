@@ -493,7 +493,7 @@ namespace snake_sandbox01 {
             
             private global::System.Data.DataColumn columnsnakeID;
             
-            private global::System.Data.DataColumn columnsnakeLenght;
+            private global::System.Data.DataColumn columnsnakeLength;
             
             private global::System.Data.DataColumn columnposX;
             
@@ -552,9 +552,9 @@ namespace snake_sandbox01 {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public global::System.Data.DataColumn snakeLenghtColumn {
+            public global::System.Data.DataColumn snakeLengthColumn {
                 get {
-                    return this.columnsnakeLenght;
+                    return this.columnsnakeLength;
                 }
             }
             
@@ -619,12 +619,12 @@ namespace snake_sandbox01 {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public level_snakesRow Addlevel_snakesRow(string levelNameID, int snakeID, int snakeLenght, int posX, int posY, string snakeColor) {
+            public level_snakesRow Addlevel_snakesRow(string levelNameID, int snakeID, int snakeLength, int posX, int posY, string snakeColor) {
                 level_snakesRow rowlevel_snakesRow = ((level_snakesRow)(this.NewRow()));
                 object[] columnValuesArray = new object[] {
                         levelNameID,
                         snakeID,
-                        snakeLenght,
+                        snakeLength,
                         posX,
                         posY,
                         snakeColor};
@@ -652,7 +652,7 @@ namespace snake_sandbox01 {
             internal void InitVars() {
                 this.columnlevelNameID = base.Columns["levelNameID"];
                 this.columnsnakeID = base.Columns["snakeID"];
-                this.columnsnakeLenght = base.Columns["snakeLenght"];
+                this.columnsnakeLength = base.Columns["snakeLength"];
                 this.columnposX = base.Columns["posX"];
                 this.columnposY = base.Columns["posY"];
                 this.columnsnakeColor = base.Columns["snakeColor"];
@@ -665,8 +665,8 @@ namespace snake_sandbox01 {
                 base.Columns.Add(this.columnlevelNameID);
                 this.columnsnakeID = new global::System.Data.DataColumn("snakeID", typeof(int), null, global::System.Data.MappingType.Element);
                 base.Columns.Add(this.columnsnakeID);
-                this.columnsnakeLenght = new global::System.Data.DataColumn("snakeLenght", typeof(int), null, global::System.Data.MappingType.Element);
-                base.Columns.Add(this.columnsnakeLenght);
+                this.columnsnakeLength = new global::System.Data.DataColumn("snakeLength", typeof(int), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnsnakeLength);
                 this.columnposX = new global::System.Data.DataColumn("posX", typeof(int), null, global::System.Data.MappingType.Element);
                 base.Columns.Add(this.columnposX);
                 this.columnposY = new global::System.Data.DataColumn("posY", typeof(int), null, global::System.Data.MappingType.Element);
@@ -676,7 +676,7 @@ namespace snake_sandbox01 {
                 this.columnlevelNameID.AllowDBNull = false;
                 this.columnlevelNameID.MaxLength = 50;
                 this.columnsnakeID.AllowDBNull = false;
-                this.columnsnakeLenght.AllowDBNull = false;
+                this.columnsnakeLength.AllowDBNull = false;
                 this.columnsnakeColor.MaxLength = 50;
             }
             
@@ -2005,7 +2005,7 @@ namespace snake_sandbox01 {
             
             private global::System.Data.DataColumn columnsnakeID;
             
-            private global::System.Data.DataColumn columnsnakeLenght;
+            private global::System.Data.DataColumn columnsnakeLength;
             
             private global::System.Data.DataColumn columnposX;
             
@@ -2072,9 +2072,9 @@ namespace snake_sandbox01 {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public global::System.Data.DataColumn snakeLenghtColumn {
+            public global::System.Data.DataColumn snakeLengthColumn {
                 get {
-                    return this.columnsnakeLenght;
+                    return this.columnsnakeLength;
                 }
             }
             
@@ -2171,12 +2171,12 @@ namespace snake_sandbox01 {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public savegame_snakesRow Addsavegame_snakesRow(string saveGameNameID, int snakeID, int snakeLenght, int posX, int posY, string direction, string snakeColor, bool insideSnake, bool superSnake, int snakeColorID) {
+            public savegame_snakesRow Addsavegame_snakesRow(string saveGameNameID, int snakeID, int snakeLength, int posX, int posY, string direction, string snakeColor, bool insideSnake, bool superSnake, int snakeColorID) {
                 savegame_snakesRow rowsavegame_snakesRow = ((savegame_snakesRow)(this.NewRow()));
                 object[] columnValuesArray = new object[] {
                         saveGameNameID,
                         snakeID,
-                        snakeLenght,
+                        snakeLength,
                         posX,
                         posY,
                         direction,
@@ -2208,7 +2208,7 @@ namespace snake_sandbox01 {
             internal void InitVars() {
                 this.columnsaveGameNameID = base.Columns["saveGameNameID"];
                 this.columnsnakeID = base.Columns["snakeID"];
-                this.columnsnakeLenght = base.Columns["snakeLenght"];
+                this.columnsnakeLength = base.Columns["snakeLength"];
                 this.columnposX = base.Columns["posX"];
                 this.columnposY = base.Columns["posY"];
                 this.columndirection = base.Columns["direction"];
@@ -2225,8 +2225,8 @@ namespace snake_sandbox01 {
                 base.Columns.Add(this.columnsaveGameNameID);
                 this.columnsnakeID = new global::System.Data.DataColumn("snakeID", typeof(int), null, global::System.Data.MappingType.Element);
                 base.Columns.Add(this.columnsnakeID);
-                this.columnsnakeLenght = new global::System.Data.DataColumn("snakeLenght", typeof(int), null, global::System.Data.MappingType.Element);
-                base.Columns.Add(this.columnsnakeLenght);
+                this.columnsnakeLength = new global::System.Data.DataColumn("snakeLength", typeof(int), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnsnakeLength);
                 this.columnposX = new global::System.Data.DataColumn("posX", typeof(int), null, global::System.Data.MappingType.Element);
                 base.Columns.Add(this.columnposX);
                 this.columnposY = new global::System.Data.DataColumn("posY", typeof(int), null, global::System.Data.MappingType.Element);
@@ -2244,7 +2244,7 @@ namespace snake_sandbox01 {
                 this.columnsaveGameNameID.AllowDBNull = false;
                 this.columnsaveGameNameID.MaxLength = 50;
                 this.columnsnakeID.AllowDBNull = false;
-                this.columnsnakeLenght.AllowDBNull = false;
+                this.columnsnakeLength.AllowDBNull = false;
                 this.columnposX.AllowDBNull = false;
                 this.columnposY.AllowDBNull = false;
                 this.columndirection.MaxLength = 10;
@@ -2722,12 +2722,12 @@ namespace snake_sandbox01 {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public int snakeLenght {
+            public int snakeLength {
                 get {
-                    return ((int)(this[this.tablelevel_snakes.snakeLenghtColumn]));
+                    return ((int)(this[this.tablelevel_snakes.snakeLengthColumn]));
                 }
                 set {
-                    this[this.tablelevel_snakes.snakeLenghtColumn] = value;
+                    this[this.tablelevel_snakes.snakeLengthColumn] = value;
                 }
             }
             
@@ -3169,12 +3169,12 @@ namespace snake_sandbox01 {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
-            public int snakeLenght {
+            public int snakeLength {
                 get {
-                    return ((int)(this[this.tablesavegame_snakes.snakeLenghtColumn]));
+                    return ((int)(this[this.tablesavegame_snakes.snakeLengthColumn]));
                 }
                 set {
-                    this[this.tablesavegame_snakes.snakeLenghtColumn] = value;
+                    this[this.tablesavegame_snakes.snakeLengthColumn] = value;
                 }
             }
             
@@ -3776,20 +3776,20 @@ namespace snake_sandbox01.GameDatabaseDataSetTableAdapters {
             tableMapping.DataSetTable = "level_snakes";
             tableMapping.ColumnMappings.Add("levelNameID", "levelNameID");
             tableMapping.ColumnMappings.Add("snakeID", "snakeID");
-            tableMapping.ColumnMappings.Add("snakeLenght", "snakeLenght");
+            tableMapping.ColumnMappings.Add("snakeLength", "snakeLength");
             tableMapping.ColumnMappings.Add("posX", "posX");
             tableMapping.ColumnMappings.Add("posY", "posY");
             tableMapping.ColumnMappings.Add("snakeColor", "snakeColor");
             this._adapter.TableMappings.Add(tableMapping);
             this._adapter.InsertCommand = new global::System.Data.SqlClient.SqlCommand();
             this._adapter.InsertCommand.Connection = this.Connection;
-            this._adapter.InsertCommand.CommandText = "INSERT INTO [dbo].[level_snakes] ([levelNameID], [snakeID], [snakeLenght], [posX]" +
-                ", [posY], [snakeColor]) VALUES (@levelNameID, @snakeID, @snakeLenght, @posX, @po" +
+            this._adapter.InsertCommand.CommandText = "INSERT INTO [dbo].[level_snakes] ([levelNameID], [snakeID], [snakeLength], [posX]" +
+                ", [posY], [snakeColor]) VALUES (@levelNameID, @snakeID, @snakeLength, @posX, @po" +
                 "sY, @snakeColor)";
             this._adapter.InsertCommand.CommandType = global::System.Data.CommandType.Text;
             this._adapter.InsertCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@levelNameID", global::System.Data.SqlDbType.VarChar, 0, global::System.Data.ParameterDirection.Input, 0, 0, "levelNameID", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
             this._adapter.InsertCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@snakeID", global::System.Data.SqlDbType.Int, 0, global::System.Data.ParameterDirection.Input, 0, 0, "snakeID", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
-            this._adapter.InsertCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@snakeLenght", global::System.Data.SqlDbType.Int, 0, global::System.Data.ParameterDirection.Input, 0, 0, "snakeLenght", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
+            this._adapter.InsertCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@snakeLength", global::System.Data.SqlDbType.Int, 0, global::System.Data.ParameterDirection.Input, 0, 0, "snakeLength", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
             this._adapter.InsertCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@posX", global::System.Data.SqlDbType.Int, 0, global::System.Data.ParameterDirection.Input, 0, 0, "posX", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
             this._adapter.InsertCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@posY", global::System.Data.SqlDbType.Int, 0, global::System.Data.ParameterDirection.Input, 0, 0, "posY", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
             this._adapter.InsertCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@snakeColor", global::System.Data.SqlDbType.VarChar, 0, global::System.Data.ParameterDirection.Input, 0, 0, "snakeColor", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
@@ -3808,7 +3808,7 @@ namespace snake_sandbox01.GameDatabaseDataSetTableAdapters {
             this._commandCollection = new global::System.Data.SqlClient.SqlCommand[1];
             this._commandCollection[0] = new global::System.Data.SqlClient.SqlCommand();
             this._commandCollection[0].Connection = this.Connection;
-            this._commandCollection[0].CommandText = "SELECT levelNameID, snakeID, snakeLenght, posX, posY, snakeColor FROM dbo.level_s" +
+            this._commandCollection[0].CommandText = "SELECT levelNameID, snakeID, snakeLength, posX, posY, snakeColor FROM dbo.level_s" +
                 "nakes";
             this._commandCollection[0].CommandType = global::System.Data.CommandType.Text;
         }
@@ -3870,7 +3870,7 @@ namespace snake_sandbox01.GameDatabaseDataSetTableAdapters {
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
         [global::System.ComponentModel.Design.HelpKeywordAttribute("vs.data.TableAdapter")]
         [global::System.ComponentModel.DataObjectMethodAttribute(global::System.ComponentModel.DataObjectMethodType.Insert, true)]
-        public virtual int Insert(string levelNameID, int snakeID, int snakeLenght, global::System.Nullable<int> posX, global::System.Nullable<int> posY, string snakeColor) {
+        public virtual int Insert(string levelNameID, int snakeID, int snakeLength, global::System.Nullable<int> posX, global::System.Nullable<int> posY, string snakeColor) {
             if ((levelNameID == null)) {
                 throw new global::System.ArgumentNullException("levelNameID");
             }
@@ -3878,7 +3878,7 @@ namespace snake_sandbox01.GameDatabaseDataSetTableAdapters {
                 this.Adapter.InsertCommand.Parameters[0].Value = ((string)(levelNameID));
             }
             this.Adapter.InsertCommand.Parameters[1].Value = ((int)(snakeID));
-            this.Adapter.InsertCommand.Parameters[2].Value = ((int)(snakeLenght));
+            this.Adapter.InsertCommand.Parameters[2].Value = ((int)(snakeLength));
             if ((posX.HasValue == true)) {
                 this.Adapter.InsertCommand.Parameters[3].Value = ((int)(posX.Value));
             }
@@ -5019,7 +5019,7 @@ namespace snake_sandbox01.GameDatabaseDataSetTableAdapters {
             tableMapping.DataSetTable = "savegame_snakes";
             tableMapping.ColumnMappings.Add("saveGameNameID", "saveGameNameID");
             tableMapping.ColumnMappings.Add("snakeID", "snakeID");
-            tableMapping.ColumnMappings.Add("snakeLenght", "snakeLenght");
+            tableMapping.ColumnMappings.Add("snakeLength", "snakeLength");
             tableMapping.ColumnMappings.Add("posX", "posX");
             tableMapping.ColumnMappings.Add("posY", "posY");
             tableMapping.ColumnMappings.Add("direction", "direction");
@@ -5030,11 +5030,11 @@ namespace snake_sandbox01.GameDatabaseDataSetTableAdapters {
             this._adapter.TableMappings.Add(tableMapping);
             this._adapter.InsertCommand = new global::System.Data.SqlClient.SqlCommand();
             this._adapter.InsertCommand.Connection = this.Connection;
-            this._adapter.InsertCommand.CommandText = @"INSERT INTO [dbo].[savegame_snakes] ([saveGameNameID], [snakeID], [snakeLenght], [posX], [posY], [direction], [snakeColor], [insideSnake], [superSnake], [snakeColorID]) VALUES (@saveGameNameID, @snakeID, @snakeLenght, @posX, @posY, @direction, @snakeColor, @insideSnake, @superSnake, @snakeColorID)";
+            this._adapter.InsertCommand.CommandText = @"INSERT INTO [dbo].[savegame_snakes] ([saveGameNameID], [snakeID], [snakeLength], [posX], [posY], [direction], [snakeColor], [insideSnake], [superSnake], [snakeColorID]) VALUES (@saveGameNameID, @snakeID, @snakeLength, @posX, @posY, @direction, @snakeColor, @insideSnake, @superSnake, @snakeColorID)";
             this._adapter.InsertCommand.CommandType = global::System.Data.CommandType.Text;
             this._adapter.InsertCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@saveGameNameID", global::System.Data.SqlDbType.VarChar, 0, global::System.Data.ParameterDirection.Input, 0, 0, "saveGameNameID", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
             this._adapter.InsertCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@snakeID", global::System.Data.SqlDbType.Int, 0, global::System.Data.ParameterDirection.Input, 0, 0, "snakeID", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
-            this._adapter.InsertCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@snakeLenght", global::System.Data.SqlDbType.Int, 0, global::System.Data.ParameterDirection.Input, 0, 0, "snakeLenght", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
+            this._adapter.InsertCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@snakeLength", global::System.Data.SqlDbType.Int, 0, global::System.Data.ParameterDirection.Input, 0, 0, "snakeLength", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
             this._adapter.InsertCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@posX", global::System.Data.SqlDbType.Int, 0, global::System.Data.ParameterDirection.Input, 0, 0, "posX", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
             this._adapter.InsertCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@posY", global::System.Data.SqlDbType.Int, 0, global::System.Data.ParameterDirection.Input, 0, 0, "posY", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
             this._adapter.InsertCommand.Parameters.Add(new global::System.Data.SqlClient.SqlParameter("@direction", global::System.Data.SqlDbType.NChar, 0, global::System.Data.ParameterDirection.Input, 0, 0, "direction", global::System.Data.DataRowVersion.Current, false, null, "", "", ""));
@@ -5057,7 +5057,7 @@ namespace snake_sandbox01.GameDatabaseDataSetTableAdapters {
             this._commandCollection = new global::System.Data.SqlClient.SqlCommand[1];
             this._commandCollection[0] = new global::System.Data.SqlClient.SqlCommand();
             this._commandCollection[0].Connection = this.Connection;
-            this._commandCollection[0].CommandText = "SELECT saveGameNameID, snakeID, snakeLenght, posX, posY, direction, snakeColor, i" +
+            this._commandCollection[0].CommandText = "SELECT saveGameNameID, snakeID, snakeLength, posX, posY, direction, snakeColor, i" +
                 "nsideSnake, superSnake, snakeColorID FROM dbo.savegame_snakes";
             this._commandCollection[0].CommandType = global::System.Data.CommandType.Text;
         }
@@ -5119,7 +5119,7 @@ namespace snake_sandbox01.GameDatabaseDataSetTableAdapters {
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
         [global::System.ComponentModel.Design.HelpKeywordAttribute("vs.data.TableAdapter")]
         [global::System.ComponentModel.DataObjectMethodAttribute(global::System.ComponentModel.DataObjectMethodType.Insert, true)]
-        public virtual int Insert(string saveGameNameID, int snakeID, int snakeLenght, int posX, int posY, string direction, string snakeColor, global::System.Nullable<bool> insideSnake, global::System.Nullable<bool> superSnake, global::System.Nullable<int> snakeColorID) {
+        public virtual int Insert(string saveGameNameID, int snakeID, int snakeLength, int posX, int posY, string direction, string snakeColor, global::System.Nullable<bool> insideSnake, global::System.Nullable<bool> superSnake, global::System.Nullable<int> snakeColorID) {
             if ((saveGameNameID == null)) {
                 throw new global::System.ArgumentNullException("saveGameNameID");
             }
@@ -5127,7 +5127,7 @@ namespace snake_sandbox01.GameDatabaseDataSetTableAdapters {
                 this.Adapter.InsertCommand.Parameters[0].Value = ((string)(saveGameNameID));
             }
             this.Adapter.InsertCommand.Parameters[1].Value = ((int)(snakeID));
-            this.Adapter.InsertCommand.Parameters[2].Value = ((int)(snakeLenght));
+            this.Adapter.InsertCommand.Parameters[2].Value = ((int)(snakeLength));
             this.Adapter.InsertCommand.Parameters[3].Value = ((int)(posX));
             this.Adapter.InsertCommand.Parameters[4].Value = ((int)(posY));
             if ((direction == null)) {

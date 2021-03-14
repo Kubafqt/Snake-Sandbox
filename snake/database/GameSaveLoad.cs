@@ -62,7 +62,7 @@ namespace snake_sandbox01
                int superSnake = snake.superSnake ? 1 : 0;
                int insideSnake = snake.insideSnake ? 1 : 0;
                int isPlayerSnake = snake == snakes.PlayerSnake ? 1 : 0;
-               string commandText = "INSERT INTO savegame_snakes " + "(saveGameNameID, snakeID, snakeLenght, startSnakeLenght, posX, posY, insideSnake, superSnake, snakeColorID, playerSnake)" +
+               string commandText = "INSERT INTO savegame_snakes " + "(saveGameNameID, snakeID, snakeLength, startSnakeLength, posX, posY, insideSnake, superSnake, snakeColorID, playerSnake)" +
                   $" VALUES (@saveName, {snake.snakeNumber}, {snake.snakeLength}, {snake.startSnakeLength}, {snake.x}, {snake.y}, {superSnake}, {insideSnake}, {snakes.snakeColorsList.IndexOf(snake.color)}, {isPlayerSnake})";
                SqlCommand command = new SqlCommand(commandText, connection);
                command.Parameters.AddWithValue("@saveName", saveName);
@@ -175,21 +175,21 @@ namespace snake_sandbox01
          {
             if ((bool)reader["playerSnake"] == true) //playerSnake
             {
-               int startSnakeLenght = Convert.IsDBNull((int)reader["startSnakeLenght"]) ? 0 : (int)reader["startSnakeLenght"];
-               snakes.PlayerSnake = new snakes(Form1.width / 2, Form1.height / 2, startSnakeLenght, snakes.snakeColorsList[(int)reader["snakeColorID"]]);
+               int startSnakeLength = Convert.IsDBNull((int)reader["startSnakeLength"]) ? 0 : (int)reader["startSnakeLength"];
+               snakes.PlayerSnake = new snakes(Form1.width / 2, Form1.height / 2, startSnakeLength, snakes.snakeColorsList[(int)reader["snakeColorID"]]);
                snakes.PlayerSnake.x = (int)reader["posX"];
                snakes.PlayerSnake.y = (int)reader["posY"];
-               snakes.PlayerSnake.snakeLength = (int)reader["snakeLenght"];
+               snakes.PlayerSnake.snakeLength = (int)reader["snakeLength"];
                //snakes.PlayerSnake.direction = (string)reader["direction"];  - z nějakého důvodu nelze uložit!
                snakes.Snakes.Add(snakes.PlayerSnake);
             }
             else //botSnakes
             {
-               int startSnakeLenght = Convert.IsDBNull((int)reader["startSnakeLenght"]) ? 0 : (int)reader["startSnakeLenght"];
-               snakes snake = new snakes(random.Next(Form1.width), random.Next(Form1.height), startSnakeLenght, snakes.snakeColorsList[(int)reader["snakeColorID"]], (int)reader["snakeID"]);
+               int startSnakeLength = Convert.IsDBNull((int)reader["startSnakeLength"]) ? 0 : (int)reader["startSnakeLength"];
+               snakes snake = new snakes(random.Next(Form1.width), random.Next(Form1.height), startSnakeLength, snakes.snakeColorsList[(int)reader["snakeColorID"]], (int)reader["snakeID"]);
                snake.x = (int)reader["posX"];
                snake.y = (int)reader["posY"];
-               snake.snakeLength = (int)reader["snakeLenght"];
+               snake.snakeLength = (int)reader["snakeLength"];
                //snake.direction = (string)reader["direction"]; - z nějakého důvodu nelze uložit!
                snake.insideSnake = Convert.IsDBNull((bool)reader["insideSnake"]) ? false : (bool)reader["insideSnake"];
                snake.superSnake = Convert.IsDBNull((bool)reader["superSnake"]) ? false : (bool)reader["superSnake"];
