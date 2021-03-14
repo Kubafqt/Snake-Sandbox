@@ -80,11 +80,11 @@ namespace snake_sandbox01
                SqlConnection connection = new SqlConnection(game.connString);
 
                //load level information:
-               string cmdtext = "SELECT * FROM level_info WHERE levelNameID = @levelName";
-               SqlCommand cmd = new SqlCommand(cmdtext, connection);
-               cmd.Parameters.AddWithValue("@levelName", levelName);
+               string cmdText = "SELECT * FROM level_info WHERE levelNameID = @levelName";
+               SqlCommand command = new SqlCommand(cmdText, connection);
+               command.Parameters.AddWithValue("@levelName", levelName);
                connection.Open(); //open SQL server connection
-               SqlDataReader reader = cmd.ExecuteReader();
+               SqlDataReader reader = command.ExecuteReader();
                while (reader.Read()) //load level info
                {
                   //game.interval = Convert.IsDBNull((bool)reader["interval"]) ? game.interval : (int)reader["interval"]; later
@@ -94,14 +94,14 @@ namespace snake_sandbox01
                connection.Close();
 
                //load level blocks:              
-               string cmdText = "SELECT * FROM level_blocks WHERE levelNameID = @levelName";
-               SqlCommand command = new SqlCommand(cmdText, connection);
+               cmdText = "SELECT * FROM level_blocks WHERE levelNameID = @levelName";
+               command = new SqlCommand(cmdText, connection);
                command.Parameters.AddWithValue("@levelName", levelName);
                connection.Open();
-               SqlDataReader sqlReader = command.ExecuteReader();
-               while (sqlReader.Read())
+               reader = command.ExecuteReader();
+               while (reader.Read())
                {
-                  Point blockPoint = new Point((int)sqlReader["blockPosX"], (int)sqlReader["blockPosY"]);
+                  Point blockPoint = new Point((int)reader["blockPosX"], (int)reader["blockPosY"]);
                   Form1.blockPointList.Add(blockPoint);
                   Form1.blockArr[blockPoint.X, blockPoint.Y] = "hardblock"; //everythings is hardblock now
                }

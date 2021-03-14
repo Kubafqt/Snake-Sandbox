@@ -156,7 +156,7 @@
          this.levelpanel.Controls.Add(this.btStartLevel);
          this.levelpanel.Location = new System.Drawing.Point(227, 37);
          this.levelpanel.Name = "levelpanel";
-         this.levelpanel.Size = new System.Drawing.Size(33, 24);
+         this.levelpanel.Size = new System.Drawing.Size(32, 26);
          this.levelpanel.TabIndex = 1;
          this.levelpanel.Visible = false;
          this.levelpanel.Paint += new System.Windows.Forms.PaintEventHandler(this.levelpanel_Paint);
@@ -165,7 +165,7 @@
          // 
          this.selectChBoxPassableEdges.AutoSize = true;
          this.selectChBoxPassableEdges.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-         this.selectChBoxPassableEdges.Location = new System.Drawing.Point(86, 156);
+         this.selectChBoxPassableEdges.Location = new System.Drawing.Point(86, 154);
          this.selectChBoxPassableEdges.Name = "selectChBoxPassableEdges";
          this.selectChBoxPassableEdges.Size = new System.Drawing.Size(129, 19);
          this.selectChBoxPassableEdges.TabIndex = 18;
@@ -176,7 +176,7 @@
          // 
          this.btnEditLevel.Enabled = false;
          this.btnEditLevel.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-         this.btnEditLevel.Location = new System.Drawing.Point(326, 146);
+         this.btnEditLevel.Location = new System.Drawing.Point(301, 151);
          this.btnEditLevel.Name = "btnEditLevel";
          this.btnEditLevel.Size = new System.Drawing.Size(144, 24);
          this.btnEditLevel.TabIndex = 17;
@@ -186,7 +186,7 @@
          // btnDeleteLevel
          // 
          this.btnDeleteLevel.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-         this.btnDeleteLevel.Location = new System.Drawing.Point(326, 114);
+         this.btnDeleteLevel.Location = new System.Drawing.Point(301, 118);
          this.btnDeleteLevel.Name = "btnDeleteLevel";
          this.btnDeleteLevel.Size = new System.Drawing.Size(144, 24);
          this.btnDeleteLevel.TabIndex = 16;
@@ -197,7 +197,7 @@
          // btnDeleteSave
          // 
          this.btnDeleteSave.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-         this.btnDeleteSave.Location = new System.Drawing.Point(973, 129);
+         this.btnDeleteSave.Location = new System.Drawing.Point(891, 118);
          this.btnDeleteSave.Name = "btnDeleteSave";
          this.btnDeleteSave.Size = new System.Drawing.Size(144, 25);
          this.btnDeleteSave.TabIndex = 15;
@@ -209,7 +209,7 @@
          // 
          this.lbSaveGame.AutoSize = true;
          this.lbSaveGame.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-         this.lbSaveGame.Location = new System.Drawing.Point(721, 67);
+         this.lbSaveGame.Location = new System.Drawing.Point(639, 56);
          this.lbSaveGame.Name = "lbSaveGame";
          this.lbSaveGame.Size = new System.Drawing.Size(88, 16);
          this.lbSaveGame.TabIndex = 14;
@@ -217,7 +217,7 @@
          // 
          // tbSaveGame
          // 
-         this.tbSaveGame.Location = new System.Drawing.Point(815, 66);
+         this.tbSaveGame.Location = new System.Drawing.Point(733, 55);
          this.tbSaveGame.Name = "tbSaveGame";
          this.tbSaveGame.Size = new System.Drawing.Size(144, 20);
          this.tbSaveGame.TabIndex = 13;
@@ -227,7 +227,7 @@
          // 
          this.lbLoadGame.AutoSize = true;
          this.lbLoadGame.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-         this.lbLoadGame.Location = new System.Drawing.Point(753, 101);
+         this.lbLoadGame.Location = new System.Drawing.Point(671, 90);
          this.lbLoadGame.Name = "lbLoadGame";
          this.lbLoadGame.Size = new System.Drawing.Size(55, 16);
          this.lbLoadGame.TabIndex = 12;
@@ -237,7 +237,7 @@
          // 
          this.cmbLoadGame.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
          this.cmbLoadGame.FormattingEnabled = true;
-         this.cmbLoadGame.Location = new System.Drawing.Point(814, 100);
+         this.cmbLoadGame.Location = new System.Drawing.Point(732, 89);
          this.cmbLoadGame.Name = "cmbLoadGame";
          this.cmbLoadGame.Size = new System.Drawing.Size(144, 21);
          this.cmbLoadGame.TabIndex = 11;
@@ -245,7 +245,7 @@
          // btnLoadGame
          // 
          this.btnLoadGame.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-         this.btnLoadGame.Location = new System.Drawing.Point(973, 97);
+         this.btnLoadGame.Location = new System.Drawing.Point(891, 86);
          this.btnLoadGame.Name = "btnLoadGame";
          this.btnLoadGame.Size = new System.Drawing.Size(144, 25);
          this.btnLoadGame.TabIndex = 10;
@@ -257,7 +257,7 @@
          // 
          this.btnSaveGame.Enabled = false;
          this.btnSaveGame.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-         this.btnSaveGame.Location = new System.Drawing.Point(973, 63);
+         this.btnSaveGame.Location = new System.Drawing.Point(891, 52);
          this.btnSaveGame.Name = "btnSaveGame";
          this.btnSaveGame.Size = new System.Drawing.Size(144, 25);
          this.btnSaveGame.TabIndex = 9;
@@ -302,7 +302,7 @@
          // btnChangeDetail
          // 
          this.btnChangeDetail.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold);
-         this.btnChangeDetail.Location = new System.Drawing.Point(326, 83);
+         this.btnChangeDetail.Location = new System.Drawing.Point(301, 85);
          this.btnChangeDetail.Name = "btnChangeDetail";
          this.btnChangeDetail.Size = new System.Drawing.Size(144, 24);
          this.btnChangeDetail.TabIndex = 4;
@@ -332,7 +332,7 @@
          // btStartLevel
          // 
          this.btStartLevel.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold);
-         this.btStartLevel.Location = new System.Drawing.Point(326, 51);
+         this.btStartLevel.Location = new System.Drawing.Point(301, 51);
          this.btStartLevel.Name = "btStartLevel";
          this.btStartLevel.Size = new System.Drawing.Size(144, 24);
          this.btStartLevel.TabIndex = 0;
@@ -417,7 +417,7 @@
          // 
          this.lbBlockTitle.AutoSize = true;
          this.lbBlockTitle.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-         this.lbBlockTitle.Location = new System.Drawing.Point(43, 12);
+         this.lbBlockTitle.Location = new System.Drawing.Point(40, 15);
          this.lbBlockTitle.Name = "lbBlockTitle";
          this.lbBlockTitle.Size = new System.Drawing.Size(96, 18);
          this.lbBlockTitle.TabIndex = 10;

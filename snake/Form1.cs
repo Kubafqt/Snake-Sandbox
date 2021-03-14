@@ -56,8 +56,8 @@ namespace snake_sandbox01
          gamepanel.Size = game.gamepanelSize;
          sizeX = gamepanel.Width / width; //width of the blocks
          sizeY = gamepanel.Height / height; //height of the blocks
-         snakeArr = new int[width, height]; //asi not +1
-         blockArr = new string[width, height]; //asi not +1
+         snakeArr = new int[width, height]; //snake array
+         blockArr = new string[width, height]; //block array
          snakes.AddPlayerSnake(); //add player snake to game
          //fill select levels combobox with levels: 
          cmbSelectedLevel.Items.Add("Custom level");
@@ -287,7 +287,7 @@ namespace snake_sandbox01
          }
       }
 
-      #region Paint on panel
+      #region Paint on panels
 
       /// <summary>
       /// gamepanel paint
@@ -297,7 +297,8 @@ namespace snake_sandbox01
          Graphics gfx = e.Graphics;
          gfx.DrawRectangle(Pens.Black, 0, 0, gamepanel.Width - 1, gamepanel.Height - 1); //panel border
          int i = 0;
-         foreach (explo ex in explo.explosions.ToList()) //explosion (after snake death)
+         //paint explosion (after bot snake death):
+         foreach (explo ex in explo.explosions.ToList())
          {
             if (ex.size < ex.fullSize)
             {
@@ -308,22 +309,35 @@ namespace snake_sandbox01
             else { explo.explosions.RemoveAt(i); }
             i++;
          }
+         //paint all snakes:
          foreach (snakes snake in snakes.Snakes.ToList()) //all snakes
          {
             foreach (Point p in snake.snakePointQueue.ToList()) //snakes + array for colors
             {
                SolidBrush brush = new SolidBrush(snake.color);
                gfx.FillRectangle(brush, p.X * sizeX, p.Y * sizeY, sizeX, sizeY);
-               //Pen pen = new Pen(Brushes.DarkGreen, 2); //some interesting animation
-               //gfx.DrawRectangle(pen, p.X * sizeX, p.Y * sizeY, sizeX, sizeY);
+               //if (snake == snakes.PlayerSnake) //special animation for player snake
+               //{
+               //   Pen pen = new Pen(Brushes.DarkGreen, 2); //some interesting animation
+               //   gfx.DrawRectangle(pen, p.X * sizeX, p.Y * sizeY, sizeX, sizeY);
+               //}
             }
             if (snake.failPos.X != 2500) //2500 = reseted position (basic)
-            { gfx.FillRectangle(Brushes.PaleVioletRed, snake.failPos.X * sizeX, snake.failPos.Y * sizeY, sizeX, sizeY); }
+            { 
+               gfx.FillRectangle(Brushes.PaleVioletRed, snake.failPos.X * sizeX, snake.failPos.Y * sizeY, sizeX, sizeY); 
+            }
          }
+         //paint all foods:
          foreach (Point p in foodPointList) //foods
-         { gfx.FillRectangle(Brushes.DarkRed, p.X * sizeX, p.Y * sizeY, sizeX, sizeY); }
+         {
+            gfx.FillRectangle(Brushes.DarkRed, p.X * sizeX, p.Y * sizeY, sizeX, sizeY);
+         }
+         //paint all other blocks:
          foreach (Point p in blockPointList) //hardblocks
-         { gfx.FillRectangle(Brushes.DarkCyan, p.X * sizeX, p.Y * sizeY, sizeX, sizeY); }
+         {
+            gfx.FillRectangle(Brushes.DarkCyan, p.X * sizeX, p.Y * sizeY, sizeX, sizeY);
+         }
+         //paint gameover:
          if (game.gameover) //gameover
          {
             gfx.FillRectangle(Brushes.PaleVioletRed, snakes.PlayerSnake.failPos.X * sizeX, snakes.PlayerSnake.failPos.Y * sizeY, sizeX, sizeY);
@@ -374,7 +388,7 @@ namespace snake_sandbox01
 
       #endregion
 
-      #region selectpanel
+      #region selectpanelUI
 
       #region save and load
       /// <summary>
@@ -502,13 +516,11 @@ namespace snake_sandbox01
       /// </summary>
       private void StartSelectedLevel()
       {
-         if (game.levelCreating && SaveCurrentCreatingLevel())
+         if (game.levelCreating && SaveCurrentCreatingLevel()) //level is creating and user want to save currently creating level
          {
             return;
          }
-         levelpanel.Hide();
-         gamepanel.Show();
-         game.activePanel = "gamepanel";
+         ChangePanel(gamepanel);
          game.selectedLevelName = cmbSelectedLevel.Text;
          game.NewGame();
          selectChBoxPassableEdges.Checked = game.passableEdges;
