@@ -4,7 +4,7 @@
     <xs:appinfo source="urn:schemas-microsoft-com:xml-msdatasource">
       <DataSource DefaultConnectionIndex="0" FunctionsComponentName="QueriesTableAdapter" Modifier="AutoLayout, AnsiClass, Class, Public" SchemaSerializationMode="IncludeSchema" xmlns="urn:schemas-microsoft-com:xml-msdatasource">
         <Connections>
-          <Connection AppSettingsObjectName="Settings" AppSettingsPropertyName="ConnectionString" ConnectionStringObject="" IsAppSettingsProperty="true" Modifier="Assembly" Name="ConnectionString (Settings)" ParameterPrefix="@" PropertyReference="ApplicationSettings.snake.Properties.Settings.GlobalReference.Default.ConnectionString" Provider="System.Data.SqlClient" />
+          <Connection AppSettingsObjectName="Settings" AppSettingsPropertyName="ConnectionString" ConnectionStringObject="" IsAppSettingsProperty="true" Modifier="Assembly" Name="ConnectionString (Settings)" ParameterPrefix="@" PropertyReference="ApplicationSettings.snake_sandbox01.Properties.Settings.GlobalReference.Default.ConnectionString" Provider="System.Data.SqlClient" />
         </Connections>
         <Tables>
           <TableAdapter BaseClass="System.ComponentModel.Component" DataAccessorModifier="AutoLayout, AnsiClass, Class, Public" DataAccessorName="level_snakesTableAdapter" GeneratorDataComponentClassName="level_snakesTableAdapter" Name="level_snakes" UserDataComponentName="level_snakesTableAdapter">
@@ -245,7 +245,7 @@
   <xs:element name="GameDatabaseDataSet" msdata:IsDataSet="true" msdata:UseCurrentLocale="true" msprop:EnableTableAdapterManager="True" msprop:Generator_DataSetName="GameDatabaseDataSet" msprop:Generator_UserDSName="GameDatabaseDataSet">
     <xs:complexType>
       <xs:choice minOccurs="0" maxOccurs="unbounded">
-        <xs:element name="level_snakes" msprop:Generator_TableClassName="level_snakesDataTable" msprop:Generator_TableVarName="tablelevel_snakes" msprop:Generator_TablePropName="level_snakes" msprop:Generator_RowDeletingName="level_snakesRowDeleting" msprop:Generator_RowChangingName="level_snakesRowChanging" msprop:Generator_RowEvHandlerName="level_snakesRowChangeEventHandler" msprop:Generator_RowDeletedName="level_snakesRowDeleted" msprop:Generator_UserTableName="level_snakes" msprop:Generator_RowChangedName="level_snakesRowChanged" msprop:Generator_RowEvArgName="level_snakesRowChangeEvent" msprop:Generator_RowClassName="level_snakesRow">
+        <xs:element name="level_snakes" msprop:Generator_TableClassName="level_snakesDataTable" msprop:Generator_TableVarName="tablelevel_snakes" msprop:Generator_RowChangedName="level_snakesRowChanged" msprop:Generator_TablePropName="level_snakes" msprop:Generator_RowDeletingName="level_snakesRowDeleting" msprop:Generator_RowChangingName="level_snakesRowChanging" msprop:Generator_RowEvHandlerName="level_snakesRowChangeEventHandler" msprop:Generator_RowDeletedName="level_snakesRowDeleted" msprop:Generator_RowClassName="level_snakesRow" msprop:Generator_UserTableName="level_snakes" msprop:Generator_RowEvArgName="level_snakesRowChangeEvent">
           <xs:complexType>
             <xs:sequence>
               <xs:element name="levelNameID" msprop:Generator_ColumnVarNameInTable="columnlevelNameID" msprop:Generator_ColumnPropNameInRow="levelNameID" msprop:Generator_ColumnPropNameInTable="levelNameIDColumn" msprop:Generator_UserColumnName="levelNameID">
@@ -269,7 +269,7 @@
             </xs:sequence>
           </xs:complexType>
         </xs:element>
-        <xs:element name="levels_blocks" msprop:Generator_TableClassName="levels_blocksDataTable" msprop:Generator_TableVarName="tablelevels_blocks" msprop:Generator_TablePropName="levels_blocks" msprop:Generator_RowDeletingName="levels_blocksRowDeleting" msprop:Generator_RowChangingName="levels_blocksRowChanging" msprop:Generator_RowEvHandlerName="levels_blocksRowChangeEventHandler" msprop:Generator_RowDeletedName="levels_blocksRowDeleted" msprop:Generator_UserTableName="levels_blocks" msprop:Generator_RowChangedName="levels_blocksRowChanged" msprop:Generator_RowEvArgName="levels_blocksRowChangeEvent" msprop:Generator_RowClassName="levels_blocksRow">
+        <xs:element name="levels_blocks" msprop:Generator_TableClassName="levels_blocksDataTable" msprop:Generator_TableVarName="tablelevels_blocks" msprop:Generator_RowChangedName="levels_blocksRowChanged" msprop:Generator_TablePropName="levels_blocks" msprop:Generator_RowDeletingName="levels_blocksRowDeleting" msprop:Generator_RowChangingName="levels_blocksRowChanging" msprop:Generator_RowEvHandlerName="levels_blocksRowChangeEventHandler" msprop:Generator_RowDeletedName="levels_blocksRowDeleted" msprop:Generator_RowClassName="levels_blocksRow" msprop:Generator_UserTableName="levels_blocks" msprop:Generator_RowEvArgName="levels_blocksRowChangeEvent">
           <xs:complexType>
             <xs:sequence>
               <xs:element name="levelNameID" msprop:Generator_ColumnVarNameInTable="columnlevelNameID" msprop:Generator_ColumnPropNameInRow="levelNameID" msprop:Generator_ColumnPropNameInTable="levelNameIDColumn" msprop:Generator_UserColumnName="levelNameID">
@@ -291,7 +291,7 @@
             </xs:sequence>
           </xs:complexType>
         </xs:element>
-        <xs:element name="levels_info" msprop:Generator_TableClassName="levels_infoDataTable" msprop:Generator_TableVarName="tablelevels_info" msprop:Generator_TablePropName="levels_info" msprop:Generator_RowDeletingName="levels_infoRowDeleting" msprop:Generator_RowChangingName="levels_infoRowChanging" msprop:Generator_RowEvHandlerName="levels_infoRowChangeEventHandler" msprop:Generator_RowDeletedName="levels_infoRowDeleted" msprop:Generator_UserTableName="levels_info" msprop:Generator_RowChangedName="levels_infoRowChanged" msprop:Generator_RowEvArgName="levels_infoRowChangeEvent" msprop:Generator_RowClassName="levels_infoRow">
+        <xs:element name="levels_info" msprop:Generator_TableClassName="levels_infoDataTable" msprop:Generator_TableVarName="tablelevels_info" msprop:Generator_RowChangedName="levels_infoRowChanged" msprop:Generator_TablePropName="levels_info" msprop:Generator_RowDeletingName="levels_infoRowDeleting" msprop:Generator_RowChangingName="levels_infoRowChanging" msprop:Generator_RowEvHandlerName="levels_infoRowChangeEventHandler" msprop:Generator_RowDeletedName="levels_infoRowDeleted" msprop:Generator_RowClassName="levels_infoRow" msprop:Generator_UserTableName="levels_info" msprop:Generator_RowEvArgName="levels_infoRowChangeEvent">
           <xs:complexType>
             <xs:sequence>
               <xs:element name="levelNameID" msprop:Generator_ColumnVarNameInTable="columnlevelNameID" msprop:Generator_ColumnPropNameInRow="levelNameID" msprop:Generator_ColumnPropNameInTable="levelNameIDColumn" msprop:Generator_UserColumnName="levelNameID">
@@ -307,7 +307,7 @@
             </xs:sequence>
           </xs:complexType>
         </xs:element>
-        <xs:element name="savegame_blocks" msprop:Generator_TableClassName="savegame_blocksDataTable" msprop:Generator_TableVarName="tablesavegame_blocks" msprop:Generator_TablePropName="savegame_blocks" msprop:Generator_RowDeletingName="savegame_blocksRowDeleting" msprop:Generator_RowChangingName="savegame_blocksRowChanging" msprop:Generator_RowEvHandlerName="savegame_blocksRowChangeEventHandler" msprop:Generator_RowDeletedName="savegame_blocksRowDeleted" msprop:Generator_UserTableName="savegame_blocks" msprop:Generator_RowChangedName="savegame_blocksRowChanged" msprop:Generator_RowEvArgName="savegame_blocksRowChangeEvent" msprop:Generator_RowClassName="savegame_blocksRow">
+        <xs:element name="savegame_blocks" msprop:Generator_TableClassName="savegame_blocksDataTable" msprop:Generator_TableVarName="tablesavegame_blocks" msprop:Generator_RowChangedName="savegame_blocksRowChanged" msprop:Generator_TablePropName="savegame_blocks" msprop:Generator_RowDeletingName="savegame_blocksRowDeleting" msprop:Generator_RowChangingName="savegame_blocksRowChanging" msprop:Generator_RowEvHandlerName="savegame_blocksRowChangeEventHandler" msprop:Generator_RowDeletedName="savegame_blocksRowDeleted" msprop:Generator_RowClassName="savegame_blocksRow" msprop:Generator_UserTableName="savegame_blocks" msprop:Generator_RowEvArgName="savegame_blocksRowChangeEvent">
           <xs:complexType>
             <xs:sequence>
               <xs:element name="saveGameNameID" msprop:Generator_ColumnVarNameInTable="columnsaveGameNameID" msprop:Generator_ColumnPropNameInRow="saveGameNameID" msprop:Generator_ColumnPropNameInTable="saveGameNameIDColumn" msprop:Generator_UserColumnName="saveGameNameID">
@@ -329,7 +329,7 @@
             </xs:sequence>
           </xs:complexType>
         </xs:element>
-        <xs:element name="savegame_info" msprop:Generator_TableClassName="savegame_infoDataTable" msprop:Generator_TableVarName="tablesavegame_info" msprop:Generator_TablePropName="savegame_info" msprop:Generator_RowDeletingName="savegame_infoRowDeleting" msprop:Generator_RowChangingName="savegame_infoRowChanging" msprop:Generator_RowEvHandlerName="savegame_infoRowChangeEventHandler" msprop:Generator_RowDeletedName="savegame_infoRowDeleted" msprop:Generator_UserTableName="savegame_info" msprop:Generator_RowChangedName="savegame_infoRowChanged" msprop:Generator_RowEvArgName="savegame_infoRowChangeEvent" msprop:Generator_RowClassName="savegame_infoRow">
+        <xs:element name="savegame_info" msprop:Generator_TableClassName="savegame_infoDataTable" msprop:Generator_TableVarName="tablesavegame_info" msprop:Generator_RowChangedName="savegame_infoRowChanged" msprop:Generator_TablePropName="savegame_info" msprop:Generator_RowDeletingName="savegame_infoRowDeleting" msprop:Generator_RowChangingName="savegame_infoRowChanging" msprop:Generator_RowEvHandlerName="savegame_infoRowChangeEventHandler" msprop:Generator_RowDeletedName="savegame_infoRowDeleted" msprop:Generator_RowClassName="savegame_infoRow" msprop:Generator_UserTableName="savegame_info" msprop:Generator_RowEvArgName="savegame_infoRowChangeEvent">
           <xs:complexType>
             <xs:sequence>
               <xs:element name="saveGameNameID" msprop:Generator_ColumnVarNameInTable="columnsaveGameNameID" msprop:Generator_ColumnPropNameInRow="saveGameNameID" msprop:Generator_ColumnPropNameInTable="saveGameNameIDColumn" msprop:Generator_UserColumnName="saveGameNameID">
@@ -352,7 +352,7 @@
             </xs:sequence>
           </xs:complexType>
         </xs:element>
-        <xs:element name="savegame_snakes" msprop:Generator_TableClassName="savegame_snakesDataTable" msprop:Generator_TableVarName="tablesavegame_snakes" msprop:Generator_TablePropName="savegame_snakes" msprop:Generator_RowDeletingName="savegame_snakesRowDeleting" msprop:Generator_RowChangingName="savegame_snakesRowChanging" msprop:Generator_RowEvHandlerName="savegame_snakesRowChangeEventHandler" msprop:Generator_RowDeletedName="savegame_snakesRowDeleted" msprop:Generator_UserTableName="savegame_snakes" msprop:Generator_RowChangedName="savegame_snakesRowChanged" msprop:Generator_RowEvArgName="savegame_snakesRowChangeEvent" msprop:Generator_RowClassName="savegame_snakesRow">
+        <xs:element name="savegame_snakes" msprop:Generator_TableClassName="savegame_snakesDataTable" msprop:Generator_TableVarName="tablesavegame_snakes" msprop:Generator_RowChangedName="savegame_snakesRowChanged" msprop:Generator_TablePropName="savegame_snakes" msprop:Generator_RowDeletingName="savegame_snakesRowDeleting" msprop:Generator_RowChangingName="savegame_snakesRowChanging" msprop:Generator_RowEvHandlerName="savegame_snakesRowChangeEventHandler" msprop:Generator_RowDeletedName="savegame_snakesRowDeleted" msprop:Generator_RowClassName="savegame_snakesRow" msprop:Generator_UserTableName="savegame_snakes" msprop:Generator_RowEvArgName="savegame_snakesRowChangeEvent">
           <xs:complexType>
             <xs:sequence>
               <xs:element name="saveGameNameID" msprop:Generator_ColumnVarNameInTable="columnsaveGameNameID" msprop:Generator_ColumnPropNameInRow="saveGameNameID" msprop:Generator_ColumnPropNameInTable="saveGameNameIDColumn" msprop:Generator_UserColumnName="saveGameNameID">
@@ -386,7 +386,7 @@
             </xs:sequence>
           </xs:complexType>
         </xs:element>
-        <xs:element name="savegame_snakesPointQueue" msprop:Generator_TableClassName="savegame_snakesPointQueueDataTable" msprop:Generator_TableVarName="tablesavegame_snakesPointQueue" msprop:Generator_TablePropName="savegame_snakesPointQueue" msprop:Generator_RowDeletingName="savegame_snakesPointQueueRowDeleting" msprop:Generator_RowChangingName="savegame_snakesPointQueueRowChanging" msprop:Generator_RowEvHandlerName="savegame_snakesPointQueueRowChangeEventHandler" msprop:Generator_RowDeletedName="savegame_snakesPointQueueRowDeleted" msprop:Generator_UserTableName="savegame_snakesPointQueue" msprop:Generator_RowChangedName="savegame_snakesPointQueueRowChanged" msprop:Generator_RowEvArgName="savegame_snakesPointQueueRowChangeEvent" msprop:Generator_RowClassName="savegame_snakesPointQueueRow">
+        <xs:element name="savegame_snakesPointQueue" msprop:Generator_TableClassName="savegame_snakesPointQueueDataTable" msprop:Generator_TableVarName="tablesavegame_snakesPointQueue" msprop:Generator_RowChangedName="savegame_snakesPointQueueRowChanged" msprop:Generator_TablePropName="savegame_snakesPointQueue" msprop:Generator_RowDeletingName="savegame_snakesPointQueueRowDeleting" msprop:Generator_RowChangingName="savegame_snakesPointQueueRowChanging" msprop:Generator_RowEvHandlerName="savegame_snakesPointQueueRowChangeEventHandler" msprop:Generator_RowDeletedName="savegame_snakesPointQueueRowDeleted" msprop:Generator_RowClassName="savegame_snakesPointQueueRow" msprop:Generator_UserTableName="savegame_snakesPointQueue" msprop:Generator_RowEvArgName="savegame_snakesPointQueueRowChangeEvent">
           <xs:complexType>
             <xs:sequence>
               <xs:element name="saveGameNameID" msprop:Generator_ColumnVarNameInTable="columnsaveGameNameID" msprop:Generator_ColumnPropNameInRow="saveGameNameID" msprop:Generator_ColumnPropNameInTable="saveGameNameIDColumn" msprop:Generator_UserColumnName="saveGameNameID">

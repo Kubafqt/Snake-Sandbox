@@ -11,9 +11,8 @@ using System.Windows.Forms;
 using System.Text.RegularExpressions;
 using System.Data.SqlClient;
 using System.IO;
-using snakezz;
 
-namespace snakezz
+namespace snake_sandbox01
 {
    public partial class Form1 : Form
    {
@@ -126,7 +125,10 @@ namespace snakezz
       private void DisablePauseOnMovementKeydown()
       {
          if (!game.gameover && game.activePanel == gamepanel.Name) //disable pause when not gameover and active panel is gamepanel
-         { game.Pause(2); }
+         { 
+            game.Pause(2);
+            game.gameIsRunning = true;
+         }
       }
 
       /// <summary>
@@ -250,21 +252,12 @@ namespace snakezz
                }
                else if (blockArr[snake.x, snake.y] != "food" && snake.snakeLength <= snake.startSnakeLength)//snake.thisStartSnakeLength && snake == snakes.PlayerSnake) //snake growth
                {
-                  //if (blockArr[snake.x, snake.y] == "food") //food eaten when growth - later, not properly functional now
-                  //{
-                  //   snake.thisStartSnakeLength++;
-                  //   FoodEaten(snake);
-                  //}
-                  //else
-                  //{
-                  //   snake.snakeLength++;
-                  //}
                   snake.snakeLength++;
                   lbScore.Text = $"SnakeLenght : { snakes.PlayerSnake.snakeLength}";
                }
-               else //if (blockArr[snake.x, snake.y] == "food") //food eaten 
+               else
                {
-                  FoodEaten(snake); //or snake.FoodEaten() can be
+                  FoodEaten(snake); //or snake.FoodEaten()
                }
             }
          }
@@ -404,6 +397,7 @@ namespace snakezz
             { cmbLoadGame.Items.Add(tbSaveGame.Text); }
             cmbLoadGame.SelectedItem = tbSaveGame.Text; //select currently added level
             tbSaveGame.Clear(); //clear saveGame textbox after save game proceed
+            game.gameIsRunning = false; //game is not running when save level
             if (!cmbLoadGame.Enabled || !btnLoadGame.Enabled || !btnDeleteSave.Enabled)
             {
                EnableLoadAndDeleteControls(); //enable loadgame controls if not enabled
@@ -446,7 +440,6 @@ namespace snakezz
             if (GameSaveLoad.LoadGame(cmbLoadGame.SelectedItem.ToString())) //try load game from database
             {
                ChangePanel(gamepanel); //switch panel in form app
-               game.gameIsRunning = true;
                lbScore.Text = $"SnakeLenght : { snakes.PlayerSnake.snakeLength}";
                snakes.AllBotSnakesCheckClosestFood();
             }
@@ -526,27 +519,27 @@ namespace snakezz
       /// </summary>
       private void btnChangeDetail_Click(object sender, EventArgs e)
       {
-         SelectedLevelGameAttribs();
-         snakes.AllBotSnakesCheckClosestFood();
+         ChangeLevelGameAttribs(); //change selected level level atributes
+         snakes.AllBotSnakesCheckClosestFood(); //all snakes bots check for closest food
       }
 
       /// <summary>
-      /// Select and edit some level attributes from textboxes.
+      /// Change selected level attributes.
       /// </summary>
-      private void SelectedLevelGameAttribs()
+      private void ChangeLevelGameAttribs()
       {
-         int foodNumber = 0;
-         int interval = 0;
-         int.TryParse(tbFoodNumber.Text, out foodNumber);
-         int.TryParse(tbInterval.Text, out interval);
-         if (foodNumber > 0 && foodNumber < game.foodNumber) //change tracked food, when is less (not index out of range exception)
+         int foodCount = 0;
+         int interval = 0; //new game interval
+         int.TryParse(tbFoodNumber.Text, out foodCount); //try to parse new found count from textbox
+         int.TryParse(tbInterval.Text, out interval); //try to parse new interval from textbox
+         if (foodCount > 0 && foodCount < game.foodNumber) //change tracked food, when is less (not index out of range exception)
          { snakes.FoodCountChanged(); }
-         game.foodNumber = foodNumber > 0 ? foodNumber : game.foodNumber;
+         game.foodNumber = foodCount > 0 ? foodCount : game.foodNumber;
          game.interval = interval > 0 ? interval : game.interval;
-         game.SpawnAllFood();
-         timer.Interval = game.interval;
-         tbIntervalOpen.Text = game.interval.ToString();
-         game.passableEdges = selectChBoxPassableEdges.Checked;
+         game.SpawnAllFood(true); //delete all old foods and spawn new foods
+         timer.Interval = game.interval; //change game timer interval (gamespeed)
+         tbIntervalOpen.Text = game.interval.ToString(); //change open control interval textbox by new interval
+         game.passableEdges = selectChBoxPassableEdges.Checked; //change passable edges attribute from by checkbox
       }
 
       /// <summary>
@@ -558,9 +551,9 @@ namespace snakezz
          if (dialogResult == DialogResult.Yes && CustomLevels.DeleteLevel(cmbSelectedLevel.SelectedItem.ToString())) //user choose to save game first
          {
             cmbSelectedLevel.Items.Remove(cmbSelectedLevel.SelectedItem.ToString());
+            cmbSelectedLevel.SelectedIndex = 0;
          }
       }
-
 
       /// <summary>
       /// Fill savegame combobox with saved game records from database.
@@ -983,6 +976,7 @@ namespace snakezz
          return false;
       }
 
+      //form-resize (unused):
       //private void Form1_Resize(object sender, EventArgs e)
       //{
       //   //foreach (Control control in Controls)
@@ -1010,6 +1004,7 @@ namespace snakezz
             return handleParam;
          }
       }
+
       #endregion
 
    }

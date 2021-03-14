@@ -6,8 +6,8 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{717B102F-BD8E-4C67-9D90-539CE77C0624}</ProjectGuid>
     <OutputType>WinExe</OutputType>
-    <RootNamespace>snake</RootNamespace>
-    <AssemblyName>snake</AssemblyName>
+    <RootNamespace>snake_sandbox01</RootNamespace>
+    <AssemblyName>Snake Sandbox</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
@@ -92,6 +92,7 @@
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
     </Compile>
     <None Include="GameDatabaseDataSet.xsc">
       <DependentUpon>GameDatabaseDataSet.xsd</DependentUpon>

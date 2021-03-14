@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace snakezz
+namespace snake_sandbox01
 {
     static class Program
     {

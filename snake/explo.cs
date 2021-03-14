@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Drawing;
 
-namespace snakezz
+namespace snake_sandbox01
 {
    class explo
    {

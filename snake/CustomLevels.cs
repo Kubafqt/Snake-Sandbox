@@ -1,13 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Data.SqlClient;
 using System.Windows.Forms;
 using System.Drawing;
 
-namespace snakezz
+namespace snake_sandbox01
 {
    class CustomLevels
    {
@@ -90,7 +87,7 @@ namespace snakezz
                SqlDataReader reader = cmd.ExecuteReader();
                while (reader.Read()) //load level info
                {
-                  //game.interval = Convert.IsDBNull((bool)reader["interval"]) ? game.interval : (int)reader["interval"];
+                  //game.interval = Convert.IsDBNull((bool)reader["interval"]) ? game.interval : (int)reader["interval"]; later
                   game.foodNumber = (int)reader["foodNumber"];
                   game.passableEdges = (bool)reader["passableEdges"];
                }

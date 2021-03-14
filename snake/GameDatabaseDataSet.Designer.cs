@@ -10,7 +10,7 @@
 
 #pragma warning disable 1591
 
-namespace snake {
+namespace snake_sandbox01 {
     
     
     /// <summary>
@@ -3650,7 +3650,7 @@ namespace snake {
         }
     }
 }
-namespace snake.GameDatabaseDataSetTableAdapters {
+namespace snake_sandbox01.GameDatabaseDataSetTableAdapters {
     
     
     /// <summary>
@@ -3799,7 +3799,7 @@ namespace snake.GameDatabaseDataSetTableAdapters {
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
         private void InitConnection() {
             this._connection = new global::System.Data.SqlClient.SqlConnection();
-            this._connection.ConnectionString = global::snake.Properties.Settings.Default.ConnectionString;
+            this._connection.ConnectionString = global::snake_sandbox01.Properties.Settings.Default.ConnectionString;
         }
         
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -4055,7 +4055,7 @@ namespace snake.GameDatabaseDataSetTableAdapters {
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
         private void InitConnection() {
             this._connection = new global::System.Data.SqlClient.SqlConnection();
-            this._connection.ConnectionString = global::snake.Properties.Settings.Default.ConnectionString;
+            this._connection.ConnectionString = global::snake_sandbox01.Properties.Settings.Default.ConnectionString;
         }
         
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -4298,7 +4298,7 @@ namespace snake.GameDatabaseDataSetTableAdapters {
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
         private void InitConnection() {
             this._connection = new global::System.Data.SqlClient.SqlConnection();
-            this._connection.ConnectionString = global::snake.Properties.Settings.Default.ConnectionString;
+            this._connection.ConnectionString = global::snake_sandbox01.Properties.Settings.Default.ConnectionString;
         }
         
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -4541,7 +4541,7 @@ namespace snake.GameDatabaseDataSetTableAdapters {
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
         private void InitConnection() {
             this._connection = new global::System.Data.SqlClient.SqlConnection();
-            this._connection.ConnectionString = global::snake.Properties.Settings.Default.ConnectionString;
+            this._connection.ConnectionString = global::snake_sandbox01.Properties.Settings.Default.ConnectionString;
         }
         
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -4787,7 +4787,7 @@ namespace snake.GameDatabaseDataSetTableAdapters {
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
         private void InitConnection() {
             this._connection = new global::System.Data.SqlClient.SqlConnection();
-            this._connection.ConnectionString = global::snake.Properties.Settings.Default.ConnectionString;
+            this._connection.ConnectionString = global::snake_sandbox01.Properties.Settings.Default.ConnectionString;
         }
         
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -5048,7 +5048,7 @@ namespace snake.GameDatabaseDataSetTableAdapters {
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
         private void InitConnection() {
             this._connection = new global::System.Data.SqlClient.SqlConnection();
-            this._connection.ConnectionString = global::snake.Properties.Settings.Default.ConnectionString;
+            this._connection.ConnectionString = global::snake_sandbox01.Properties.Settings.Default.ConnectionString;
         }
         
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -5321,7 +5321,7 @@ namespace snake.GameDatabaseDataSetTableAdapters {
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "16.0.0.0")]
         private void InitConnection() {
             this._connection = new global::System.Data.SqlClient.SqlConnection();
-            this._connection.ConnectionString = global::snake.Properties.Settings.Default.ConnectionString;
+            this._connection.ConnectionString = global::snake_sandbox01.Properties.Settings.Default.ConnectionString;
         }
         
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]

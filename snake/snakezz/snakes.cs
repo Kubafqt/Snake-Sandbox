@@ -2,9 +2,8 @@
 using System.Drawing;
 using System.Collections.Generic;
 using System.Linq;
-using snake;
 
-namespace snakezz
+namespace snake_sandbox01
 {
 	class snakes
 	{

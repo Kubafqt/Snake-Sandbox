@@ -2,9 +2,8 @@
 using System.Linq;
 using System.Drawing;
 using System.Windows.Forms;
-using snakezz;
 
-namespace snakezz
+namespace snake_sandbox01
 {
    class game
    {
@@ -36,15 +35,15 @@ namespace snakezz
       {
          ResetGame();
          snakes.Snakes.Add(snakes.PlayerSnake); //on position 0     
-         SpawnAllFood();
-         if (CustomLevels.TestLevelExist(selectedLevelName))
+         if (CustomLevels.TestLevelExist(selectedLevelName)) //load custom level from database if exist
          {
             CustomLevels.LoadLevel(selectedLevelName, true);
          }
-         else
+         else //load default level defined in code
          {
             SelectLevel(defaultLevel);
          }
+         SpawnAllFood();
          foreach (snakes snake in snakes.Snakes.ToList())
          {
             newStartPoint:  //basic for now
@@ -97,13 +96,16 @@ namespace snakezz
       /// <summary>
       /// spawn food to game
       /// </summary>
-      public static void SpawnAllFood()
+      public static void SpawnAllFood(bool deleteOldFoods = false)
       {
-         Form1.foodPointList.Clear();
-         for (int x = 0; x < Form1.width; x++) //delete old food
+         if (deleteOldFoods)
          {
-            for (int y = 0; y < Form1.height; y++)
-            { if (Form1.blockArr[x, y] == "food") { Form1.blockArr[x, y] = string.Empty; } }
+            Form1.foodPointList.Clear();
+            for (int x = 0; x < Form1.width; x++) //delete old food
+            {
+               for (int y = 0; y < Form1.height; y++)
+               { if (Form1.blockArr[x, y] == "food") { Form1.blockArr[x, y] = string.Empty; } }
+            }
          }
          for (int i = 0; i < foodNumber; i++) //spawn new food
          {
