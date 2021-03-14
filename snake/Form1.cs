@@ -309,7 +309,7 @@ namespace snake_sandbox01
          gfx.DrawRectangle(Pens.Black, 0, 0, gamepanel.Width - 1, gamepanel.Height - 1); //panel border
          int i = 0;
          //paint explosion (after bot snake death):
-         try //can be weird
+         try //can be sometimes weird
          {
             foreach (explo ex in explo.explosions.ToList())
             {
@@ -336,10 +336,6 @@ namespace snake_sandbox01
                //   Pen pen = new Pen(Brushes.DarkGreen, 2); //some interesting animation
                //   gfx.DrawRectangle(pen, p.X * sizeX, p.Y * sizeY, sizeX, sizeY);
                //}
-            }
-            if (snake.failPos.X != 2500) //2500 = reseted position (basic)
-            { 
-               gfx.FillRectangle(Brushes.PaleVioletRed, snake.failPos.X * sizeX, snake.failPos.Y * sizeY, sizeX, sizeY); 
             }
          }
          //paint all foods:

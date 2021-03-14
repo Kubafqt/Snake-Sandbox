@@ -16,7 +16,7 @@ namespace snake_sandbox01
 		public int snakeLength;
 		public int startSnakeLength;
 		public bool dead = false;
-		public Point failPos = new Point(2500, 0);
+		public Point failPos = new Point();
 		public int selectedFood = -1;
 		public bool changedDirection = false;
 		public string vectTracking = ""; //bot snake current moving vector

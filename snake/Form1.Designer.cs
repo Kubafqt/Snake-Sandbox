@@ -35,6 +35,8 @@
          this.selectLevelToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
          this.createLevelsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
          this.levelpanel = new System.Windows.Forms.Panel();
+         this.lbHelp = new System.Windows.Forms.Label();
+         this.btnHelp = new System.Windows.Forms.Button();
          this.selectChBoxPassableEdges = new System.Windows.Forms.CheckBox();
          this.btnEditLevel = new System.Windows.Forms.Button();
          this.btnDeleteLevel = new System.Windows.Forms.Button();
@@ -77,8 +79,6 @@
          this.createpanelUI = new System.Windows.Forms.Panel();
          this.checkBoxPassableEdges = new System.Windows.Forms.CheckBox();
          this.btnCreateLevelStart = new System.Windows.Forms.Button();
-         this.btnHelp = new System.Windows.Forms.Button();
-         this.lbHelp = new System.Windows.Forms.Label();
          this.menuStrip1.SuspendLayout();
          this.levelpanel.SuspendLayout();
          this.blockPanel.SuspendLayout();
@@ -160,10 +160,32 @@
          this.levelpanel.Controls.Add(this.btStartLevel);
          this.levelpanel.Location = new System.Drawing.Point(227, 37);
          this.levelpanel.Name = "levelpanel";
-         this.levelpanel.Size = new System.Drawing.Size(29, 24);
+         this.levelpanel.Size = new System.Drawing.Size(34, 21);
          this.levelpanel.TabIndex = 1;
          this.levelpanel.Visible = false;
          this.levelpanel.Paint += new System.Windows.Forms.PaintEventHandler(this.levelpanel_Paint);
+         // 
+         // lbHelp
+         // 
+         this.lbHelp.AutoSize = true;
+         this.lbHelp.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+         this.lbHelp.Location = new System.Drawing.Point(92, 270);
+         this.lbHelp.Name = "lbHelp";
+         this.lbHelp.Size = new System.Drawing.Size(66, 16);
+         this.lbHelp.TabIndex = 20;
+         this.lbHelp.Text = "help text";
+         this.lbHelp.Visible = false;
+         // 
+         // btnHelp
+         // 
+         this.btnHelp.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+         this.btnHelp.Location = new System.Drawing.Point(70, 214);
+         this.btnHelp.Name = "btnHelp";
+         this.btnHelp.Size = new System.Drawing.Size(106, 37);
+         this.btnHelp.TabIndex = 19;
+         this.btnHelp.Text = "Help ";
+         this.btnHelp.UseVisualStyleBackColor = true;
+         this.btnHelp.Click += new System.EventHandler(this.btnHelp_Click);
          // 
          // selectChBoxPassableEdges
          // 
@@ -606,28 +628,6 @@
          this.btnCreateLevelStart.Text = "Start Creating Level";
          this.btnCreateLevelStart.UseVisualStyleBackColor = true;
          this.btnCreateLevelStart.Click += new System.EventHandler(this.btnCreateLevelStart_Click);
-         // 
-         // btnHelp
-         // 
-         this.btnHelp.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-         this.btnHelp.Location = new System.Drawing.Point(70, 214);
-         this.btnHelp.Name = "btnHelp";
-         this.btnHelp.Size = new System.Drawing.Size(106, 37);
-         this.btnHelp.TabIndex = 19;
-         this.btnHelp.Text = "Help ";
-         this.btnHelp.UseVisualStyleBackColor = true;
-         this.btnHelp.Click += new System.EventHandler(this.btnHelp_Click);
-         // 
-         // lbHelp
-         // 
-         this.lbHelp.AutoSize = true;
-         this.lbHelp.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-         this.lbHelp.Location = new System.Drawing.Point(82, 275);
-         this.lbHelp.Name = "lbHelp";
-         this.lbHelp.Size = new System.Drawing.Size(66, 16);
-         this.lbHelp.TabIndex = 20;
-         this.lbHelp.Text = "help text";
-         this.lbHelp.Visible = false;
          // 
          // Form1
          // 

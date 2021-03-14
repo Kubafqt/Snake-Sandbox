@@ -86,7 +86,6 @@ namespace snake_sandbox01
          foreach (snakes snake in snakes.Snakes.ToList())
          {
             snake.snakeLength = 0;
-            snake.failPos.X = 2500; //hide failpos
             snake.snakePointQueue.Clear();
          }
          snakes.Snakes.Clear();
