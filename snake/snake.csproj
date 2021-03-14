@@ -62,7 +62,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="blocks.cs" />
-    <Compile Include="explo.cs" />
+    <Compile Include="snakezz\explo.cs" />
     <Compile Include="Form1.cs">
       <SubType>Form</SubType>
     </Compile>
