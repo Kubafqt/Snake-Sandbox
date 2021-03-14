@@ -854,7 +854,7 @@ namespace snake_sandbox01
          }
          if (addSnakePanel.Visible)
          {
-            tb.Text = $"{(e.X) / sizeX};{(e.Y) / sizeY}";
+            tbSnakePoint.Text = $"{(e.X) / sizeX};{(e.Y) / sizeY}";
          }
       }
 
