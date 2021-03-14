@@ -31,10 +31,39 @@ namespace snake_sandbox01
       public static Timer timer;
       Font font = new Font("Consolas", 25.0f); //font of game-over announcement
 
-      //constructor:
+      #region constructor
       public Form1()
       {
          InitializeComponent();
+         LoadBasicVariables(); //load basic game variables
+         SetBasicSizesAndLocations(); //set panels and form size and location
+         sizeX = gamepanel.Width / width; //width of the blocks
+         sizeY = gamepanel.Height / height; //height of the blocks
+         snakeArr = new int[width, height]; //snake array
+         blockArr = new string[width, height]; //block array
+         snakes.AddPlayerSnake(); //add player snake to game
+         FillComboBoxWithSaveGames(); //add save games to cmbSaveGame
+         FillComboBoxWithLevels(); //add created levels to cmbSelectedLevel
+         //get basic game properties in selectpanel from default loaded level:
+         try
+         {
+            cmbSelectedLevel.SelectedIndex = 0;
+            tbInterval.Text = game.interval.ToString();
+            tbFoodNumber.Text = game.foodNumber.ToString();
+            tbIntervalOpen.Text = game.interval.ToString();
+         } 
+         catch (Exception e) 
+         {
+            MessageBox.Show($"{e.GetType()}");
+         }
+         this.KeyPreview = true; //keydown better focus
+      }
+
+      /// <summary>
+      /// Load basic game variables.
+      /// </summary>
+      private void LoadBasicVariables()
+      {
          random = new Random();
          width = 120; height = 60; //width and height of array
          lbGameSize.Text = $"game size: {width}, {height} (x,y)";
@@ -42,6 +71,15 @@ namespace snake_sandbox01
          timer.Tick += new EventHandler(timer_tick);
          timer.Interval = game.interval;
          lbScore.Text = ""; //reset score label
+         tbFoodNumber.MaxLength = 3; //food number textbox
+         tbCFoodnumber.MaxLength = 3; //food number textbox in create panel
+      }
+
+      /// <summary>
+      /// Set panels and form size and location.
+      /// </summary>
+      private void SetBasicSizesAndLocations()
+      {
          this.Size = new Size(defaultFormWidth, defaultFormHeight); //default form size
          foreach (Control c in Controls) //assign default panels size and location 
          {
@@ -54,33 +92,10 @@ namespace snake_sandbox01
          game.activePanel = gamepanel.Name;
          gamepanel.Location = game.panelLocation;
          gamepanel.Size = game.gamepanelSize;
-         sizeX = gamepanel.Width / width; //width of the blocks
-         sizeY = gamepanel.Height / height; //height of the blocks
-         snakeArr = new int[width, height]; //snake array
-         blockArr = new string[width, height]; //block array
-         snakes.AddPlayerSnake(); //add player snake to game
-         //fill select levels combobox with levels: 
-         cmbSelectedLevel.Items.Add("Custom level");
-         for (int i = 0; i <= game.levelsNumb; i++) //without new levels in database yet
-         {
-            cmbSelectedLevel.Items.Add($"level " + i);
-         }
-         FillComboBoxWithSaveGames(); //add save games to cmbSaveGame
-         FillComboBoxWithLevels(); //add created levels to cmbSelectedLevel
-         try //get basic game properties from default loaded level
-         {
-            cmbSelectedLevel.SelectedIndex = 0;
-            tbInterval.Text = game.interval.ToString();
-            tbFoodNumber.Text = game.foodNumber.ToString();
-            tbIntervalOpen.Text = game.interval.ToString();
-         } 
-         catch (Exception e) { MessageBox.Show($"{e.GetType()}"); }
-         tbFoodNumber.MaxLength = 3;
-         tbCFoodnumber.MaxLength = 3;
-         this.KeyPreview = true;
       }
+      #endregion
 
-      //keydown:
+      #region form keydown
       private void Form1_KeyDown(object sender, KeyEventArgs e)
       {
          Keys key = e.KeyCode;
@@ -131,9 +146,9 @@ namespace snake_sandbox01
          }
       }
 
-      /// <summary>
-      /// game timer
-      /// </summary>
+      #endregion
+
+      #region main game timer
       private void timer_tick(object sender, EventArgs e)
       {
          snakes.PlayerSnake.direction = directKeyDown;
@@ -287,6 +302,8 @@ namespace snake_sandbox01
          }
       }
 
+      #endregion
+
       #region Paint on panels
 
       /// <summary>
@@ -392,7 +409,7 @@ namespace snake_sandbox01
 
       #region save and load
       /// <summary>
-      /// Save game button.
+      /// Button for save game.
       /// </summary>
       private void btnSaveGame_Click(object sender, EventArgs e)
       {
@@ -435,7 +452,7 @@ namespace snake_sandbox01
       }
 
       /// <summary>
-      /// Load saved game button.
+      /// Button for load saved game.
       /// </summary>
       private void btnLoadGame_Click(object sender, EventArgs e)
       {
@@ -465,7 +482,7 @@ namespace snake_sandbox01
       }
 
       /// <summary>
-      /// Delete saved game button.
+      /// Button for delete saved game.
       /// </summary>
       private void btnDeleteSave_Click(object sender, EventArgs e)
       {
@@ -498,9 +515,9 @@ namespace snake_sandbox01
 
       #endregion save and load
 
-      #region level select
+      #region select level
       /// <summary>
-      /// Start selected level button.
+      /// Button for start selected level.
       /// </summary>
       private void btnStartLevel_Click(object sender, EventArgs e)
       {
@@ -520,10 +537,10 @@ namespace snake_sandbox01
          {
             return;
          }
-         ChangePanel(gamepanel);
+         ChangePanel(gamepanel); //change panel to gamepanel
          game.selectedLevelName = cmbSelectedLevel.Text;
          game.NewGame();
-         selectChBoxPassableEdges.Checked = game.passableEdges;
+         selectChBoxPassableEdges.Checked = game.passableEdges; //checkbox for passable edges in selectpanel
       }
 
       /// <summary>
@@ -555,7 +572,7 @@ namespace snake_sandbox01
       }
 
       /// <summary>
-      /// Delete selected level button.
+      /// Button for delete selected level.
       /// </summary>
       private void btnDeleteLevel_Click(object sender, EventArgs e)
       {
@@ -608,11 +625,11 @@ namespace snake_sandbox01
 
       #endregion level select
 
-      #endregion selectpanel
+      #endregion select level
 
       #region createpanelUI
       /// <summary>
-      /// Enable start create level button.
+      /// Button to enable start creating level.
       /// </summary>
       private void btnCreateLevelStart_Click(object sender, EventArgs e)
       {
@@ -642,7 +659,7 @@ namespace snake_sandbox01
          checkBoxPassableEdges.Checked = enable;
          checkBoxPassableEdges.Enabled = enable;
          //btnAddSnake.Enabled = enable; //develop this later (will be very good)
-         btnCreateLvl.Enabled = enable;
+         btnCreateLevel.Enabled = enable;
          if (!enable)
          {
             ResetCreateLevelControls();
@@ -660,9 +677,9 @@ namespace snake_sandbox01
       }
 
       /// <summary>
-      /// Create level to database button.
+      /// Button for create level and save level to database.
       /// </summary>
-      private void btnCreateLvl_Click(object sender, EventArgs e)
+      private void btnCreateLevel_Click(object sender, EventArgs e)
       {
          int foodnumber = int.TryParse(tbCFoodnumber.Text, out foodnumber) ? foodnumber : 1; //default value is 1
          string levelName = tbLevelName.Text;
@@ -850,6 +867,12 @@ namespace snake_sandbox01
       /// </summary>
       private void FillComboBoxWithLevels()
       {
+         //fill selectLevel combobox with default levels: 
+         cmbSelectedLevel.Items.Add("Custom level");
+         for (int i = 0; i <= game.levelsNumb; i++) //without new levels in database yet
+         {
+            cmbSelectedLevel.Items.Add($"level " + i);
+         }
          try
          {
             SqlConnection connection = new SqlConnection(game.connString);
@@ -939,7 +962,7 @@ namespace snake_sandbox01
 
       #region interval setting
       /// <summary>
-      /// Select timer interval button. (speed of game)
+      /// Button for select timer interval. (speed of game)
       /// </summary>
       private void btnSelectIntervalOpen_Click(object sender, EventArgs e)
       {
@@ -958,7 +981,7 @@ namespace snake_sandbox01
       }
 
       /// <summary>
-      /// Disable timer interval textbox on MouseHover on SelectInterval button.
+      /// Button for disable timer interval textbox on MouseHover on SelectInterval.
       /// </summary>
       private void btnSelectIntervalOpen_MouseHover(object sender, EventArgs e)
       {

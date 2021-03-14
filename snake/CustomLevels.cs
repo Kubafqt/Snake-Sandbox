@@ -9,7 +9,7 @@ namespace snake_sandbox01
    class CustomLevels
    {
       /// <summary>
-      /// Add current new level to database.
+      /// Add currently created level to database.
       /// </summary>
       /// <param name="levelName">Input level name ID.</param>
       /// <param name="foodnumber">Food number to level (default called - 1).</param>
@@ -67,7 +67,7 @@ namespace snake_sandbox01
       }
 
       /// <summary>
-      /// Load level from database. (all level tables)
+      /// Load level from database.
       /// </summary>
       /// <param name="levelName">Input level name ID.</param>
       /// <returns>True: Level exist and everything proceed fine. False: Level is not exist in database or something is not proceed fine.</returns>

@@ -70,7 +70,7 @@
          this.btnAddSnake = new System.Windows.Forms.Button();
          this.btClearBlock = new System.Windows.Forms.Button();
          this.btAddBlock = new System.Windows.Forms.Button();
-         this.btnCreateLvl = new System.Windows.Forms.Button();
+         this.btnCreateLevel = new System.Windows.Forms.Button();
          this.lbIntervalOpen = new System.Windows.Forms.Label();
          this.tbIntervalOpen = new System.Windows.Forms.TextBox();
          this.btSelectIntervalOpen = new System.Windows.Forms.Button();
@@ -156,7 +156,7 @@
          this.levelpanel.Controls.Add(this.btStartLevel);
          this.levelpanel.Location = new System.Drawing.Point(227, 37);
          this.levelpanel.Name = "levelpanel";
-         this.levelpanel.Size = new System.Drawing.Size(32, 26);
+         this.levelpanel.Size = new System.Drawing.Size(32, 21);
          this.levelpanel.TabIndex = 1;
          this.levelpanel.Visible = false;
          this.levelpanel.Paint += new System.Windows.Forms.PaintEventHandler(this.levelpanel_Paint);
@@ -515,17 +515,17 @@
          this.btAddBlock.UseVisualStyleBackColor = true;
          this.btAddBlock.Click += new System.EventHandler(this.btnAddBlock_Click);
          // 
-         // btnCreateLvl
+         // btnCreateLevel
          // 
-         this.btnCreateLvl.Enabled = false;
-         this.btnCreateLvl.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-         this.btnCreateLvl.Location = new System.Drawing.Point(70, 475);
-         this.btnCreateLvl.Name = "btnCreateLvl";
-         this.btnCreateLvl.Size = new System.Drawing.Size(123, 32);
-         this.btnCreateLvl.TabIndex = 8;
-         this.btnCreateLvl.Text = "Create Level";
-         this.btnCreateLvl.UseVisualStyleBackColor = true;
-         this.btnCreateLvl.Click += new System.EventHandler(this.btnCreateLvl_Click);
+         this.btnCreateLevel.Enabled = false;
+         this.btnCreateLevel.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+         this.btnCreateLevel.Location = new System.Drawing.Point(73, 423);
+         this.btnCreateLevel.Name = "btnCreateLevel";
+         this.btnCreateLevel.Size = new System.Drawing.Size(123, 32);
+         this.btnCreateLevel.TabIndex = 8;
+         this.btnCreateLevel.Text = "Create Level";
+         this.btnCreateLevel.UseVisualStyleBackColor = true;
+         this.btnCreateLevel.Click += new System.EventHandler(this.btnCreateLevel_Click);
          // 
          // lbIntervalOpen
          // 
@@ -563,7 +563,7 @@
          this.createpanelUI.Controls.Add(this.checkBoxPassableEdges);
          this.createpanelUI.Controls.Add(this.btnCreateLevelStart);
          this.createpanelUI.Controls.Add(this.tbCFoodnumber);
-         this.createpanelUI.Controls.Add(this.btnCreateLvl);
+         this.createpanelUI.Controls.Add(this.btnCreateLevel);
          this.createpanelUI.Controls.Add(this.lbCFoodNumber);
          this.createpanelUI.Controls.Add(this.btAddBlock);
          this.createpanelUI.Controls.Add(this.tbLevelName);
@@ -655,7 +655,7 @@
       private System.Windows.Forms.Label lbIntervalOpen;
       private System.Windows.Forms.TextBox tbIntervalOpen;
       private System.Windows.Forms.Button btSelectIntervalOpen;
-      private System.Windows.Forms.Button btnCreateLvl;
+      private System.Windows.Forms.Button btnCreateLevel;
       private System.Windows.Forms.Button btAddBlock;
       private System.Windows.Forms.Button btClearBlock;
       private System.Windows.Forms.Label lbBlockSize;
