@@ -11,5 +11,5 @@ After that I will add more new features for better gameplay experience and more 
 
 Other ideas to project: more snakes types, with some spells (much more OOP, better code readability and OOP patterns) [right after, next weekend will be much more OP]
 
-when i will get some more time, i will spend more time on my more interesting project than some sandbox game
+when I will get some more time, I will spend more time on my more interesting projects than some sandbox game [incoming weekend will be much more productive]
 
