@@ -9,7 +9,7 @@ Soon I will develop this project more and optimize database tables.
 
 After that I will add more new features for better gameplay experience and more sandbox elements.
 
-Other ideas to project: more snakes types, with some spells (much more OOP, better code readability and OOP patterns)
+Other ideas: more snakes types, with some spells (much more OOP, better code readability and OOP patterns)
 
 when I will get some more time, I will spend more time on my more interesting projects than some sandbox game 
 
