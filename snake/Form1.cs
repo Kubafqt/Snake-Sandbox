@@ -20,6 +20,8 @@ namespace snake_sandbox01
       private int defaultFormWidth = 1256; //default width of form
       private int defaultFormHeight = 732; //default height of form
       private int createFormWidth = 1529; //width of form when createpanel is active
+      public static Stack<string> saveComboboxItemsToDelete = new Stack<string>();
+      public static Stack<string> levelComboboxItemsToDelete = new Stack<string>();
 
       Random random;
       public static Timer timer;
@@ -48,7 +50,7 @@ namespace snake_sandbox01
          } 
          catch (Exception e) 
          {
-            MessageBox.Show($"{e.GetType()}");
+            MessageBox.Show($"Form1 constructor exception, when parsing game properties to textboxes and combobox - {e.GetType()}");
          }
          this.KeyPreview = true; //keydown better focus
       }
@@ -521,10 +523,6 @@ namespace snake_sandbox01
       /// </summary>
       private void btnStartLevel_Click(object sender, EventArgs e)
       {
-         if (!CustomLevels.LoadLevel(cmbSelectedLevel.SelectedItem.ToString())) //true: load created level from db, false: this is not user created level
-         {
-            game.defaultLevel = cmbSelectedLevel.SelectedIndex - 1 < 6 ? cmbSelectedLevel.SelectedIndex - 1 : 1;
-         }
          StartSelectedLevel();
       }
 
@@ -539,7 +537,7 @@ namespace snake_sandbox01
          }
          ChangePanel(gamepanel); //change panel to gamepanel
          game.selectedLevelName = cmbSelectedLevel.Text;
-         game.NewGame();
+         game.NewGame(cmbSelectedLevel.SelectedIndex - 1 < 6 ? cmbSelectedLevel.SelectedIndex - 1 : 1);
          selectChBoxPassableEdges.Checked = game.passableEdges; //checkbox for passable edges in selectpanel
       }
 
@@ -619,7 +617,7 @@ namespace snake_sandbox01
          }
          catch (Exception e)
          {
-            MessageBox.Show($"V metodě FillComboBoxWithSaveGames se vyskytla vyjímka - {e.GetType()}.");
+            MessageBox.Show($"Form1 FillComboBoxWithSaveGames method exception - {e.GetType()}");
          }
       }
 
@@ -659,7 +657,7 @@ namespace snake_sandbox01
          btClearBlock.Enabled = enable;
          checkBoxPassableEdges.Checked = enable;
          checkBoxPassableEdges.Enabled = enable;
-         //btnAddSnake.Enabled = enable; //develop this later (will be very good)
+         btnAddSnake.Enabled = enable;
          btnCreateLevel.Enabled = enable;
          if (!enable)
          {
@@ -709,6 +707,10 @@ namespace snake_sandbox01
       {
          lbBlockSize.Text = "Block size:";
          lbBlockTitle.Text = "Add block:";
+         if (addSnakePanel.Visible)
+         {
+            addSnakePanel.Hide();
+         }
          if (blocks.clearBlocks) //switch from clear block
          {
             blocks.clearBlocks = false;
@@ -743,6 +745,10 @@ namespace snake_sandbox01
       {
          lbBlockSize.Text = "Clear size:";
          lbBlockTitle.Text = "Clear blocks:";
+         if (addSnakePanel.Visible)
+         {
+            addSnakePanel.Hide();
+         }
          if (!blocks.clearBlocks)
          {
             blocks.clearBlocks = true;
@@ -788,12 +794,14 @@ namespace snake_sandbox01
             int y = 0;
             if (!blocks.clearBlocks && blocks.NotAcrossBorderValues(out x, ref y, blocks.newBlockSize, splitText))
             {
-               blocks.AssignBlockValues(out blocks.newBlockPoint, x, y);
+               //blocks.AssignBlockValues(out blocks.newBlockPoint, x, y);
+               blocks.newBlockPoint = new Point(x, y);
                Refresh();
             }
             else if (blocks.clearBlocks && blocks.NotAcrossBorderValues(out x, ref y, blocks.clearBlockSize, splitText))
             {
-               blocks.AssignBlockValues(out blocks.clearBlockPoint, x, y);
+               //blocks.AssignBlockValues(out blocks.clearBlockPoint, x, y);
+               blocks.clearBlockPoint = new Point(x, y);
                Refresh();
             }
          }
@@ -811,12 +819,14 @@ namespace snake_sandbox01
             int y = 0;
             if (!blocks.clearBlocks && blocks.NotAcrossBorderValues(out x, ref y, blocks.newBlockPoint, splitText))
             {
-               blocks.AssignBlockValues(out blocks.newBlockSize, x, y);
+               //blocks.AssignBlockValues(out blocks.newBlockSize, x, y);
+               blocks.newBlockSize = new Size(x, y);
                Refresh();
             }
             else if (blocks.clearBlocks && blocks.NotAcrossBorderValues(out x, ref y, blocks.clearBlockPoint, splitText))
             {
-               blocks.AssignBlockValues(out blocks.clearBlockSize, x, y);
+               //blocks.AssignBlockValues(out blocks.clearBlockSize, x, y);
+               blocks.clearBlockSize = new Size(x, y);
                Refresh();
             }
          }
@@ -840,7 +850,40 @@ namespace snake_sandbox01
       /// </summary>
       private void btnAddSnake_Click(object sender, EventArgs e)
       {
-
+         if (blocks.clearBlocks || blockPanel.Visible) //hide block panel
+         {
+            blocks.clearBlocks = false;
+            ResetBlockPointSizeText(out blocks.clearBlockPoint, out blocks.clearBlockSize);  //reset block controls
+            blockPanel.Hide();
+         }
+         if (!addSnakePanel.Visible) //show add snake panel
+         {
+            addSnakePanel.Show();
+         }
+         else if (tbSnakePoint.Text == string.Empty && tbStartSnakeLength.Text == string.Empty) //hide when empty
+         {
+            addSnakePanel.Hide();
+         }
+         else //add snake to level
+         {
+            if (Regex.IsMatch(tbSnakePoint.Text, ";"))
+            {
+               string[] splitText = tbSnakePoint.Text.Split(';');
+               int x, y;
+               int startSnakeLength;
+               if (int.TryParse(splitText[0], out x) && int.TryParse(splitText[1], out y) && int.TryParse(tbStartSnakeLength.Text, out startSnakeLength))
+               {
+                  //basic - random color from list:
+                  snakes.Snakes.Add(new snakes(x, y, startSnakeLength, snakes.snakeColorsList[random.Next(snakes.snakeColorsList.Count)], game.snakeCountNumber));
+                  game.snakeCountNumber++; //snake ID
+                  MessageBox.Show("Snake added Successfully!");
+                  tbSnakePoint.Clear();
+                  tbStartSnakeLength.Clear();
+                  addSnakePanel.Hide();
+               }
+            }
+         }
+         Refresh();
       }
 
       /// <summary>
@@ -904,7 +947,7 @@ namespace snake_sandbox01
          }
          catch (Exception e)
          {
-            MessageBox.Show($"V metodě FillComboBoxWithLevels se vyskytla vyjímka - {e.GetType()}.");
+            MessageBox.Show($"Form1 FillComboBoxWithLevels method exception - {e.GetType()}");
          }
       }
 
@@ -944,13 +987,27 @@ namespace snake_sandbox01
       /// <param name="panel">selected panel to show</param>
       private void ChangePanel(Panel panel)
       {
+         //delete deleted saved games from combobox:
+         //for (int i = 0; i < saveComboboxItemsToDelete.Count; i++) //get all items?
+         //{
+         //   string item = saveComboboxItemsToDelete.Pop();
+         //   cmbLoadGame.Items.Remove(item);
+         //   cmbLoadGame.SelectedIndex = 0;
+         //}
+         ////delete deleted levels from combobox:
+         //for (int i = 0; i < levelComboboxItemsToDelete.Count; i++) //get all items?
+         //{
+         //   string item = saveComboboxItemsToDelete.Pop();
+         //   cmbSelectedLevel.Items.Remove(item);
+         //   cmbSelectedLevel.SelectedIndex = 0;
+         //}
          if (game.activePanel != panel.Name)
          {
             HideControls<Panel>(); //hide alls panels
             panel.Show();
             game.activePanel = panel.Name;
             if (panel == createpanel) //it's create panel
-            { 
+            {
                this.Size = new Size(createFormWidth, defaultFormHeight);
                createpanelUI.Show();
             }
@@ -1021,12 +1078,17 @@ namespace snake_sandbox01
       #endregion interval setting
 
       /// <summary>
-      /// Button for show help.
+      /// Button to show help.
       /// </summary>
       private void btnHelp_Click(object sender, EventArgs e)
       {
          lbHelp.Visible = lbHelp.Visible ? false : true;
          lbHelp.Text = lbHelp.Text == "help text" ? "Nápověda:\n\n W / up arrow - nahoru, S / down arrow - dolu\r\nA / left arrow - doleva, D / right arrow - doprava\r\nR - nová hra, P / G - pozastavení hry" : lbHelp.Text;
+      }
+
+      private void btnEditLevel_Click(object sender, EventArgs e)
+      {
+         MessageBox.Show("In development right now!");
       }
 
       /// <summary>

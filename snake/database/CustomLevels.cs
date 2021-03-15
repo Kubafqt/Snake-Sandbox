@@ -8,6 +8,8 @@ namespace snake_sandbox01
 {
    class CustomLevels
    {
+      private static Random random = new Random();
+
       /// <summary>
       /// Add currently created level to database.
       /// </summary>
@@ -21,10 +23,11 @@ namespace snake_sandbox01
             //test if level under this name already exist:
             if (TestLevelExist(levelName)) //check if save game name already exist, then ask if overwrite level or not
             {
-               DialogResult dialogResult = MessageBox.Show("Level s tímto názvem již existuje. Chcete přepsat level?", "Přepsat level?", MessageBoxButtons.YesNo);
+               DialogResult dialogResult = MessageBox.Show("Level s tímto názvem již existuje. Chcete přepsat level?", "Přepsat level?", MessageBoxButtons.YesNo); //+delete from combobox
                if (dialogResult == DialogResult.Yes)
                {
                   DeleteLevel(levelName, true); //delete saved level with this name
+                  Form1.levelComboboxItemsToDelete.Push(levelName); //stack for delete combobox item (call in changepanel)
                }
                else if (dialogResult == DialogResult.No) //dont delete saved level with this name
                {
@@ -51,17 +54,21 @@ namespace snake_sandbox01
                command.Parameters.AddWithValue("@levelNameID", levelName);
                command.ExecuteNonQuery();
             }
-
-            //save level snakes: (soon)
-            //foreach (snakes snake in snakes.Snakes.ToList()) //later add snakes to database
-            //{
-            //}
+            //save level snakes:
+            foreach (snakes snake in snakes.Snakes.ToList())
+            {
+               cmdText = $"INSERT INTO level_snakes (levelNameID, snakeID, startSnakeLength, posX, posY) VALUES (@levelNameID, {game.snakeCountNumber}, {snake.startSnakeLength}, {snake.startX}, {snake.startY})";
+               command = new SqlCommand(cmdText, connection);
+               command.Parameters.AddWithValue("@levelNameID", levelName);
+               command.ExecuteNonQuery();
+               game.snakeCountNumber++;
+            }
             connection.Close();
             return true;
          }
          catch (Exception e)
          {
-            MessageBox.Show($"V metodě AddLevel se vyskytla chyba - {e.GetType()}");
+            MessageBox.Show($"CustomLevels.AddLevel method exception - {e.GetType()}");
             return false;
          }
       }
@@ -73,12 +80,11 @@ namespace snake_sandbox01
       /// <returns>True: Level exist and everything proceed fine. False: Level is not exist in database or something is not proceed fine.</returns>
       public static bool LoadLevel(string levelName, bool alreadyTestedExist = false)
       {
-         try
-         {
+         //try
+         //{
             if (alreadyTestedExist || TestLevelExist(levelName)) //test level exist in database (by name)
             {
                SqlConnection connection = new SqlConnection(game.connString);
-
                //load level information:
                string cmdText = "SELECT * FROM level_info WHERE levelNameID = @levelName";
                SqlCommand command = new SqlCommand(cmdText, connection);
@@ -107,24 +113,28 @@ namespace snake_sandbox01
                }
                connection.Close();
 
-               //load level snakes: (soon)
-               //connection.Open();
-               //cmdtext = "SELECT * FROM level_snakes WHERE levelNameID = @levelName";
-               //cmd = new SqlCommand(cmdtext, connection);
-               //reader = cmd.ExecuteReader();
-               //while (reader.Read())
-               //{
-               //}
-               //connection.Close();
+               //load level snakes:
+
+               cmdText = "SELECT * FROM level_snakes WHERE levelNameID = @levelName";
+               command = new SqlCommand(cmdText, connection);
+            command.Parameters.AddWithValue("@levelName", levelName);
+            connection.Open();
+            reader = command.ExecuteReader();
+               while (reader.Read())
+               {
+                  //random snake color for now - later better choose to save
+                  snakes.Snakes.Add(new snakes((int)reader["posX"], (int)reader["posY"], (int)reader["startSnakeLength"], snakes.snakeColorsList[random.Next(snakes.snakeColorsList.Count)], game.snakeCountNumber));
+               }
+               connection.Close();
                return true;
             }
             return false;
-         }
-         catch (Exception e)
-         {
-            MessageBox.Show($"V metodě LoadLevel se vyskytla chyba - {e.GetType()}");
-            return false;
-         }
+         //}
+         //catch (Exception e)
+         //{
+         //   MessageBox.Show($"CustomLevels.LoadLevel method exception - {e.GetType()}");
+         //   return false;
+         //}
       }
 
       /// <summary>
@@ -136,7 +146,6 @@ namespace snake_sandbox01
       {
          try
          {
-
             if (!alreadyCheckedExist && !TestLevelExist(levelName)) //test level exist in db, when it is not already checked
             {
                MessageBox.Show("Tento level je defaultní a v databázi custom levelů neexistuje!");
@@ -158,7 +167,7 @@ namespace snake_sandbox01
          }
          catch (Exception e)
          {
-            MessageBox.Show($"V metodě DeleteSave se vyskytla chyba! - {e.GetType()}");
+            MessageBox.Show($"CustomLevels.DeleteSave method exception - {e.GetType()}");
             return false;
          }
       }
@@ -188,7 +197,7 @@ namespace snake_sandbox01
          }
          catch (Exception e)
          {
-            MessageBox.Show($"V metodě TestLevelExist se vyskytla chyba - {e.GetType()}");
+            MessageBox.Show($"CustomLevels.TestLevelExist method exception - {e.GetType()}");
             return false;
          }
       }

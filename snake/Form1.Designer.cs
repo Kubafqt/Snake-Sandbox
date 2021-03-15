@@ -77,14 +77,14 @@
          this.tbIntervalOpen = new System.Windows.Forms.TextBox();
          this.btnSelectIntervalOpen = new System.Windows.Forms.Button();
          this.createpanelUI = new System.Windows.Forms.Panel();
-         this.checkBoxPassableEdges = new System.Windows.Forms.CheckBox();
-         this.btnCreateLevelStart = new System.Windows.Forms.Button();
          this.addSnakePanel = new System.Windows.Forms.Panel();
          this.lbAddSnake = new System.Windows.Forms.Label();
          this.tbStartSnakeLength = new System.Windows.Forms.TextBox();
          this.tbSnakePoint = new System.Windows.Forms.TextBox();
-         this.label4 = new System.Windows.Forms.Label();
-         this.label6 = new System.Windows.Forms.Label();
+         this.lbSnakePoint = new System.Windows.Forms.Label();
+         this.lbStartSnakeLength = new System.Windows.Forms.Label();
+         this.checkBoxPassableEdges = new System.Windows.Forms.CheckBox();
+         this.btnCreateLevelStart = new System.Windows.Forms.Button();
          this.menuStrip1.SuspendLayout();
          this.levelpanel.SuspendLayout();
          this.blockPanel.SuspendLayout();
@@ -167,7 +167,7 @@
          this.levelpanel.Controls.Add(this.btStartLevel);
          this.levelpanel.Location = new System.Drawing.Point(227, 37);
          this.levelpanel.Name = "levelpanel";
-         this.levelpanel.Size = new System.Drawing.Size(32, 24);
+         this.levelpanel.Size = new System.Drawing.Size(1045, 555);
          this.levelpanel.TabIndex = 1;
          this.levelpanel.Visible = false;
          this.levelpanel.Paint += new System.Windows.Forms.PaintEventHandler(this.levelpanel_Paint);
@@ -207,7 +207,6 @@
          // 
          // btnEditLevel
          // 
-         this.btnEditLevel.Enabled = false;
          this.btnEditLevel.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
          this.btnEditLevel.Location = new System.Drawing.Point(301, 151);
          this.btnEditLevel.Name = "btnEditLevel";
@@ -215,6 +214,7 @@
          this.btnEditLevel.TabIndex = 17;
          this.btnEditLevel.Text = "Edit Level";
          this.btnEditLevel.UseVisualStyleBackColor = true;
+         this.btnEditLevel.Click += new System.EventHandler(this.btnEditLevel_Click);
          // 
          // btnDeleteLevel
          // 
@@ -230,7 +230,7 @@
          // btnDeleteSave
          // 
          this.btnDeleteSave.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-         this.btnDeleteSave.Location = new System.Drawing.Point(891, 118);
+         this.btnDeleteSave.Location = new System.Drawing.Point(945, 138);
          this.btnDeleteSave.Name = "btnDeleteSave";
          this.btnDeleteSave.Size = new System.Drawing.Size(144, 25);
          this.btnDeleteSave.TabIndex = 15;
@@ -242,7 +242,7 @@
          // 
          this.lbSaveGame.AutoSize = true;
          this.lbSaveGame.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-         this.lbSaveGame.Location = new System.Drawing.Point(639, 56);
+         this.lbSaveGame.Location = new System.Drawing.Point(693, 76);
          this.lbSaveGame.Name = "lbSaveGame";
          this.lbSaveGame.Size = new System.Drawing.Size(88, 16);
          this.lbSaveGame.TabIndex = 14;
@@ -250,7 +250,7 @@
          // 
          // tbSaveGame
          // 
-         this.tbSaveGame.Location = new System.Drawing.Point(733, 55);
+         this.tbSaveGame.Location = new System.Drawing.Point(787, 75);
          this.tbSaveGame.Name = "tbSaveGame";
          this.tbSaveGame.Size = new System.Drawing.Size(144, 20);
          this.tbSaveGame.TabIndex = 13;
@@ -260,7 +260,7 @@
          // 
          this.lbLoadGame.AutoSize = true;
          this.lbLoadGame.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-         this.lbLoadGame.Location = new System.Drawing.Point(671, 90);
+         this.lbLoadGame.Location = new System.Drawing.Point(725, 110);
          this.lbLoadGame.Name = "lbLoadGame";
          this.lbLoadGame.Size = new System.Drawing.Size(55, 16);
          this.lbLoadGame.TabIndex = 12;
@@ -270,7 +270,7 @@
          // 
          this.cmbLoadGame.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
          this.cmbLoadGame.FormattingEnabled = true;
-         this.cmbLoadGame.Location = new System.Drawing.Point(732, 89);
+         this.cmbLoadGame.Location = new System.Drawing.Point(786, 109);
          this.cmbLoadGame.Name = "cmbLoadGame";
          this.cmbLoadGame.Size = new System.Drawing.Size(144, 21);
          this.cmbLoadGame.TabIndex = 11;
@@ -278,7 +278,7 @@
          // btnLoadGame
          // 
          this.btnLoadGame.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-         this.btnLoadGame.Location = new System.Drawing.Point(891, 86);
+         this.btnLoadGame.Location = new System.Drawing.Point(945, 106);
          this.btnLoadGame.Name = "btnLoadGame";
          this.btnLoadGame.Size = new System.Drawing.Size(144, 25);
          this.btnLoadGame.TabIndex = 10;
@@ -290,7 +290,7 @@
          // 
          this.btnSaveGame.Enabled = false;
          this.btnSaveGame.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-         this.btnSaveGame.Location = new System.Drawing.Point(891, 52);
+         this.btnSaveGame.Location = new System.Drawing.Point(945, 72);
          this.btnSaveGame.Name = "btnSaveGame";
          this.btnSaveGame.Size = new System.Drawing.Size(144, 25);
          this.btnSaveGame.TabIndex = 9;
@@ -433,7 +433,7 @@
          this.blockPanel.Controls.Add(this.lbBlockSize);
          this.blockPanel.Location = new System.Drawing.Point(19, 177);
          this.blockPanel.Name = "blockPanel";
-         this.blockPanel.Size = new System.Drawing.Size(24, 27);
+         this.blockPanel.Size = new System.Drawing.Size(21, 17);
          this.blockPanel.TabIndex = 1;
          this.blockPanel.Visible = false;
          // 
@@ -441,7 +441,7 @@
          // 
          this.lbGameSize.AutoSize = true;
          this.lbGameSize.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-         this.lbGameSize.Location = new System.Drawing.Point(20, 95);
+         this.lbGameSize.Location = new System.Drawing.Point(22, 97);
          this.lbGameSize.Name = "lbGameSize";
          this.lbGameSize.Size = new System.Drawing.Size(108, 15);
          this.lbGameSize.TabIndex = 17;
@@ -614,36 +614,13 @@
          this.createpanelUI.Visible = false;
          this.createpanelUI.Paint += new System.Windows.Forms.PaintEventHandler(this.createpanelUI_Paint);
          // 
-         // checkBoxPassableEdges
-         // 
-         this.checkBoxPassableEdges.AutoSize = true;
-         this.checkBoxPassableEdges.Enabled = false;
-         this.checkBoxPassableEdges.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-         this.checkBoxPassableEdges.Location = new System.Drawing.Point(67, 272);
-         this.checkBoxPassableEdges.Name = "checkBoxPassableEdges";
-         this.checkBoxPassableEdges.Size = new System.Drawing.Size(129, 19);
-         this.checkBoxPassableEdges.TabIndex = 17;
-         this.checkBoxPassableEdges.Text = "Passable Edges";
-         this.checkBoxPassableEdges.UseVisualStyleBackColor = true;
-         // 
-         // btnCreateLevelStart
-         // 
-         this.btnCreateLevelStart.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-         this.btnCreateLevelStart.Location = new System.Drawing.Point(39, 30);
-         this.btnCreateLevelStart.Name = "btnCreateLevelStart";
-         this.btnCreateLevelStart.Size = new System.Drawing.Size(189, 43);
-         this.btnCreateLevelStart.TabIndex = 0;
-         this.btnCreateLevelStart.Text = "Start Creating Level";
-         this.btnCreateLevelStart.UseVisualStyleBackColor = true;
-         this.btnCreateLevelStart.Click += new System.EventHandler(this.btnCreateLevelStart_Click);
-         // 
          // addSnakePanel
          // 
          this.addSnakePanel.Controls.Add(this.lbAddSnake);
          this.addSnakePanel.Controls.Add(this.tbStartSnakeLength);
          this.addSnakePanel.Controls.Add(this.tbSnakePoint);
-         this.addSnakePanel.Controls.Add(this.label4);
-         this.addSnakePanel.Controls.Add(this.label6);
+         this.addSnakePanel.Controls.Add(this.lbSnakePoint);
+         this.addSnakePanel.Controls.Add(this.lbStartSnakeLength);
          this.addSnakePanel.Location = new System.Drawing.Point(19, 297);
          this.addSnakePanel.Name = "addSnakePanel";
          this.addSnakePanel.Size = new System.Drawing.Size(227, 118);
@@ -674,25 +651,48 @@
          this.tbSnakePoint.Size = new System.Drawing.Size(64, 20);
          this.tbSnakePoint.TabIndex = 6;
          // 
-         // label4
+         // lbSnakePoint
          // 
-         this.label4.AutoSize = true;
-         this.label4.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-         this.label4.Location = new System.Drawing.Point(3, 48);
-         this.label4.Name = "label4";
-         this.label4.Size = new System.Drawing.Size(147, 15);
-         this.label4.TabIndex = 6;
-         this.label4.Text = "startSnakePoint (x; y):";
+         this.lbSnakePoint.AutoSize = true;
+         this.lbSnakePoint.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+         this.lbSnakePoint.Location = new System.Drawing.Point(3, 48);
+         this.lbSnakePoint.Name = "lbSnakePoint";
+         this.lbSnakePoint.Size = new System.Drawing.Size(147, 15);
+         this.lbSnakePoint.TabIndex = 6;
+         this.lbSnakePoint.Text = "startSnakePoint (x; y):";
          // 
-         // label6
+         // lbStartSnakeLength
          // 
-         this.label6.AutoSize = true;
-         this.label6.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-         this.label6.Location = new System.Drawing.Point(24, 73);
-         this.label6.Name = "label6";
-         this.label6.Size = new System.Drawing.Size(123, 15);
-         this.label6.TabIndex = 7;
-         this.label6.Text = "startSnakeLength:";
+         this.lbStartSnakeLength.AutoSize = true;
+         this.lbStartSnakeLength.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+         this.lbStartSnakeLength.Location = new System.Drawing.Point(24, 73);
+         this.lbStartSnakeLength.Name = "lbStartSnakeLength";
+         this.lbStartSnakeLength.Size = new System.Drawing.Size(123, 15);
+         this.lbStartSnakeLength.TabIndex = 7;
+         this.lbStartSnakeLength.Text = "startSnakeLength:";
+         // 
+         // checkBoxPassableEdges
+         // 
+         this.checkBoxPassableEdges.AutoSize = true;
+         this.checkBoxPassableEdges.Enabled = false;
+         this.checkBoxPassableEdges.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+         this.checkBoxPassableEdges.Location = new System.Drawing.Point(67, 272);
+         this.checkBoxPassableEdges.Name = "checkBoxPassableEdges";
+         this.checkBoxPassableEdges.Size = new System.Drawing.Size(129, 19);
+         this.checkBoxPassableEdges.TabIndex = 17;
+         this.checkBoxPassableEdges.Text = "Passable Edges";
+         this.checkBoxPassableEdges.UseVisualStyleBackColor = true;
+         // 
+         // btnCreateLevelStart
+         // 
+         this.btnCreateLevelStart.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+         this.btnCreateLevelStart.Location = new System.Drawing.Point(39, 30);
+         this.btnCreateLevelStart.Name = "btnCreateLevelStart";
+         this.btnCreateLevelStart.Size = new System.Drawing.Size(189, 43);
+         this.btnCreateLevelStart.TabIndex = 0;
+         this.btnCreateLevelStart.Text = "Start Creating Level";
+         this.btnCreateLevelStart.UseVisualStyleBackColor = true;
+         this.btnCreateLevelStart.Click += new System.EventHandler(this.btnCreateLevelStart_Click);
          // 
          // Form1
          // 
@@ -786,8 +786,8 @@
       private System.Windows.Forms.Label lbAddSnake;
       private System.Windows.Forms.TextBox tbStartSnakeLength;
       private System.Windows.Forms.TextBox tbSnakePoint;
-      private System.Windows.Forms.Label label4;
-      private System.Windows.Forms.Label label6;
+      private System.Windows.Forms.Label lbSnakePoint;
+      private System.Windows.Forms.Label lbStartSnakeLength;
    }
 }
 

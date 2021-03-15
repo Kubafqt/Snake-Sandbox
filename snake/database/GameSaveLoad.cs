@@ -36,10 +36,11 @@ namespace snake_sandbox01
             if (saveExist) //check if save game name already exist, then ask if overwrite level or not
             {
                proceed = false;
-               DialogResult dialogResult = MessageBox.Show("Uložená hra pod tímto názvem již existuje. Chcete přepsat uloženou hru?", "Přepsat uloženou hru?", MessageBoxButtons.YesNo);
+               DialogResult dialogResult = MessageBox.Show("Uložená hra pod tímto názvem již existuje. Chcete přepsat uloženou hru?", "Přepsat uloženou hru?", MessageBoxButtons.YesNo); //+delete from combobox
                if (dialogResult == DialogResult.Yes)
                {
                   DeleteSave(saveName); //first delete last save game
+                  Form1.saveComboboxItemsToDelete.Push(saveName); //stack for delete combobox item (call in changepanel)
                }
                else if (dialogResult == DialogResult.No)
                {

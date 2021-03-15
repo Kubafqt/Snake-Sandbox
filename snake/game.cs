@@ -31,16 +31,17 @@ namespace snake_sandbox01
       /// <summary>
       /// Start new game [will reset game and its arrays/lists first, then start new level, then spawnAllFood].
       /// </summary>
-      public static void NewGame()
+      public static void NewGame(int selectedIndex = 1)
       {
          ResetGame();
-         snakes.Snakes.Add(snakes.PlayerSnake); //on position 0     
+         snakes.Snakes.Add(snakes.PlayerSnake); //add PlayerSnake on position 0 (everytime - can be levels without player snake)
          if (CustomLevels.TestLevelExist(selectedLevelName)) //load custom level from database if exist
          {
             CustomLevels.LoadLevel(selectedLevelName, true);
          }
          else //load default level defined in code
          {
+            defaultLevel = selectedIndex;
             SelectLevel(defaultLevel);
          }
          SpawnAllFood();
