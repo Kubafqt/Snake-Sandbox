@@ -27,7 +27,7 @@ namespace snake_sandbox01
                if (dialogResult == DialogResult.Yes)
                {
                   DeleteLevel(levelName, true); //delete saved level with this name
-                  Form1.levelComboboxItemsToDelete.Push(levelName); //stack for delete combobox item (call in changepanel)
+                  //Form1.levelComboboxItemsToDelete.Push(levelName); //stack for delete combobox item (call in changepanel)
                }
                else if (dialogResult == DialogResult.No) //dont delete saved level with this name
                {

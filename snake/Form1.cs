@@ -47,8 +47,8 @@ namespace snake_sandbox01
             tbInterval.Text = game.interval.ToString();
             tbFoodNumber.Text = game.foodNumber.ToString();
             tbIntervalOpen.Text = game.interval.ToString();
-         } 
-         catch (Exception e) 
+         }
+         catch (Exception e)
          {
             MessageBox.Show($"Form1 constructor exception, when parsing game properties to textboxes and combobox - {e.GetType()}");
          }
@@ -106,17 +106,17 @@ namespace snake_sandbox01
             DisablePauseOnMovementKeydown();
          }
          if ((key == Keys.A || key == Keys.Left) && (snakes.PlayerSnake.direction != "right" || snakes.PlayerSnake.snakeLength == 0)) //left
-         { 
+         {
             directKeyDown = "left";
             DisablePauseOnMovementKeydown();
          }
          if ((key == Keys.W || key == Keys.Up) && (snakes.PlayerSnake.direction != "down" || snakes.PlayerSnake.snakeLength == 0)) //up
-         { 
+         {
             directKeyDown = "up";
             DisablePauseOnMovementKeydown();
          }
          if ((key == Keys.S || key == Keys.Down) && (snakes.PlayerSnake.direction != "up" || snakes.PlayerSnake.snakeLength == 0)) //down
-         { 
+         {
             directKeyDown = "down";
             DisablePauseOnMovementKeydown();
          }
@@ -129,8 +129,8 @@ namespace snake_sandbox01
             }
          }
          if (game.activePanel == gamepanel.Name && (key == Keys.P || key == Keys.G)) //switch pause game
-         { 
-            game.Pause(); 
+         {
+            game.Pause();
          }
       }
 
@@ -140,7 +140,7 @@ namespace snake_sandbox01
       private void DisablePauseOnMovementKeydown()
       {
          if (!game.gameover && game.activePanel == gamepanel.Name) //disable pause when not gameover and active panel is gamepanel
-         { 
+         {
             game.Pause(2);
             game.gameIsRunning = true;
          }
@@ -172,7 +172,7 @@ namespace snake_sandbox01
                            if (snake != snakes.PlayerSnake)// && snake.insideSnake) //check for food after pass the edge
                            {
                               snake.CheckClosestFoodAndGetDirection();
-                           } 
+                           }
                         }
                         else //game over when not passable edges
                         {
@@ -188,11 +188,11 @@ namespace snake_sandbox01
                            snake.x = 0;
                            if (snake != snakes.PlayerSnake) //check for food after pass the edge
                            {
-                              snake.CheckClosestFoodAndGetDirection(); 
+                              snake.CheckClosestFoodAndGetDirection();
                            }
                         }
                         else //game over when not passable edges
-                        { 
+                        {
                            game.GameOver(snake);
                         }
                         break;
@@ -209,7 +209,7 @@ namespace snake_sandbox01
                            }
                         }
                         else
-                        { 
+                        {
                            game.GameOver(snake);
                         }
                         break;
@@ -226,7 +226,7 @@ namespace snake_sandbox01
                            }
                         }
                         else
-                        { 
+                        {
                            game.GameOver(snake);
                         }
                         break;
@@ -241,12 +241,12 @@ namespace snake_sandbox01
                   snake.snakePointQueue.Enqueue(new Point(snake.x, snake.y)); //queue for snake movement history and deleting its tail
                }
                else if (game.killOnMyself || snake.killonItself) //snake collision with himself when killonItself is true (weird condition), game.killOnMyself is global for game
-               { 
-                  if (snake.killonItself) 
-                  { game.GameOver(snake); } 
+               {
+                  if (snake.killonItself)
+                  { game.GameOver(snake); }
                }
                else if (snakeArr[snake.x, snake.y] != snake.snakeNumber || blockArr[snake.x, snake.y] == "hardblock") //snake collision with other snake or hardblock
-               { game.GameOver(snake); } 
+               { game.GameOver(snake); }
 
                if (snake != snakes.PlayerSnake) //it's bot snake
                {
@@ -384,7 +384,7 @@ namespace snake_sandbox01
             }
          }
          if (blocks.newBlockPoint != new Point(-1, -1) && blocks.newBlockSize != Size.Empty) //new-block
-         { 
+         {
             gfx.FillRectangle(Brushes.Black, blocks.newBlockPoint.X * sizeX, blocks.newBlockPoint.Y * sizeY, blocks.newBlockSize.Width * sizeX, blocks.newBlockSize.Height * sizeY);
          }
          if (blocks.clearBlocks) //clear-block rectangle
@@ -421,7 +421,7 @@ namespace snake_sandbox01
          }
          else //no game to save
          {
-            MessageBox.Show("Neběží žádná hra k uložení!");
+            MessageBox.Show("Není spuštěná žádná hra k uložení!");
          }
          if (proceed) //everything proceed fine
          {
@@ -749,7 +749,7 @@ namespace snake_sandbox01
          {
             addSnakePanel.Hide();
          }
-         if (!blocks.clearBlocks)
+         if (!blocks.clearBlocks) //clear box is not active
          {
             blocks.clearBlocks = true;
             ResetBlockPointSizeText(out blocks.newBlockPoint, out blocks.newBlockSize); //reset block controls
@@ -757,7 +757,7 @@ namespace snake_sandbox01
             {
                blockPanel.Show(); //show block controls
             }
-            //Refresh();
+            Refresh();
          }
          else //block procedure
          {
@@ -767,19 +767,19 @@ namespace snake_sandbox01
             }
             else if (tbBlockPoint.Text == string.Empty && tbBlockSize.Text == string.Empty)
             {
-               blockPanel.Hide(); //hide block controls
+               blockPanel.Hide(); //hide block controls when empty textboxes
                blocks.clearBlocks = false;
             }
-            else if (blocks.clearBlockPoint != new Point(-1, -1) && blocks.clearBlockSize != Size.Empty)
+            else if (blocks.clearBlockPoint != new Point(-1, -1) && blocks.clearBlockSize != Size.Empty) //clear blocks
             {
                blocks.PerformClearBlocks(blocks.clearBlockPoint, blocks.clearBlockSize);
                ResetBlockPointSizeText(out blocks.clearBlockPoint, out blocks.clearBlockSize);
                blockPanel.Hide();
                blocks.clearBlocks = false;
-               //Refresh();
+               Refresh();
             }
          }
-         Refresh();
+         //Refresh();
       }
 
       /// <summary>
@@ -787,24 +787,7 @@ namespace snake_sandbox01
       /// </summary>
       private void tbBlockPoint_TextChanged(object sender, EventArgs e)
       {
-         if (Regex.IsMatch(tbBlockPoint.Text, ";"))
-         {
-            string[] splitText = tbBlockPoint.Text.Split(';');
-            int x;
-            int y = 0;
-            if (!blocks.clearBlocks && blocks.NotAcrossBorderValues(out x, ref y, blocks.newBlockSize, splitText))
-            {
-               //blocks.AssignBlockValues(out blocks.newBlockPoint, x, y);
-               blocks.newBlockPoint = new Point(x, y);
-               Refresh();
-            }
-            else if (blocks.clearBlocks && blocks.NotAcrossBorderValues(out x, ref y, blocks.clearBlockSize, splitText))
-            {
-               //blocks.AssignBlockValues(out blocks.clearBlockPoint, x, y);
-               blocks.clearBlockPoint = new Point(x, y);
-               Refresh();
-            }
-         }
+         TestTextboxValues();
       }
 
       /// <summary>
@@ -812,6 +795,31 @@ namespace snake_sandbox01
       /// </summary>
       private void tbBlockSize_TextChanged(object sender, EventArgs e)
       {
+         TestTextboxValues();
+      }
+
+      /// <summary>
+      /// Test if proper block values is in textboxes.
+      /// </summary>
+      private void TestTextboxValues()
+      {
+         if (Regex.IsMatch(tbBlockPoint.Text, ";")) //
+         {
+            string[] splitText = tbBlockPoint.Text.Split(';');
+            int x;
+            int y = 0;
+            if (!blocks.clearBlocks && blocks.NotAcrossBorderValues(out x, ref y, blocks.newBlockSize, splitText)) //
+            {
+               //blocks.AssignBlockValues(out blocks.newBlockPoint, x, y);
+               blocks.newBlockPoint = new Point(x, y);
+            }
+            else if (blocks.clearBlocks && blocks.NotAcrossBorderValues(out x, ref y, blocks.clearBlockSize, splitText)) //
+            {
+               //blocks.AssignBlockValues(out blocks.clearBlockPoint, x, y);
+               blocks.clearBlockPoint = new Point(x, y);
+            }
+            Refresh();
+         }
          if (Regex.IsMatch(tbBlockSize.Text, ";"))
          {
             string[] splitText = tbBlockSize.Text.Split(';');
@@ -821,14 +829,13 @@ namespace snake_sandbox01
             {
                //blocks.AssignBlockValues(out blocks.newBlockSize, x, y);
                blocks.newBlockSize = new Size(x, y);
-               Refresh();
             }
             else if (blocks.clearBlocks && blocks.NotAcrossBorderValues(out x, ref y, blocks.clearBlockPoint, splitText))
             {
                //blocks.AssignBlockValues(out blocks.clearBlockSize, x, y);
                blocks.clearBlockSize = new Size(x, y);
-               Refresh();
             }
+            Refresh();
          }
       }
 

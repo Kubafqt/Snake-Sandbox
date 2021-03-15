@@ -40,7 +40,7 @@ namespace snake_sandbox01
                if (dialogResult == DialogResult.Yes)
                {
                   DeleteSave(saveName); //first delete last save game
-                  Form1.saveComboboxItemsToDelete.Push(saveName); //stack for delete combobox item (call in changepanel)
+                  //Form1.saveComboboxItemsToDelete.Push(saveName); //stack for delete combobox item (call in changepanel)
                }
                else if (dialogResult == DialogResult.No)
                {
