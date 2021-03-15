@@ -9,4 +9,5 @@ Soon I will develop this project more and optimize database tables.
 
 After that I will add more new features for better gameplay experience and more sandbox elements.
 
-some other idea: more snakes types, with some spells (more OOP and inheritance) [right after, next weekend will be much more OP]
+Other ideas to project: more snakes types, with some spells (more OOP and inheritance) [right after, next weekend will be much more OP]
+
