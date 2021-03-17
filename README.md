@@ -1,10 +1,14 @@
 # Snake-Sandbox
-Development version 0.1
+
+This is very basic version in development. (+-0.1)
 
 Idea of Snake SandBox game. - SandBox of snake game in snake game base.
 
-This is very basic development version - 0.1
+Soon I will add more new features for better gameplay experience and more sandbox elements.
 
-Soon will develop and add some optimize to database tables and some more new functions for better gameplay experience and more sandbox elements.
+Other ideas: more snakes types, with some spells (much more OOP, better code readability and OOP patterns)
 
-some other idea: more snakes types, with some spells (more OOP and inheritance)
+when I will get some more time, I will spend more time on my more interesting projects than some sandbox game 
+
+[incoming weekend will be much more productive and much more OP]
+
