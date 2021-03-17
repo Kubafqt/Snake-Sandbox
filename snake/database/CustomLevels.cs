@@ -11,12 +11,12 @@ namespace snake_sandbox01
       private static Random random = new Random();
 
       /// <summary>
-      /// Add currently created level to database.
+      /// Add created level to database.
       /// </summary>
       /// <param name="levelName">Input level name ID.</param>
       /// <param name="foodnumber">Food number to level (default called - 1).</param>
       /// <param name="proceedAddToCombobox">Bool to check if everything proceed fine and add new level to combobox.</param>
-      public static bool AddLevel(string levelName, int foodnumber, bool passable)
+      public static bool AddLevel(string levelName, int foodnumber, bool passableEdges)
       {
          try
          {
@@ -36,13 +36,12 @@ namespace snake_sandbox01
             }
 
             //save level info:
-            SqlConnection connection = new SqlConnection(game.connString);
-            int passableEdges = passable ? 1 : 0;
-            string cmdText = $"INSERT INTO level_info " + "(levelNameID, foodNumber, passableEdges)" + $"VALUES (@levelNameID, @foodNumber, @passable)";
+            SqlConnection connection = new SqlConnection(Game.connString);
+            int passableEdge = passableEdges ? 1 : 0;
+            string cmdText = $"INSERT INTO level_info " + "(levelNameID, foodNumber, passableEdges)" + $"VALUES (@levelNameID, @foodNumber, {passableEdge})";
             SqlCommand command = new SqlCommand(cmdText, connection);
             command.Parameters.AddWithValue("@levelNameID", levelName);
             command.Parameters.AddWithValue("@foodNumber", foodnumber);
-            command.Parameters.AddWithValue("@passable", passableEdges);
             connection.Open();
             command.ExecuteNonQuery();
 
@@ -55,13 +54,13 @@ namespace snake_sandbox01
                command.ExecuteNonQuery();
             }
             //save level snakes:
-            foreach (snakes snake in snakes.Snakes.ToList())
+            foreach (Snakes snake in Snakes.snakesList.ToList())
             {
-               cmdText = $"INSERT INTO level_snakes (levelNameID, snakeID, startSnakeLength, posX, posY) VALUES (@levelNameID, {game.snakeCountNumber}, {snake.startSnakeLength}, {snake.startX}, {snake.startY})";
+               cmdText = $"INSERT INTO level_snakes (levelNameID, snakeID, startSnakeLength, posX, posY) VALUES (@levelNameID, {Game.snakeID}, {snake.startSnakeLength}, {snake.startX}, {snake.startY})";
                command = new SqlCommand(cmdText, connection);
                command.Parameters.AddWithValue("@levelNameID", levelName);
                command.ExecuteNonQuery();
-               game.snakeCountNumber++;
+               Game.snakeID++;
             }
             connection.Close();
             return true;
@@ -80,11 +79,11 @@ namespace snake_sandbox01
       /// <returns>True: Level exist and everything proceed fine. False: Level is not exist in database or something is not proceed fine.</returns>
       public static bool LoadLevel(string levelName, bool alreadyTestedExist = false)
       {
-         //try
-         //{
+         try
+         {
             if (alreadyTestedExist || TestLevelExist(levelName)) //test level exist in database (by name)
             {
-               SqlConnection connection = new SqlConnection(game.connString);
+               SqlConnection connection = new SqlConnection(Game.connString);
                //load level information:
                string cmdText = "SELECT * FROM level_info WHERE levelNameID = @levelName";
                SqlCommand command = new SqlCommand(cmdText, connection);
@@ -94,8 +93,8 @@ namespace snake_sandbox01
                while (reader.Read()) //load level info
                {
                   //game.interval = Convert.IsDBNull((bool)reader["interval"]) ? game.interval : (int)reader["interval"]; later
-                  game.foodNumber = (int)reader["foodNumber"];
-                  game.passableEdges = (bool)reader["passableEdges"];
+                  Game.foodNumber = (int)reader["foodNumber"];
+                  Game.passableEdges = (bool)reader["passableEdges"];
                }
                connection.Close();
 
@@ -117,24 +116,62 @@ namespace snake_sandbox01
 
                cmdText = "SELECT * FROM level_snakes WHERE levelNameID = @levelName";
                command = new SqlCommand(cmdText, connection);
-            command.Parameters.AddWithValue("@levelName", levelName);
-            connection.Open();
-            reader = command.ExecuteReader();
+               command.Parameters.AddWithValue("@levelName", levelName);
+               connection.Open();
+               reader = command.ExecuteReader();
                while (reader.Read())
                {
                   //random snake color for now - later better choose to save
-                  snakes.Snakes.Add(new snakes((int)reader["posX"], (int)reader["posY"], (int)reader["startSnakeLength"], snakes.snakeColorsList[random.Next(snakes.snakeColorsList.Count)], game.snakeCountNumber));
+                  Snakes.snakesList.Add(new Snakes((int)reader["posX"], (int)reader["posY"], (int)reader["startSnakeLength"], Snakes.snakeColorsList[random.Next(Snakes.snakeColorsList.Count)], Game.snakeID));
                }
                connection.Close();
                return true;
             }
             return false;
-         //}
-         //catch (Exception e)
-         //{
-         //   MessageBox.Show($"CustomLevels.LoadLevel method exception - {e.GetType()}");
-         //   return false;
-         //}
+         }
+         catch (Exception e)
+         {
+            MessageBox.Show($"CustomLevels.LoadLevel method exception - {e.GetType()}");
+            return false;
+         }
+      }
+
+      /// <summary>
+      /// Load only blocks from level - usable when load saved game.
+      /// </summary>
+      /// <param name="levelName">level name ID</param>
+      /// <param name="alreadyTestedExist">true if already tested that level exist in db, default: false</param>
+      /// <returns>True: level exist and load completed. False: level is not exist or exception.</returns>
+      public static bool LoadLevelBlocks(string levelName, bool alreadyTestedExist = false)
+      {
+         try
+         {
+            if (alreadyTestedExist || TestLevelExist(levelName)) //test level exist in database (by name)
+            {
+               SqlConnection connection = new SqlConnection(Game.connString);
+               //load level blocks:              
+               string cmdText = "SELECT * FROM level_blocks WHERE levelNameID = @levelName";
+               SqlCommand command = new SqlCommand(cmdText, connection);
+               command = new SqlCommand(cmdText, connection);
+               command.Parameters.AddWithValue("@levelName", levelName);
+               connection.Open();
+               SqlDataReader reader = command.ExecuteReader();
+               while (reader.Read())
+               {
+                  Point blockPoint = new Point((int)reader["blockPosX"], (int)reader["blockPosY"]);
+                  Form1.blockPointList.Add(blockPoint);
+                  Form1.blockArr[blockPoint.X, blockPoint.Y] = "hardblock"; //everythings is hardblock now
+               }
+               connection.Close();
+               return true;
+            }
+            return false;
+         }
+         catch (Exception e)
+         {
+            MessageBox.Show($"CustomLevels.LoadLevelBlocks method exception - {e.GetType()}");
+            return false;
+         }
       }
 
       /// <summary>
@@ -152,7 +189,7 @@ namespace snake_sandbox01
                return false;
             }
             //delete level from tables:
-            SqlConnection connection = new SqlConnection(game.connString);
+            SqlConnection connection = new SqlConnection(Game.connString);
             string[] tableNames = new string[] { "level_info", "level_blocks", "level_snakes" };
             foreach (string tableName in tableNames) //delete all level table records by levelNameID
             {
@@ -181,7 +218,7 @@ namespace snake_sandbox01
       {
          try
          {
-            SqlConnection connection = new SqlConnection(game.connString);
+            SqlConnection connection = new SqlConnection(Game.connString);
             string cmdText = $"SELECT levelNameID FROM level_info WHERE levelNameID = @levelName";
             SqlCommand cmd = new SqlCommand(cmdText, connection);
             cmd.Parameters.AddWithValue("@levelName", levelName);

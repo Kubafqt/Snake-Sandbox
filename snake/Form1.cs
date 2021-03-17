@@ -14,49 +14,47 @@ namespace snake_sandbox01
       public static int width, height; //of array
       public static int[,] snakeArr; //snakes
       public static string[,] blockArr; //foods/blocks
-      public static List<Point> blockPointList = new List<Point>();
-      public static List<Point> foodPointList = new List<Point>();
-      public static string directKeyDown = "";
+      public static List<Point> foodPointList = new List<Point>(); //list of foods
+      public static List<Point> blockPointList = new List<Point>(); //list of blocks
+      public static string directKeyDown = ""; //player change direction (assign snake.direction in timer)
       private int defaultFormWidth = 1256; //default width of form
       private int defaultFormHeight = 732; //default height of form
       private int createFormWidth = 1529; //width of form when createpanel is active
-      public static Stack<string> saveComboboxItemsToDelete = new Stack<string>();
-      public static Stack<string> levelComboboxItemsToDelete = new Stack<string>();
 
-      Random random;
-      public static Timer timer;
+      Random random; //some element of random
+      public static Timer timer; //main game timer
       Font font = new Font("Consolas", 25.0f); //font of game-over announcement
 
-      #region constructor
+      #region Form constructor
       public Form1()
       {
          InitializeComponent();
          LoadBasicVariables(); //load basic game variables
-         SetBasicSizesAndLocations(); //set panels and form size and location
+         SetPanelFormSizeLocation(); //set form and panels size and location
          sizeX = gamepanel.Width / width; //width of the blocks
          sizeY = gamepanel.Height / height; //height of the blocks
          snakeArr = new int[width, height]; //snake array
          blockArr = new string[width, height]; //block array
-         snakes.AddPlayerSnake(); //add player snake to game
+         Snakes.AddPlayerSnake(); //add player snake to game
          FillComboBoxWithSaveGames(); //add save games to cmbSaveGame
          FillComboBoxWithLevels(); //add created levels to cmbSelectedLevel
-         //get basic game properties in selectpanel from default loaded level:
-         try
+         try //get basic game properties in selectpanel from default loaded level
          {
             cmbSelectedLevel.SelectedIndex = 0;
-            tbInterval.Text = game.interval.ToString();
-            tbFoodNumber.Text = game.foodNumber.ToString();
-            tbIntervalOpen.Text = game.interval.ToString();
+            tbInterval.Text = Game.interval.ToString();
+            tbFoodNumber.Text = Game.foodNumber.ToString();
+            tbIntervalOpen.Text = Game.interval.ToString();
          }
          catch (Exception e)
          {
             MessageBox.Show($"Form1 constructor exception, when parsing game properties to textboxes and combobox - {e.GetType()}");
          }
          this.KeyPreview = true; //keydown better focus
+         this.DoubleBuffered = true; //double buffering
       }
 
       /// <summary>
-      /// Load basic game variables.
+      /// Load default base game variables.
       /// </summary>
       private void LoadBasicVariables()
       {
@@ -65,29 +63,29 @@ namespace snake_sandbox01
          lbGameSize.Text = $"game size: {width}, {height} (x,y)";
          timer = new Timer();
          timer.Tick += new EventHandler(timer_tick);
-         timer.Interval = game.interval;
+         timer.Interval = Game.interval;
          lbScore.Text = ""; //reset score label
          tbFoodNumber.MaxLength = 3; //food number textbox
          tbCFoodnumber.MaxLength = 3; //food number textbox in create panel
       }
 
       /// <summary>
-      /// Set panels and form size and location.
+      /// Set default form and panels size and location.
       /// </summary>
-      private void SetBasicSizesAndLocations()
+      private void SetPanelFormSizeLocation()
       {
          this.Size = new Size(defaultFormWidth, defaultFormHeight); //default form size
          foreach (Control c in Controls) //assign default panels size and location 
          {
             if (c is Panel && c != gamepanel && c != createpanelUI)
             {
-               c.Size = game.settingsPanelSize;
-               c.Location = game.panelLocation;
+               c.Size = Game.settingsPanelSize;
+               c.Location = Game.panelLocation;
             }
          }
-         game.activePanel = gamepanel.Name;
-         gamepanel.Location = game.panelLocation;
-         gamepanel.Size = game.gamepanelSize;
+         Game.activePanel = gamepanel.Name;
+         gamepanel.Location = Game.panelLocation;
+         gamepanel.Size = Game.gamepanelSize;
          blockPanel.Location = new Point(19, 290);
          blockPanel.Size = new Size(222, 118);
          addSnakePanel.Location = new Point(19, 290);
@@ -100,37 +98,37 @@ namespace snake_sandbox01
       {
          Keys key = e.KeyCode;
          //change direction of player snake movement:
-         if ((key == Keys.D || key == Keys.Right) && (snakes.PlayerSnake.direction != "left" || snakes.PlayerSnake.snakeLength == 0)) //right
+         if ((key == Keys.D || key == Keys.Right) && (Snakes.PlayerSnake.direction != "left" || Snakes.PlayerSnake.snakeLength == 0)) //D - right
          {
             directKeyDown = "right";
             DisablePauseOnMovementKeydown();
          }
-         if ((key == Keys.A || key == Keys.Left) && (snakes.PlayerSnake.direction != "right" || snakes.PlayerSnake.snakeLength == 0)) //left
+         if ((key == Keys.A || key == Keys.Left) && (Snakes.PlayerSnake.direction != "right" || Snakes.PlayerSnake.snakeLength == 0)) //A - left
          {
             directKeyDown = "left";
             DisablePauseOnMovementKeydown();
          }
-         if ((key == Keys.W || key == Keys.Up) && (snakes.PlayerSnake.direction != "down" || snakes.PlayerSnake.snakeLength == 0)) //up
+         if ((key == Keys.W || key == Keys.Up) && (Snakes.PlayerSnake.direction != "down" || Snakes.PlayerSnake.snakeLength == 0)) //W - up
          {
             directKeyDown = "up";
             DisablePauseOnMovementKeydown();
          }
-         if ((key == Keys.S || key == Keys.Down) && (snakes.PlayerSnake.direction != "up" || snakes.PlayerSnake.snakeLength == 0)) //down
+         if ((key == Keys.S || key == Keys.Down) && (Snakes.PlayerSnake.direction != "up" || Snakes.PlayerSnake.snakeLength == 0)) //S - down
          {
             directKeyDown = "down";
             DisablePauseOnMovementKeydown();
          }
-         if (game.activePanel == gamepanel.Name && key == Keys.R) //new games
+         if (Game.activePanel == gamepanel.Name && key == Keys.R) //R - new games
          {
-            if (!game.levelCreating || !SaveCurrentCreatingLevel()) //zeptej se jestli uložit právě vytvářený level, pokud se právě vytváří
+            if (!Game.levelCreating || !SaveCurrentCreatingLevel()) //ask if save currently creating level, when currently creating level
             {
-               game.NewGame();
-               lbScore.Text = $"SnakeLength : { snakes.PlayerSnake.snakeLength}";
+               Game.NewGame(Game.defaultLevel);
+               lbScore.Text = $"SnakeLength : { Snakes.PlayerSnake.snakeLength}";
             }
          }
-         if (game.activePanel == gamepanel.Name && (key == Keys.P || key == Keys.G)) //switch pause game
+         if (Game.activePanel == gamepanel.Name && (key == Keys.P || key == Keys.G)) //P, G - switch pause game
          {
-            game.Pause();
+            Game.Pause();
          }
       }
 
@@ -139,10 +137,10 @@ namespace snake_sandbox01
       /// </summary>
       private void DisablePauseOnMovementKeydown()
       {
-         if (!game.gameover && game.activePanel == gamepanel.Name) //disable pause when not gameover and active panel is gamepanel
+         if (!Game.gameover && Game.activePanel == gamepanel.Name) //disable pause when not gameover and active panel is gamepanel
          {
-            game.Pause(2);
-            game.gameIsRunning = true;
+            Game.Pause(2);
+            Game.gameIsRunning = true;
          }
       }
 
@@ -151,13 +149,13 @@ namespace snake_sandbox01
       #region main game timer
       private void timer_tick(object sender, EventArgs e)
       {
-         snakes.PlayerSnake.direction = directKeyDown;
-         foreach (snakes snake in snakes.Snakes.ToList())
+         Snakes.PlayerSnake.direction = directKeyDown;
+         foreach (Snakes snake in Snakes.snakesList.ToList())
          {
-            if (snake.direction != "" && !snake.dead) //go if not staying or is not dead
+            if (snake.direction != "" && !snake.dead) //move when not staying or not dead
             {
                //bot check free way to change direction:
-               if (snake != snakes.PlayerSnake)
+               if (snake != Snakes.PlayerSnake)
                { snake.CheckDirection(); }
 
                //snake movement on coordinates:
@@ -166,68 +164,68 @@ namespace snake_sandbox01
                   case "left": //left
                      {
                         if (snake.x != 0) { snake.x--; }
-                        else if (game.passableEdges) //edges of gamepanel can be passed
+                        else if (Game.passableEdges) //edges of gamepanel can be passed
                         {
                            snake.x = width - 1;
-                           if (snake != snakes.PlayerSnake)// && snake.insideSnake) //check for food after pass the edge
+                           if (snake != Snakes.PlayerSnake)// && snake.insideSnake) //check for food after pass the edge
                            {
                               snake.CheckClosestFoodAndGetDirection();
                            }
                         }
                         else //game over when not passable edges
                         {
-                           game.GameOver(snake);
+                           Game.GameOver(snake);
                         }
                         break;
                      }
                   case "right": //right
                      {
                         if (snake.x != width - 1) { snake.x++; }
-                        else if (game.passableEdges) //edges of gamepanel can be passed
+                        else if (Game.passableEdges) //edges of gamepanel can be passed
                         {
                            snake.x = 0;
-                           if (snake != snakes.PlayerSnake) //check for food after pass the edge
+                           if (snake != Snakes.PlayerSnake) //check for food after pass the edge
                            {
                               snake.CheckClosestFoodAndGetDirection();
                            }
                         }
                         else //game over when not passable edges
                         {
-                           game.GameOver(snake);
+                           Game.GameOver(snake);
                         }
                         break;
                      }
                   case "up": //up
                      {
                         if (snake.y != 0) { snake.y--; }
-                        else if (game.passableEdges) //edges of gamepanel can be passed
+                        else if (Game.passableEdges) //edges of gamepanel can be passed
                         {
                            snake.y = height - 1;
-                           if (snake != snakes.PlayerSnake) //check for food after pass the edge
+                           if (snake != Snakes.PlayerSnake) //check for food after pass the edge
                            {
                               snake.CheckClosestFoodAndGetDirection();
                            }
                         }
                         else
                         {
-                           game.GameOver(snake);
+                           Game.GameOver(snake);
                         }
                         break;
                      }
                   case "down": //down
                      {
                         if (snake.y != height - 1) { snake.y++; }
-                        else if (game.passableEdges) //edges of gamepanel can be passed
+                        else if (Game.passableEdges) //edges of gamepanel can be passed
                         {
                            snake.y = 0;
-                           if (snake != snakes.PlayerSnake) //check for food after pass the edge
+                           if (snake != Snakes.PlayerSnake) //check for food after pass the edge
                            {
                               snake.CheckClosestFoodAndGetDirection();
                            }
                         }
                         else
                         {
-                           game.GameOver(snake);
+                           Game.GameOver(snake);
                         }
                         break;
                      }
@@ -240,15 +238,15 @@ namespace snake_sandbox01
                   snakeArr[snake.x, snake.y] = snake.snakeNumber; //add snake to snake array
                   snake.snakePointQueue.Enqueue(new Point(snake.x, snake.y)); //queue for snake movement history and deleting its tail
                }
-               else if (game.killOnMyself || snake.killonItself) //snake collision with himself when killonItself is true (weird condition), game.killOnMyself is global for game
+               else if (Game.killOnMyself || snake.killonItself) //snake collision with himself when killonItself is true (weird condition), game.killOnMyself is global for game
                {
                   if (snake.killonItself)
-                  { game.GameOver(snake); }
+                  { Game.GameOver(snake); }
                }
                else if (snakeArr[snake.x, snake.y] != snake.snakeNumber || blockArr[snake.x, snake.y] == "hardblock") //snake collision with other snake or hardblock
-               { game.GameOver(snake); }
+               { Game.GameOver(snake); }
 
-               if (snake != snakes.PlayerSnake) //it's bot snake
+               if (snake != Snakes.PlayerSnake) //it's bot snake
                {
                   if (snake.changedDirection) //bot tracking food after change direction
                   {
@@ -268,7 +266,7 @@ namespace snake_sandbox01
                else if (blockArr[snake.x, snake.y] != "food" && snake.snakeLength <= snake.startSnakeLength)//snake.thisStartSnakeLength && snake == snakes.PlayerSnake) //snake growth
                {
                   snake.snakeLength++;
-                  lbScore.Text = $"SnakeLength : { snakes.PlayerSnake.snakeLength}";
+                  lbScore.Text = $"SnakeLength : { Snakes.PlayerSnake.snakeLength}";
                }
                else
                {
@@ -283,10 +281,10 @@ namespace snake_sandbox01
       /// Snake eated food.
       /// </summary>
       /// <param name="snake">snake instance</param>
-      private void FoodEaten(snakes snake)
+      private void FoodEaten(Snakes snake)
       {
          snake.snakeLength++;
-         lbScore.Text = $"SnakeLength : { snakes.PlayerSnake.snakeLength}";
+         lbScore.Text = $"SnakeLength : { Snakes.PlayerSnake.snakeLength}";
          //new-food:
          blockArr[snake.x, snake.y] = string.Empty;
          int i = foodPointList.IndexOf(new Point(snake.x, snake.y));
@@ -298,7 +296,7 @@ namespace snake_sandbox01
             { goto newFoodPoint; } //food in hardblock or in food or in snake - (double/multiple food portion?)
             foodPointList[i] = fPoint; //replace foodPosition (not remove/add food)
             blockArr[fPoint.X, fPoint.Y] = "food";
-            snakes.AllBotSnakesCheckClosestFood();
+            Snakes.AllBotSnakesCheckClosestFood();
          }
       }
 
@@ -307,7 +305,7 @@ namespace snake_sandbox01
       #region Paint on panels
 
       /// <summary>
-      /// gamepanel paint
+      /// paint on game panel
       /// </summary>
       private void gamepanel_Paint(object sender, PaintEventArgs e)
       {
@@ -317,27 +315,27 @@ namespace snake_sandbox01
          //paint explosion (after bot snake death):
          try //can be sometimes weird
          {
-            foreach (explo ex in explo.explosions.ToList())
+            foreach (Explode explosion in Explode.explosions.ToList())
             {
-               if (ex.size < ex.fullSize)
+               if (explosion.size < explosion.fullSize)
                {
-                  SolidBrush brush = new SolidBrush(ex.color);
-                  gfx.FillEllipse(brush, ex.x - ex.size / 2 + ex.startSize, ex.y - ex.size / 2 + ex.startSize, ex.size, ex.size);
-                  ex.size += 5;
+                  SolidBrush brush = new SolidBrush(explosion.color);
+                  gfx.FillEllipse(brush, explosion.x - explosion.size / 2 + explosion.startSize, explosion.y - explosion.size / 2 + explosion.startSize, explosion.size, explosion.size);
+                  explosion.size += 5;
                }
-               else { explo.explosions.RemoveAt(i); }
+               else { Explode.explosions.RemoveAt(i); }
                i++;
             }
          }
          catch { }
          //paint all snakes:
-         foreach (snakes snake in snakes.Snakes.ToList()) //all snakes
+         foreach (Snakes snake in Snakes.snakesList.ToList()) //all snakes
          {
             foreach (Point p in snake.snakePointQueue.ToList()) //snakes + array for colors
             {
                SolidBrush brush = new SolidBrush(snake.color);
                gfx.FillRectangle(brush, p.X * sizeX, p.Y * sizeY, sizeX, sizeY);
-               //if (snake == snakes.PlayerSnake) //special animation for player snake
+               //if (snake == snakes.PlayerSnake) //special animation for PlayerSnake
                //{
                //   Pen pen = new Pen(Brushes.DarkGreen, 2); //some interesting animation
                //   gfx.DrawRectangle(pen, p.X * sizeX, p.Y * sizeY, sizeX, sizeY);
@@ -355,15 +353,15 @@ namespace snake_sandbox01
             gfx.FillRectangle(Brushes.DarkCyan, p.X * sizeX, p.Y * sizeY, sizeX, sizeY);
          }
          //paint gameover:
-         if (game.gameover) //gameover
+         if (Game.gameover) //gameover
          {
-            gfx.FillRectangle(Brushes.PaleVioletRed, snakes.PlayerSnake.failPos.X * sizeX, snakes.PlayerSnake.failPos.Y * sizeY, sizeX, sizeY);
-            gfx.DrawString($"GameOver! - SnakeLength : {snakes.PlayerSnake.snakeLength}", font, Brushes.Black, width / 2 - 50, height / 2);
+            gfx.FillRectangle(Brushes.PaleVioletRed, Snakes.PlayerSnake.failPos.X * sizeX, Snakes.PlayerSnake.failPos.Y * sizeY, sizeX, sizeY);
+            gfx.DrawString($"GameOver! - SnakeLength : {Snakes.PlayerSnake.snakeLength}", font, Brushes.Black, width / 2 - 50, height / 2);
          }
       }
 
       /// <summary>
-      /// select panel paint
+      /// paint on level panel
       /// </summary>
       private void levelpanel_Paint(object sender, PaintEventArgs e)
       {
@@ -371,32 +369,32 @@ namespace snake_sandbox01
       }
 
       /// <summary>
-      /// create panel paint
+      /// paint on create panel
       /// </summary>
       private void createpanel_Paint(object sender, PaintEventArgs e)
       {
          Graphics gfx = e.Graphics;
-         if (game.levelCreating)
+         if (Game.levelCreating)
          {
             foreach (Point p in blockPointList) //hardblock
             {
                gfx.FillRectangle(Brushes.DarkCyan, p.X * sizeX, p.Y * sizeY, sizeX, sizeY);
             }
          }
-         if (blocks.newBlockPoint != new Point(-1, -1) && blocks.newBlockSize != Size.Empty) //new-block
+         if (Blocks.newBlockPoint != new Point(-1, -1) && Blocks.newBlockSize != Size.Empty) //new-block
          {
-            gfx.FillRectangle(Brushes.Black, blocks.newBlockPoint.X * sizeX, blocks.newBlockPoint.Y * sizeY, blocks.newBlockSize.Width * sizeX, blocks.newBlockSize.Height * sizeY);
+            gfx.FillRectangle(Brushes.Black, Blocks.newBlockPoint.X * sizeX, Blocks.newBlockPoint.Y * sizeY, Blocks.newBlockSize.Width * sizeX, Blocks.newBlockSize.Height * sizeY);
          }
-         if (blocks.clearBlocks) //clear-block rectangle
+         if (Blocks.clearBlocks) //clear-block rectangle
          {
             Pen pen = new Pen(Brushes.Black, 2);
-            gfx.DrawRectangle(pen, blocks.clearBlockPoint.X * sizeX, blocks.clearBlockPoint.Y * sizeY, blocks.clearBlockSize.Width * sizeX, blocks.clearBlockSize.Height * sizeY);
+            gfx.DrawRectangle(pen, Blocks.clearBlockPoint.X * sizeX, Blocks.clearBlockPoint.Y * sizeY, Blocks.clearBlockSize.Width * sizeX, Blocks.clearBlockSize.Height * sizeY);
          }
          e.Graphics.DrawRectangle(Pens.DarkBlue, 0, 0, createpanel.Width - 1, createpanel.Height - 1); //panel edge
       }
 
       /// <summary>
-      /// createpanelUI paint
+      /// paint on createpanelUI
       /// </summary>
       private void createpanelUI_Paint(object sender, PaintEventArgs e)
       {
@@ -405,118 +403,9 @@ namespace snake_sandbox01
 
       #endregion
 
-      #region selectpanelUI
+      #region level panel UI
 
-      #region save and load
-
-      /// <summary>
-      /// Button for save game.
-      /// </summary>
-      private void btnSaveGame_Click(object sender, EventArgs e)
-      {
-         bool proceed = false;
-         if (game.gameIsRunning) //check if is some game to save
-         {
-            GameSaveLoad.SaveGame(tbSaveGame.Text, out proceed);
-         }
-         else //no game to save
-         {
-            MessageBox.Show("Není spuštěná žádná hra k uložení!");
-         }
-         if (proceed) //everything proceed fine
-         {
-            if (!cmbLoadGame.Items.Contains(tbSaveGame.Text)) //dont add item if already exist in combobox
-            { cmbLoadGame.Items.Add(tbSaveGame.Text); }
-            cmbLoadGame.SelectedItem = tbSaveGame.Text; //select currently added level
-            tbSaveGame.Clear(); //clear saveGame textbox after save game proceed
-            game.gameIsRunning = false; //game is not running when save level
-            if (!cmbLoadGame.Enabled || !btnLoadGame.Enabled || !btnDeleteSave.Enabled)
-            {
-               EnableLoadAndDeleteControls(); //enable loadgame controls if not enabled
-            }
-         }
-      }
-
-      /// <summary>
-      /// Enable or disable SaveGame button when is some text in SaveGame textbox.
-      /// </summary>
-      private void tbSaveGame_TextChanged(object sender, EventArgs e)
-      {
-         if (tbSaveGame.Text != string.Empty && !btnSaveGame.Enabled)
-         {
-            btnSaveGame.Enabled = true;
-         }
-         else if (tbSaveGame.Text == string.Empty && btnSaveGame.Enabled)
-         {
-            btnSaveGame.Enabled = false;
-         }
-      }
-
-      /// <summary>
-      /// Button for load saved game.
-      /// </summary>
-      private void btnLoadGame_Click(object sender, EventArgs e)
-      {
-         if (cmbLoadGame.Items.Count > 0) //some savegame is in combobox (cmbLoadGame)
-         {
-            if (game.gameIsRunning && AskToSaveGame(true)) //determine if some game is already running
-            {
-               return;
-            }
-            if (game.levelCreating && SaveCurrentCreatingLevel())
-            {
-               return;
-            }
-            game.Pause(1);
-            game.ResetGame();
-            if (GameSaveLoad.LoadGame(cmbLoadGame.SelectedItem.ToString())) //try load game from database
-            {
-               ChangePanel(gamepanel); //switch panel in form app
-               lbScore.Text = $"SnakeLength : { snakes.PlayerSnake.snakeLength}";
-               snakes.AllBotSnakesCheckClosestFood();
-            }
-         }
-         else //combobox cmbLoadGame is empty
-         {
-            MessageBox.Show("Nutno první přidat a zvolit nějaký savegame."); //basic
-         }
-      }
-
-      /// <summary>
-      /// Button for delete saved game.
-      /// </summary>
-      private void btnDeleteSave_Click(object sender, EventArgs e)
-      {
-         bool deleteFromCombobox;
-         GameSaveLoad.ToDeleteSave(cmbLoadGame.SelectedItem.ToString(), out deleteFromCombobox);
-         if (deleteFromCombobox)
-         {
-            cmbLoadGame.Items.RemoveAt(cmbLoadGame.SelectedIndex);
-            if (cmbLoadGame.Items.Count < 1) //no record in savegame
-            {
-               EnableLoadAndDeleteControls(false);
-            }
-            else
-            {
-               cmbLoadGame.SelectedIndex = 0;
-            }
-         }
-      }
-
-      /// <summary>
-      /// Enable or disable load game and delete save controls. Usable when is no record in saved games.
-      /// </summary>
-      /// <param name="enable">Default: true., True: enable load game / delete save controls., False: disable load game / delete save controls.</param>
-      private void EnableLoadAndDeleteControls(bool enable = true)
-      {
-         cmbLoadGame.Enabled = enable;
-         btnLoadGame.Enabled = enable;
-         btnDeleteSave.Enabled = enable;
-      }
-
-      #endregion save and load
-
-      #region select level
+      #region level select
 
       /// <summary>
       /// Button for start selected level.
@@ -531,14 +420,14 @@ namespace snake_sandbox01
       /// </summary>
       private void StartSelectedLevel()
       {
-         if (game.levelCreating && SaveCurrentCreatingLevel()) //level is creating and user want to save currently creating level
+         if (Game.levelCreating && SaveCurrentCreatingLevel()) //some level is in creating process and user want to save currently creating level
          {
             return;
          }
          ChangePanel(gamepanel); //change panel to gamepanel
-         game.selectedLevelName = cmbSelectedLevel.Text;
-         game.NewGame(cmbSelectedLevel.SelectedIndex - 1 < 6 ? cmbSelectedLevel.SelectedIndex - 1 : 1);
-         selectChBoxPassableEdges.Checked = game.passableEdges; //checkbox for passable edges in selectpanel
+         Game.selectedLevelName = cmbSelectedLevel.Text; //most important when trying to load saved level
+         Game.NewGame(cmbSelectedLevel.SelectedIndex - 1 < 6 ? cmbSelectedLevel.SelectedIndex : 1); //send default level info
+         selectChBoxPassableEdges.Checked = Game.passableEdges; //get passable edges value to checkbox in selectpanel
       }
 
       /// <summary>
@@ -547,7 +436,7 @@ namespace snake_sandbox01
       private void btnChangeDetail_Click(object sender, EventArgs e)
       {
          ChangeLevelGameAttribs(); //change selected level level atributes
-         snakes.AllBotSnakesCheckClosestFood(); //all snakes bots check for closest food
+         Snakes.AllBotSnakesCheckClosestFood(); //all snakes bots check for closest food
       }
 
       /// <summary>
@@ -559,14 +448,14 @@ namespace snake_sandbox01
          int interval = 0; //new game interval
          int.TryParse(tbFoodNumber.Text, out foodCount); //try to parse new found count from textbox
          int.TryParse(tbInterval.Text, out interval); //try to parse new interval from textbox
-         if (foodCount > 0 && foodCount < game.foodNumber) //change tracked food, when is less (not index out of range exception)
-         { snakes.FoodCountChanged(); }
-         game.foodNumber = foodCount > 0 ? foodCount : game.foodNumber;
-         game.interval = interval > 0 ? interval : game.interval;
-         game.SpawnAllFood(true); //delete all old foods and spawn new foods
-         timer.Interval = game.interval; //change game timer interval (gamespeed)
-         tbIntervalOpen.Text = game.interval.ToString(); //change open control interval textbox by new interval
-         game.passableEdges = selectChBoxPassableEdges.Checked; //change passable edges attribute from by checkbox
+         if (foodCount > 0 && foodCount < Game.foodNumber) //change tracked food, when is less (not index out of range exception)
+         { Snakes.FoodCountChanged(); }
+         Game.foodNumber = foodCount > 0 ? foodCount : Game.foodNumber;
+         Game.interval = interval > 0 ? interval : Game.interval;
+         Game.SpawnAllFood(true); //delete all old foods and spawn new foods
+         timer.Interval = Game.interval; //change game timer interval (gamespeed)
+         tbIntervalOpen.Text = Game.interval.ToString(); //change open control interval textbox by new interval
+         Game.passableEdges = selectChBoxPassableEdges.Checked; //change passable edges attribute from by checkbox
       }
 
       /// <summary>
@@ -589,7 +478,7 @@ namespace snake_sandbox01
       {
          try
          {
-            SqlConnection connection = new SqlConnection(game.connString);
+            SqlConnection connection = new SqlConnection(Game.connString);
             string cmdText = $"SELECT saveGameNameID FROM savegame_info";
             SqlCommand cmd = new SqlCommand(cmdText, connection);
             connection.Open();
@@ -623,24 +512,150 @@ namespace snake_sandbox01
 
       #endregion level select
 
-      #endregion select level
-
-      #region createpanelUI
+      #region save and load game
 
       /// <summary>
-      /// Button to enable start creating level.
+      /// Button for save game.
       /// </summary>
-      private void btnCreateLevelStart_Click(object sender, EventArgs e)
+      private void btnSaveGame_Click(object sender, EventArgs e)
       {
-         if (!game.levelCreating) //if not controls of create level enabled
+         bool proceed = false;
+         if (Game.gameIsRunning) //check if is some game to save
          {
-            if (game.gameIsRunning && AskToSaveGame()) //when some game is running
+            GameSaveLoad.SaveGame(tbSaveGame.Text, out proceed);
+         }
+         else //no game to save
+         {
+            MessageBox.Show("Není spuštěná žádná hra k uložení!");
+            return;
+         }
+         if (proceed) //everything proceed fine
+         {
+            if (!cmbLoadGame.Items.Contains(tbSaveGame.Text)) //dont add item if already exist in combobox
+            { cmbLoadGame.Items.Add(tbSaveGame.Text); }
+            cmbLoadGame.SelectedItem = tbSaveGame.Text; //select currently added level
+            tbSaveGame.Clear(); //clear saveGame textbox after save game proceed
+            Game.gameIsRunning = false; //game is not running when save level
+            if (!cmbLoadGame.Enabled || !btnLoadGame.Enabled || !btnDeleteSave.Enabled)
+            {
+               EnableLoadAndDeleteControls(); //enable loadgame controls if not enabled
+            }
+         }
+         else
+         {
+            MessageBox.Show("Hru se nepodařilo uložit.");
+         }
+      }
+
+      /// <summary>
+      /// Enable or disable button "SaveGame" when textbox "SaveGame" is changed.
+      /// </summary>
+      private void tbSaveGame_TextChanged(object sender, EventArgs e)
+      {
+         if (tbSaveGame.Text != string.Empty && !btnSaveGame.Enabled) //text is not empty
+         {
+            btnSaveGame.Enabled = true;
+         }
+         else if (tbSaveGame.Text == string.Empty && btnSaveGame.Enabled) //text empty
+         {
+            btnSaveGame.Enabled = false;
+         }
+      }
+
+      /// <summary>
+      /// Button for load saved game.
+      /// </summary>
+      private void btnLoadGame_Click(object sender, EventArgs e)
+      {
+         if (cmbLoadGame.Items.Count > 0) //some savegame is in combobox (cmbLoadGame)
+         {
+            if (Game.gameIsRunning && AskToSaveGame(true)) //determine if some game is already running
             {
                return;
             }
-            game.ResetGame(); //also disable gameIsRunning (false)
+            if (Game.levelCreating && SaveCurrentCreatingLevel())
+            {
+               return;
+            }
+            Game.Pause(1);
+            Game.ResetGame();
+            Game.selectedLevelName = cmbLoadGame.Text; //assign selected level from combobox (!) - not! - normálně něco jiného - level name by this
+             
+            if (GameSaveLoad.LoadGame(cmbLoadGame.SelectedItem.ToString())) //try load game from database
+            { 
+               if (Game.defaultLevelNames.Contains(Game.selectedLevelName)) //its default level - load it
+               {
+                  int index = Game.defaultLevelNames.IndexOf(Game.selectedLevelName);
+                  int level = index >= 0 ? index : 0;
+                  Game.SelectLevel(level); 
+               }
+               else //it is custom level save 
+               {
+                  CustomLevels.LoadLevelBlocks(Game.selectedLevelName);
+               }
+               ChangePanel(gamepanel); //switch panel in form app
+               lbScore.Text = $"SnakeLength : { Snakes.PlayerSnake.snakeLength}";
+               Snakes.AllBotSnakesCheckClosestFood();
+               timer.Start();
+            }
+         }
+         else //combobox cmbLoadGame is empty
+         {
+            MessageBox.Show("Nutno první přidat a zvolit nějaký savegame."); //basic
+         }
+      }
+
+      /// <summary>
+      /// Button for delete saved game.
+      /// </summary>
+      private void btnDeleteSave_Click(object sender, EventArgs e)
+      {
+         if (GameSaveLoad.ToDeleteSave(cmbLoadGame.SelectedItem.ToString()))
+         {
+            cmbLoadGame.Items.RemoveAt(cmbLoadGame.SelectedIndex);
+            if (cmbLoadGame.Items.Count < 1) //no record in savegame
+            {
+               EnableLoadAndDeleteControls(false);
+            }
+            else
+            {
+               cmbLoadGame.SelectedIndex = 0;
+            }
+         }
+      }
+
+      /// <summary>
+      /// Enable or disable load game and delete save controls. Usable when is no record in saved games.
+      /// </summary>
+      /// <param name="enable">Default: true., True: enable load game / delete save controls., False: disable load game / delete save controls.</param>
+      private void EnableLoadAndDeleteControls(bool enable = true)
+      {
+         cmbLoadGame.Enabled = enable;
+         btnLoadGame.Enabled = enable;
+         btnDeleteSave.Enabled = enable;
+      }
+
+      #endregion save and load game
+
+      #endregion select level
+
+      #region create panel UI
+
+      //open create level ui:
+      /// <summary>
+      /// Button for enable start creating level.
+      /// </summary>
+      private void btnCreateLevelStart_Click(object sender, EventArgs e)
+      {
+         if (!Game.levelCreating) //if not controls of create level enabled
+         {
+            if (Game.gameIsRunning && AskToSaveGame()) //when some game is running
+            {
+               return;
+            }
+            Game.ResetGame(); //also disable gameIsRunning (false)
             LevelCreateControlsEnabled();
-            lbScore.Text = $"SnakeLength : { snakes.PlayerSnake.snakeLength}";
+            lbScore.Text = $"SnakeLength : { Snakes.PlayerSnake.snakeLength}";
          }
       }
 
@@ -650,7 +665,7 @@ namespace snake_sandbox01
       /// <param name="enable">enable or disable, default: true</param>
       private void LevelCreateControlsEnabled(bool enable = true)
       {
-         game.levelCreating = enable;
+         Game.levelCreating = enable;
          tbLevelName.Enabled = enable;
          tbCFoodnumber.Enabled = enable;
          btAddBlock.Enabled = enable;
@@ -672,9 +687,10 @@ namespace snake_sandbox01
       {
          tbLevelName.Clear();
          tbCFoodnumber.Clear();
-         game.ResetGame();
+         Game.ResetGame();
       }
 
+      //create level button:
       /// <summary>
       /// Button for create level and save level to database.
       /// </summary>
@@ -691,7 +707,7 @@ namespace snake_sandbox01
             LevelCreateControlsEnabled(false);
             //ChangePanel(levelpanel); //not now here, think better
             MessageBox.Show($"Level {levelName} has successfully created!");
-            game.ResetGame(); //reset viewing of level
+            Game.ResetGame(); //reset viewing of level
             Refresh();
          }
          else //not everything proceed good
@@ -700,6 +716,7 @@ namespace snake_sandbox01
          }
       }
 
+      //add and clear block buttons:
       /// <summary>
       /// Button for add block to new level.
       /// </summary>
@@ -711,10 +728,10 @@ namespace snake_sandbox01
          {
             addSnakePanel.Hide();
          }
-         if (blocks.clearBlocks) //switch from clear block
+         if (Blocks.clearBlocks) //switch from clear block
          {
-            blocks.clearBlocks = false;
-            ResetBlockPointSizeText(out blocks.clearBlockPoint, out blocks.clearBlockSize);  //reset block controls
+            Blocks.clearBlocks = false;
+            ResetBlockPointSizeText(out Blocks.clearBlockPoint, out Blocks.clearBlockSize);  //reset block controls
             Refresh();
          }
          else //show blockPanel and create block procedure
@@ -727,10 +744,10 @@ namespace snake_sandbox01
             {
                blockPanel.Hide();
             }
-            else if (blocks.newBlockPoint != new Point(-1, -1) && blocks.newBlockSize != Size.Empty) //create block
+            else if (Blocks.newBlockPoint != new Point(-1, -1) && Blocks.newBlockSize != Size.Empty) //create block
             {
-               game.CreateBlocks(blocks.newBlockPoint.X, blocks.newBlockPoint.Y, blocks.newBlockSize.Width, blocks.newBlockSize.Height);
-               ResetBlockPointSizeText(out blocks.newBlockPoint, out blocks.newBlockSize);
+               Game.CreateBlocks(Blocks.newBlockPoint.X, Blocks.newBlockPoint.Y, Blocks.newBlockSize.Width, Blocks.newBlockSize.Height);
+               ResetBlockPointSizeText(out Blocks.newBlockPoint, out Blocks.newBlockSize);
                blockPanel.Hide();
                //Refresh();
             }
@@ -749,10 +766,10 @@ namespace snake_sandbox01
          {
             addSnakePanel.Hide();
          }
-         if (!blocks.clearBlocks) //clear box is not active
+         if (!Blocks.clearBlocks) //clear box is not active
          {
-            blocks.clearBlocks = true;
-            ResetBlockPointSizeText(out blocks.newBlockPoint, out blocks.newBlockSize); //reset block controls
+            Blocks.clearBlocks = true;
+            ResetBlockPointSizeText(out Blocks.newBlockPoint, out Blocks.newBlockSize); //reset block controls
             if (!blockPanel.Visible)
             {
                blockPanel.Show(); //show block controls
@@ -768,14 +785,14 @@ namespace snake_sandbox01
             else if (tbBlockPoint.Text == string.Empty && tbBlockSize.Text == string.Empty)
             {
                blockPanel.Hide(); //hide block controls when empty textboxes
-               blocks.clearBlocks = false;
+               Blocks.clearBlocks = false;
             }
-            else if (blocks.clearBlockPoint != new Point(-1, -1) && blocks.clearBlockSize != Size.Empty) //clear blocks
+            else if (Blocks.clearBlockPoint != new Point(-1, -1) && Blocks.clearBlockSize != Size.Empty) //clear blocks
             {
-               blocks.PerformClearBlocks(blocks.clearBlockPoint, blocks.clearBlockSize);
-               ResetBlockPointSizeText(out blocks.clearBlockPoint, out blocks.clearBlockSize);
+               Blocks.PerformClearBlocks(Blocks.clearBlockPoint, Blocks.clearBlockSize);
+               ResetBlockPointSizeText(out Blocks.clearBlockPoint, out Blocks.clearBlockSize);
                blockPanel.Hide();
-               blocks.clearBlocks = false;
+               Blocks.clearBlocks = false;
                Refresh();
             }
          }
@@ -803,37 +820,37 @@ namespace snake_sandbox01
       /// </summary>
       private void TestTextboxValues()
       {
-         if (Regex.IsMatch(tbBlockPoint.Text, ";")) //
+         if (Regex.IsMatch(tbBlockPoint.Text, ";")) //block point textbox refresh createpanel
          {
             string[] splitText = tbBlockPoint.Text.Split(';');
             int x;
             int y = 0;
-            if (!blocks.clearBlocks && blocks.NotAcrossBorderValues(out x, ref y, blocks.newBlockSize, splitText)) //
+            if (!Blocks.clearBlocks && Blocks.NotAcrossBorderValues(out x, ref y, Blocks.newBlockSize, splitText)) //
             {
                //blocks.AssignBlockValues(out blocks.newBlockPoint, x, y);
-               blocks.newBlockPoint = new Point(x, y);
+               Blocks.newBlockPoint = new Point(x, y);
             }
-            else if (blocks.clearBlocks && blocks.NotAcrossBorderValues(out x, ref y, blocks.clearBlockSize, splitText)) //
+            else if (Blocks.clearBlocks && Blocks.NotAcrossBorderValues(out x, ref y, Blocks.clearBlockSize, splitText)) //
             {
                //blocks.AssignBlockValues(out blocks.clearBlockPoint, x, y);
-               blocks.clearBlockPoint = new Point(x, y);
+               Blocks.clearBlockPoint = new Point(x, y);
             }
             Refresh();
          }
-         if (Regex.IsMatch(tbBlockSize.Text, ";"))
+         if (Regex.IsMatch(tbBlockSize.Text, ";"))  //block size textbox refresh createpanel
          {
             string[] splitText = tbBlockSize.Text.Split(';');
             int x;
             int y = 0;
-            if (!blocks.clearBlocks && blocks.NotAcrossBorderValues(out x, ref y, blocks.newBlockPoint, splitText))
+            if (!Blocks.clearBlocks && Blocks.NotAcrossBorderValues(out x, ref y, Blocks.newBlockPoint, splitText))
             {
                //blocks.AssignBlockValues(out blocks.newBlockSize, x, y);
-               blocks.newBlockSize = new Size(x, y);
+               Blocks.newBlockSize = new Size(x, y);
             }
-            else if (blocks.clearBlocks && blocks.NotAcrossBorderValues(out x, ref y, blocks.clearBlockPoint, splitText))
+            else if (Blocks.clearBlocks && Blocks.NotAcrossBorderValues(out x, ref y, Blocks.clearBlockPoint, splitText))
             {
                //blocks.AssignBlockValues(out blocks.clearBlockSize, x, y);
-               blocks.clearBlockSize = new Size(x, y);
+               Blocks.clearBlockSize = new Size(x, y);
             }
             Refresh();
          }
@@ -844,23 +861,24 @@ namespace snake_sandbox01
       /// </summary>
       /// <param name="point">return empty point</param>
       /// <param name="size">return empty size</param>
-      private void ResetBlockPointSizeText(out Point point, out Size size) //not reset last blockPoint text - better for user, but working weird
+      private void ResetBlockPointSizeText(out Point point, out Size size) 
       {
          point = new Point(-1, -1); //as empty point
          size = Size.Empty;
-         tbBlockPoint.Clear();
-         tbBlockSize.Clear();
+         tbBlockPoint.Clear(); //when not reset last text - can be better for user, but weird functionality
+         tbBlockSize.Clear(); //history listbox of added blocks will be much better (+snakes history, ...)
       }
 
+      //add snake buttons:
       /// <summary>
       /// Button for add snake to new level.
       /// </summary>
       private void btnAddSnake_Click(object sender, EventArgs e)
       {
-         if (blocks.clearBlocks || blockPanel.Visible) //hide block panel
+         if (Blocks.clearBlocks || blockPanel.Visible) //hide block panel
          {
-            blocks.clearBlocks = false;
-            ResetBlockPointSizeText(out blocks.clearBlockPoint, out blocks.clearBlockSize);  //reset block controls
+            Blocks.clearBlocks = false;
+            ResetBlockPointSizeText(out Blocks.clearBlockPoint, out Blocks.clearBlockSize);  //reset block controls
             blockPanel.Hide();
          }
          if (!addSnakePanel.Visible) //show add snake panel
@@ -878,11 +896,11 @@ namespace snake_sandbox01
                string[] splitText = tbSnakePoint.Text.Split(';');
                int x, y;
                int startSnakeLength;
-               if (int.TryParse(splitText[0], out x) && int.TryParse(splitText[1], out y) && int.TryParse(tbStartSnakeLength.Text, out startSnakeLength))
+               if (int.TryParse(splitText[0], out x) && x >= 0 && int.TryParse(splitText[1], out y) && y >= 0 && int.TryParse(tbStartSnakeLength.Text, out startSnakeLength) && startSnakeLength >= 0)
                {
                   //basic - random color from list:
-                  snakes.Snakes.Add(new snakes(x, y, startSnakeLength, snakes.snakeColorsList[random.Next(snakes.snakeColorsList.Count)], game.snakeCountNumber));
-                  game.snakeCountNumber++; //snake ID
+                  Snakes.snakesList.Add(new Snakes(x, y, startSnakeLength, Snakes.snakeColorsList[random.Next(Snakes.snakeColorsList.Count)], Game.snakeID));
+                  Game.snakeID++; //snake ID
                   MessageBox.Show("Snake added Successfully!");
                   tbSnakePoint.Clear();
                   tbStartSnakeLength.Clear();
@@ -893,8 +911,9 @@ namespace snake_sandbox01
          Refresh();
       }
 
+      //other ui behavior:
       /// <summary>
-      /// Mousedown to get locations.
+      /// Mousedown to get location point.
       /// </summary>
       private void createpanel_MouseDown(object sender, MouseEventArgs e)
       {
@@ -935,13 +954,13 @@ namespace snake_sandbox01
       {
          //fill selectLevel combobox with default levels: 
          cmbSelectedLevel.Items.Add("Custom level");
-         for (int i = 0; i <= game.levelsNumb; i++) //without new levels in database yet
+         for (int i = 1; i <= Game.levelsNumb; i++) //without new levels in database yet
          {
             cmbSelectedLevel.Items.Add($"level " + i);
          }
          try
          {
-            SqlConnection connection = new SqlConnection(game.connString);
+            SqlConnection connection = new SqlConnection(Game.connString);
             string cmdText = $"SELECT levelNameID FROM level_info";
             SqlCommand cmd = new SqlCommand(cmdText, connection);
             connection.Open();
@@ -960,7 +979,7 @@ namespace snake_sandbox01
 
       #endregion createpanelUI
 
-      #region open-controls
+      #region open-controls UI
 
       #region main menustrip
 
@@ -994,25 +1013,11 @@ namespace snake_sandbox01
       /// <param name="panel">selected panel to show</param>
       private void ChangePanel(Panel panel)
       {
-         //delete deleted saved games from combobox:
-         //for (int i = 0; i < saveComboboxItemsToDelete.Count; i++) //get all items?
-         //{
-         //   string item = saveComboboxItemsToDelete.Pop();
-         //   cmbLoadGame.Items.Remove(item);
-         //   cmbLoadGame.SelectedIndex = 0;
-         //}
-         ////delete deleted levels from combobox:
-         //for (int i = 0; i < levelComboboxItemsToDelete.Count; i++) //get all items?
-         //{
-         //   string item = saveComboboxItemsToDelete.Pop();
-         //   cmbSelectedLevel.Items.Remove(item);
-         //   cmbSelectedLevel.SelectedIndex = 0;
-         //}
-         if (game.activePanel != panel.Name)
+         if (Game.activePanel != panel.Name)
          {
             HideControls<Panel>(); //hide alls panels
             panel.Show();
-            game.activePanel = panel.Name;
+            Game.activePanel = panel.Name;
             if (panel == createpanel) //it's create panel
             {
                this.Size = new Size(createFormWidth, defaultFormHeight);
@@ -1022,7 +1027,7 @@ namespace snake_sandbox01
             {
                this.Size = new Size(defaultFormWidth, defaultFormHeight);
             }
-            game.Pause(1);
+            Game.Pause(1);
          }
       }
 
@@ -1050,8 +1055,8 @@ namespace snake_sandbox01
       {
          int interval = 0;
          int.TryParse(tbIntervalOpen.Text, out interval);
-         game.interval = interval > 0 ? interval : game.interval;
-         timer.Interval = game.interval;
+         Game.interval = interval > 0 ? interval : Game.interval;
+         timer.Interval = Game.interval;
       }
 
       /// <summary>
@@ -1085,7 +1090,7 @@ namespace snake_sandbox01
       #endregion interval setting
 
       /// <summary>
-      /// Button to show help.
+      /// Button for show help.
       /// </summary>
       private void btnHelp_Click(object sender, EventArgs e)
       {
@@ -1093,6 +1098,9 @@ namespace snake_sandbox01
          lbHelp.Text = lbHelp.Text == "help text" ? "Nápověda:\n\n W / up arrow - nahoru, S / down arrow - dolu\r\nA / left arrow - doleva, D / right arrow - doprava\r\nR - nová hra, P / G - pozastavení hry" : lbHelp.Text;
       }
 
+      /// <summary>
+      /// Button for edit level.
+      /// </summary>
       private void btnEditLevel_Click(object sender, EventArgs e)
       {
          MessageBox.Show("In development right now!");
@@ -1136,7 +1144,7 @@ namespace snake_sandbox01
 
       #endregion open-controls
 
-      #region double-buffer
+      #region double buffering
       protected override CreateParams CreateParams
       {
          get

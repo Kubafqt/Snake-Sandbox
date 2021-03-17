@@ -1,0 +1,71 @@
+Snake-Sandbox
+
+# Snake-Sandbox
+Development version 0.1
+
+Idea of Snake SandBox game. - SandBox of snake game in snake game base.
+
+This is very basic development version - 0.1
+
+Bot snakes have very basic food tracking. (old development) - Cannot calculate dead-end area. It's just trying to go on some better way.
+
+Soon will develop and add some optimize to database tables and some more new functions for better gameplay experience and more sandbox elements.
+
+some other idea: more snakes types, with some spells (more OOP and inheritance)
+
+​
+
+
+
+
+
+
+
+
+//older:
+new form size - 1506; 725
+before form size - 1248; 725
+
+
+294; 68
+294; 144
+
+//for create level:
+save to db,
+add to combobox (levelNameID)
+//for load level:
+load from combobox (levelNameID)
+
+//savegame_blocks:
+    [saveGameNameID] VARCHAR (50) NOT NULL,
+    [blockPosX]      INT          NOT NULL,
+    [blockPosY]      INT          NOT NULL,
+    [blockType]      VARCHAR (50) NOT NULL
+
+//level_info:
+  [levelNameID]   VARCHAR (50) NOT NULL,
+  [interval]      INT          NULL,
+  [passableEdges] BIT          NOT NULL,
+  [foodNumber]    INT          NOT NULL
+  
+//level_blocks:
+  [levelNameID] VARCHAR (50) NOT NULL,
+  [blockPosX]   INT          NOT NULL,
+  [blockPosY]   INT          NOT NULL,
+  [blockType]   VARCHAR (50) NULL
+
+//level_snakes:
+    [levelNameID] VARCHAR (50) NOT NULL,
+    [snakeID]     INT          NOT NULL,
+    [snakeLength] INT          NULL,
+	[startSnakeLength] INT     NOT NULL,
+    [posX]        INT          NOT NULL,
+    [posY]        INT          NOT NULL,
+    [snakeColor]  VARCHAR (50) NULL
+
+
+//u snaků asi uložím jen začáteční pozice a startSnakeLenght + snakeLenght bude 0/1 předpokládám.
+//snakeColor bude random a u hráče black - ostatní bude pak
+
+
+

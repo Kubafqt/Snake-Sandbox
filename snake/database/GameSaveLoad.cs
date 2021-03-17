@@ -20,14 +20,15 @@ namespace snake_sandbox01
       {
          try
          {
-            SqlConnection connection = new SqlConnection(game.connString);
-            string testSaveExistCmdText = $"SELECT saveGameNameID FROM savegame_info WHERE saveGameNameID = @saveName";
-            SqlCommand commd = new SqlCommand(testSaveExistCmdText, connection); 
-            commd.Parameters.AddWithValue("@saveName", saveName);
+            //check if saved game already exists in database:
+            SqlConnection connection = new SqlConnection(Game.connString);
+            string testSaveExistSql = $"SELECT saveGameNameID FROM savegame_info WHERE saveGameNameID = @saveName";
+            SqlCommand cmmd = new SqlCommand(testSaveExistSql, connection);
+            cmmd.Parameters.AddWithValue("@saveName", saveName);
             connection.Open();
             bool saveExist = false;
-            SqlDataReader reader = commd.ExecuteReader();
-            while (reader.Read()) //check if saved game (saveGameNameID) already exists in database
+            SqlDataReader reader = cmmd.ExecuteReader();
+            while (reader.Read())
             {
                saveExist = true; //save on this name exists
                break;
@@ -50,23 +51,25 @@ namespace snake_sandbox01
             }
 
             //save game info:
-            int passableEdges = game.passableEdges ? 1 : 0;
-            string cmdText = $"INSERT INTO savegame_info " + "(saveGameNameID, levelNameID, foodNumber, passableEdges, interval)" + $"VALUES (@saveName, NULL, {game.foodNumber}, {passableEdges}, {game.interval})";
+            int passableEdges = Game.passableEdges ? 1 : 0;
+            string cmdText = $"INSERT INTO savegame_info " + "(saveGameNameID, levelNameID, foodNumber, passableEdges, interval) " + $"VALUES (@saveName, @levelName, {Game.foodNumber}, {passableEdges}, {Game.interval})";
             SqlCommand comm = new SqlCommand(cmdText, connection);
             comm.Parameters.AddWithValue("@saveName", saveName);
+            comm.Parameters.AddWithValue("@levelName", Game.selectedLevelName);
             connection.Open();
             comm.ExecuteNonQuery();
 
             //save all snakes properties:
-            foreach (snakes snake in snakes.Snakes.ToList())
+            foreach (Snakes snake in Snakes.snakesList.ToList())
             {
                int superSnake = snake.superSnake ? 1 : 0;
                int insideSnake = snake.insideSnake ? 1 : 0;
-               int isPlayerSnake = snake == snakes.PlayerSnake ? 1 : 0;
-               string commandText = "INSERT INTO savegame_snakes " + "(saveGameNameID, snakeID, snakeLength, startSnakeLength, posX, posY, insideSnake, superSnake, snakeColorID, playerSnake)" +
-                  $" VALUES (@saveName, {snake.snakeNumber}, {snake.snakeLength}, {snake.startSnakeLength}, {snake.x}, {snake.y}, {superSnake}, {insideSnake}, {snakes.snakeColorsList.IndexOf(snake.color)}, {isPlayerSnake})";
+               int isPlayerSnake = snake == Snakes.PlayerSnake ? 1 : 0;
+               string commandText = "INSERT INTO savegame_snakes " + "(saveGameNameID, snakeID, snakeLength, startSnakeLength, posX, posY, direction, insideSnake, superSnake, snakeColorID, playerSnake)" +
+                  $" VALUES (@saveName, {snake.snakeNumber}, {snake.snakeLength}, {snake.startSnakeLength}, {snake.x}, {snake.y}, @direction, {superSnake}, {insideSnake}, {Snakes.snakeColorsList.IndexOf(snake.color)}, {isPlayerSnake})";
                SqlCommand command = new SqlCommand(commandText, connection);
                command.Parameters.AddWithValue("@saveName", saveName);
+               command.Parameters.AddWithValue("@direction", snake.direction);
                command.ExecuteNonQuery();
 
                //save snakePointQueue inside of snake instance:
@@ -82,20 +85,10 @@ namespace snake_sandbox01
                }
             }
 
-            //save all blocks (for now, then can be level only):
-            foreach (Point p in Form1.blockPointList.ToList())
-            {
-               string commandText = $"INSERT INTO savegame_blocks " + "(saveGameNameID, blockPosX, blockPosY, blockType)" +
-                  $" VALUES (@saveName, {p.X}, {p.Y}, 'hardblock')";
-               SqlCommand command = new SqlCommand(commandText, connection);
-               command.Parameters.AddWithValue("@saveName", saveName);
-               command.ExecuteNonQuery();
-            }
-
-            //save all food blocks:
+            //save all food positions:
             foreach (Point p in Form1.foodPointList.ToList())
             {
-               string commandText = $"INSERT INTO savegame_blocks " + "(saveGameNameID, blockPosX, blockPosY, blockType)" +
+               string commandText = $"INSERT INTO savegame_foods " + "(saveGameNameID, blockPosX, blockPosY, foodType)" +
                   $" VALUES (@saveName, {p.X}, {p.Y}, 'food')";
                SqlCommand command = new SqlCommand(commandText, connection);
                command.Parameters.AddWithValue("@saveName", saveName);
@@ -111,7 +104,6 @@ namespace snake_sandbox01
          }
       }
 
-
       #endregion
 
       #region LoadGame
@@ -123,17 +115,16 @@ namespace snake_sandbox01
       {
          try
          {
-            SqlConnection connection = new SqlConnection(game.connString);
-
+            SqlConnection connection = new SqlConnection(Game.connString);
             LoadSaveGame_info(loadName, connection);
+            LoadSaveGame_foods(loadName, connection);
             LoadSaveGame_snakes(loadName, connection);
             LoadSaveGame_snakePointQueue(loadName, connection);
-            LoadSaveGame_blocks(loadName, connection);
             return true;
          }
          catch (Exception e)
          {
-            MessageBox.Show($"Vyskytla se chyba při pokus o nahrání saveGame záznamu z DB: {e.GetType()}");
+            MessageBox.Show($"GameSaveLoad.LoadGame - Vyskytla se chyba při pokus o nahrání saveGame záznamu z DB: {e.GetType()}");
             return false;
          }
       }
@@ -144,7 +135,7 @@ namespace snake_sandbox01
       /// <param name="loadName">saveGameNameID (name ID of saved game)</param>
       /// <param name="connection">MSSQL server connection</param>
       private static void LoadSaveGame_info(string loadName, SqlConnection connection)
-      {
+      { 
          connection.Open();
          string cmdtext = "SELECT * FROM savegame_info WHERE saveGameNameID = @loadName";
          SqlCommand cmd = new SqlCommand(cmdtext, connection);
@@ -152,11 +143,12 @@ namespace snake_sandbox01
          SqlDataReader reader = cmd.ExecuteReader();
          while (reader.Read())
          {
-            game.foodNumber = (int)reader["foodNumber"];
-            game.passableEdges = (bool)reader["passableEdges"];
-            game.interval = (int)reader["interval"];
+            Game.selectedLevelName = (string)reader["levelNameID"];
+            Game.foodNumber = (int)reader["foodNumber"];
+            Game.passableEdges = (bool)reader["passableEdges"];
+            Game.interval = (int)reader["interval"];
          }
-         game.passableEdges = true;
+         Game.passableEdges = true;
          connection.Close();
       }
 
@@ -174,27 +166,26 @@ namespace snake_sandbox01
          SqlDataReader reader = cmd.ExecuteReader();
          while (reader.Read()) //nahraje tam všechny hady (kde je saveGameID == loadName a jede všechny snakeID)
          {
-            if ((bool)reader["playerSnake"] == true) //playerSnake
+            int startSnakeLength = Convert.IsDBNull((int)reader["startSnakeLength"]) ? 0 : (int)reader["startSnakeLength"];
+            if (!(bool)reader["playerSnake"] == true) //playerSnake
             {
-               int startSnakeLength = Convert.IsDBNull((int)reader["startSnakeLength"]) ? 0 : (int)reader["startSnakeLength"];
-               snakes.PlayerSnake = new snakes(Form1.width / 2, Form1.height / 2, startSnakeLength, snakes.snakeColorsList[(int)reader["snakeColorID"]]);
-               snakes.PlayerSnake.x = (int)reader["posX"];
-               snakes.PlayerSnake.y = (int)reader["posY"];
-               snakes.PlayerSnake.snakeLength = (int)reader["snakeLength"];
-               //snakes.PlayerSnake.direction = (string)reader["direction"];  - z nějakého důvodu nelze uložit!
-               snakes.Snakes.Add(snakes.PlayerSnake);
-            }
-            else //botSnakes
-            {
-               int startSnakeLength = Convert.IsDBNull((int)reader["startSnakeLength"]) ? 0 : (int)reader["startSnakeLength"];
-               snakes snake = new snakes(random.Next(Form1.width), random.Next(Form1.height), startSnakeLength, snakes.snakeColorsList[(int)reader["snakeColorID"]], (int)reader["snakeID"]);
+               Snakes snake = new Snakes(random.Next(Form1.width), random.Next(Form1.height), startSnakeLength, Snakes.snakeColorsList[(int)reader["snakeColorID"]], (int)reader["snakeID"]);
                snake.x = (int)reader["posX"];
                snake.y = (int)reader["posY"];
                snake.snakeLength = (int)reader["snakeLength"];
-               //snake.direction = (string)reader["direction"]; - z nějakého důvodu nelze uložit!
+               //snake.direction = (string)reader["direction"];
                snake.insideSnake = Convert.IsDBNull((bool)reader["insideSnake"]) ? false : (bool)reader["insideSnake"];
                snake.superSnake = Convert.IsDBNull((bool)reader["superSnake"]) ? false : (bool)reader["superSnake"];
-               snakes.Snakes.Add(snake);
+               Snakes.snakesList.Add(snake);
+            }
+            else //botSnakes
+            {
+               Snakes.PlayerSnake = new Snakes(Form1.width / 2, Form1.height / 2, startSnakeLength, Snakes.snakeColorsList[(int)reader["snakeColorID"]]);
+               Snakes.PlayerSnake.x = (int)reader["posX"];
+               Snakes.PlayerSnake.y = (int)reader["posY"];
+               Snakes.PlayerSnake.snakeLength = (int)reader["snakeLength"];
+               Snakes.PlayerSnake.direction = (string)reader["direction"];
+               Snakes.snakesList.Add(Snakes.PlayerSnake);
             }
          }
          connection.Close();
@@ -216,10 +207,11 @@ namespace snake_sandbox01
          {
             try
             {
-               snakes.Snakes[(int)reader["snakeID"] - 1].snakePointQueue.Enqueue(new Point((int)reader["posX"], (int)reader["posY"])); //každopádně by to mělo fungovat správně
+               Snakes.snakesList[(int)reader["snakeID"] - 1].snakePointQueue.Enqueue(new Point((int)reader["posX"], (int)reader["posY"])); //každopádně by to mělo fungovat správně
             }
-            catch //when is some weird error with out of range index
+            catch (Exception e) //when is some weird error with out of range index
             {
+               MessageBox.Show($"LoadSaveGame_snakePointQueue exception {e.Message}");
                continue;
             }
          }
@@ -231,10 +223,10 @@ namespace snake_sandbox01
       /// </summary>
       /// <param name="loadName">saveGameNameID (name ID of saved game)</param>
       /// <param name="connection">MSSQL server connection</param>
-      private static void LoadSaveGame_blocks(string loadName, SqlConnection connection)
+      private static void LoadSaveGame_foods(string loadName, SqlConnection connection) //load level
       {
          connection.Open();
-         string cmdtext = "SELECT * FROM savegame_blocks WHERE saveGameNameID = @loadName";
+         string cmdtext = "SELECT * FROM savegame_foods WHERE saveGameNameID = @loadName";
          SqlCommand cmd = new SqlCommand(cmdtext, connection);
          cmd.Parameters.AddWithValue("@loadName", loadName);
          SqlDataReader reader = cmd.ExecuteReader();
@@ -242,16 +234,9 @@ namespace snake_sandbox01
          {
             int posX = (int)reader["blockPosX"];
             int posY = (int)reader["blockPosY"];
-            string type = (string)reader["blockType"];
+            string type = (string)reader["foodType"];
             Form1.blockArr[posX, posY] = type;
-            if (type == "food")
-            {
-               Form1.foodPointList.Add(new Point(posX, posY));
-            }
-            else if (type == "hardblock")
-            {
-               Form1.blockPointList.Add(new Point(posX, posY));
-            }
+            Form1.foodPointList.Add(new Point(posX, posY));
          }
          connection.Close();
       }
@@ -259,49 +244,47 @@ namespace snake_sandbox01
       #endregion
 
       #region DeleteSave
-
       /// <summary>
       /// First ask if user want really delete selected saved game, then delete selected saved game.
       /// </summary>
       /// <param name="deleteName">saveGameNameID to delete</param>
       /// <param name="deleteFromCombo">delete record form combobox after proceed fine</param>
-      public static void ToDeleteSave(string deleteName, out bool deleteFromCombo)
+      public static bool ToDeleteSave(string deleteName)
       {
          DialogResult dialogResult = MessageBox.Show("Opravdu chcete vymazat uloženou hru?", "vymazat uloženou hru", MessageBoxButtons.YesNo);
          if (dialogResult == DialogResult.No)
          {
-            deleteFromCombo = false;
-            return;
+            return false;
          }
-         try
-         {
-            deleteFromCombo = true;
-            DeleteSave(deleteName);
-         }
-         catch (Exception e)
-         {
-            deleteFromCombo = false;
-            MessageBox.Show($"Vyskytla se chyba při pokus o vymazání saveGame záznamu z DB: {e.GetType()}");
-         }
+         return DeleteSave(deleteName);
       }
 
       /// <summary>
       /// Delete selected saved game from database.
       /// </summary>
       /// <param name="deleteName">saveGameNameID to delete</param>
-      public static void DeleteSave(string deleteName)
+      public static bool DeleteSave(string deleteName)
       {
-         SqlConnection connection = new SqlConnection(game.connString);
-         string[] tableNames = new string[] { "savegame_info", "savegame_blocks", "savegame_snakes", "savegame_snakesPointQueue" };
-         //basic: multiple delete statements, advanced: cascading deletes rows from multiple tables (can be tested later, not important)
-         foreach (string tableName in tableNames)
+         try
          {
-            string cmdText = $"DELETE FROM {tableName} WHERE saveGameNameID = @deleteName";
-            SqlCommand cmd = new SqlCommand(cmdText, connection);
-            cmd.Parameters.AddWithValue("@deleteName", deleteName);
-            connection.Open();
-            cmd.ExecuteNonQuery();
-            connection.Close();
+            SqlConnection connection = new SqlConnection(Game.connString);
+            string[] tableNames = new string[] { "savegame_info", "savegame_foods", "savegame_snakes", "savegame_snakesPointQueue" };
+            //basic: multiple delete statements, advanced: cascading deletes rows from multiple tables (can be tested later, not important)
+            foreach (string tableName in tableNames)
+            {
+               string cmdText = $"DELETE FROM {tableName} WHERE saveGameNameID = @deleteName";
+               SqlCommand cmd = new SqlCommand(cmdText, connection);
+               cmd.Parameters.AddWithValue("@deleteName", deleteName);
+               connection.Open();
+               cmd.ExecuteNonQuery();
+               connection.Close();
+            }
+            return true;
+         }
+         catch (Exception e)
+         {
+            MessageBox.Show($"Vyskytla se chyba při pokus o vymazání saveGame záznamu z DB: {e.GetType()}");
+            return false;
          }
       }
 

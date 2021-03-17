@@ -2,40 +2,42 @@
 using System.Linq;
 using System.Drawing;
 using System.Windows.Forms;
+using System.Collections.Generic;
 
 namespace snake_sandbox01
 {
-   class game
+   class Game
    {
       public static readonly string connString = $"Data Source=(LocalDB)\\MSSQLLocalDB;AttachDbFilename={Application.StartupPath}\\GameDatabase.mdf;Integrated Security = True; Connect Timeout = 30";
       public static int defaultLevel = 4;
       public static string selectedLevelName = "";
-      public static int levelsNumb = 5; //number of levels (for now)
-      public static int foodNumber = 25;
+      public static int levelsNumb = 5; //number of levels
+      public static int foodNumber = 25; //number of foods
       public static bool gameover = false;
       public static bool passableEdges = true;
-      public static bool killOnMyself = true;
+      public static bool killOnMyself = true; //snake cannot self kill when false, but not working rly properly rigth now
       static Random random = new Random();
       //readonly static string[] direction = new string[] { "right", "left", "up", "down" }; //possible directions of snake
       static Color[] colorArr = new Color[] { Color.Black, Color.DarkOrange, Color.DarkOliveGreen, Color.DarkGoldenrod, Color.Indigo, Color.IndianRed }; //for snake or anything else (alternative array of colors)
-      public static int interval = 42; //snakespeed
+      public static int interval = 50; //snakespeed (main game timer)
       public static bool levelCreating = false; //determine if creating new level
       public static bool gameIsRunning = false; //determine if some game is running
-      public static int snakeCountNumber = 1; //snakes ID
-      public static string activePanel = "game";
+      public static int snakeID = 1; //snakes ID
+      public static string activePanel = "game"; 
       public static Size gamepanelSize = new Size(1200, 600);
       public static Size settingsPanelSize = new Size(1200, 600);
       public static Point panelLocation = new Point(18, 70);
+      public static List<string> defaultLevelNames = new List<string> { "Custom level", "level 1", "level 2", "level 3", "level 4", "level 5" };
 
       //game-control:
-      /// <summary>
-      /// Start new game [will reset game and its arrays/lists first, then start new level, then spawnAllFood].
-      /// </summary>
+         /// <summary>
+         /// Start new game [will reset game and its arrays/lists first, then start new level, then spawnAllFood].
+         /// </summary>
       public static void NewGame(int selectedIndex = 1)
       {
          ResetGame();
-         snakes.Snakes.Add(snakes.PlayerSnake); //add PlayerSnake on position 0 (everytime - can be levels without player snake)
-         if (CustomLevels.TestLevelExist(selectedLevelName)) //load custom level from database if exist
+         Snakes.snakesList.Add(Snakes.PlayerSnake); //add PlayerSnake on position 0 (everytime - can be levels without player snake)
+         if (!defaultLevelNames.Contains(selectedLevelName) && CustomLevels.TestLevelExist(selectedLevelName)) //load custom level from database if exist
          {
             CustomLevels.LoadLevel(selectedLevelName, true);
          }
@@ -45,7 +47,7 @@ namespace snake_sandbox01
             SelectLevel(defaultLevel);
          }
          SpawnAllFood();
-         foreach (snakes snake in snakes.Snakes.ToList())
+         foreach (Snakes snake in Snakes.snakesList.ToList()) //add snake base positions to game
          {
             newStartPoint:  //basic for now
             if (Form1.blockArr[snake.startX, snake.startY] == "hardblock") //try another random start point when snake starting in hardblock (basic)
@@ -58,8 +60,8 @@ namespace snake_sandbox01
             snake.y = snake.startY;
             Form1.snakeArr[snake.x, snake.y] = 1; //snakeLength;
             snake.snakePointQueue.Enqueue(new Point(snake.x, snake.y));
-            snakes.PlayerSnake.startSnakeLength = 20; //basic here
-            if (snake != snakes.PlayerSnake) //botom choose food 
+            Snakes.PlayerSnake.startSnakeLength = 20; //basic default startSnakeLength here
+            if (snake != Snakes.PlayerSnake) //botom choose food 
             {
                snake.CheckClosestFood();
                snake.GetDirection();
@@ -83,13 +85,13 @@ namespace snake_sandbox01
          Form1.foodPointList.Clear();
          passableEdges = true;
          killOnMyself = true;
-         snakeCountNumber = 2; //for other snakes
-         foreach (snakes snake in snakes.Snakes.ToList())
+         snakeID = 2; //for other snakes
+         foreach (Snakes snake in Snakes.snakesList.ToList())
          {
             snake.snakeLength = 0;
             snake.snakePointQueue.Clear();
          }
-         snakes.Snakes.Clear();
+         Snakes.snakesList.Clear();
         
       }
 
@@ -123,11 +125,11 @@ namespace snake_sandbox01
       /// </summary>
       /// <param name="snake">crashed snake</param>
       /// <returns>true when playerSnake crashed, false when any else snake crashed</returns>
-      public static bool GameOver(snakes snake)
+      public static bool GameOver(Snakes snake)
       {
          snake.failPos = new Point(snake.x, snake.y);
-         if (snake != snakes.PlayerSnake) //bot snake
-         { snake.dead = true; snakes.RemoveSnake(snake); }
+         if (snake != Snakes.PlayerSnake) //bot snake
+         { snake.dead = true; Snakes.RemoveSnake(snake); }
          else //playerSnake
          {
             Form1.timer.Enabled = false;
@@ -159,6 +161,7 @@ namespace snake_sandbox01
       /// <param name="lvl">selected level</param>
       public static void SelectLevel(int lvl)
       {
+         selectedLevelName = defaultLevelNames[lvl]; //change selected level name
          switch (lvl)
          {
             case 1: //custom level
@@ -171,8 +174,8 @@ namespace snake_sandbox01
                   passableEdges = false;
                   for (int i = 0; i < 4; i++)
                   {
-                     snakes.AddSnake(random.Next(Form1.width - 1), random.Next(Form1.height - 1), 10, colorArr[random.Next(colorArr.Length)]);
-                     //snakes.AddSnake(random.Next(Form1.width - 1), random.Next(Form1.height - 1), 0, colorArr[random.Next(colorArr.Length)]);
+                     Snakes.AddSnake(random.Next(Form1.width - 1), random.Next(Form1.height - 1), 10, colorArr[random.Next(colorArr.Length)]);
+                     //Snakes.AddSnake(random.Next(Form1.width - 1), random.Next(Form1.height - 1), 0, colorArr[random.Next(colorArr.Length)]);
                   }
                   CreateBlocks(Form1.width / 3 - 5, Form1.height / 3, 42, 2);
                   CreateBlocks(Form1.width / 3 - 5, Form1.height / 3 + 12, 42, 2);
@@ -182,24 +185,21 @@ namespace snake_sandbox01
                {
                   for (int i = 0; i < 32; i++)
                   {
-                     snakes.AddSnake(random.Next(Form1.width - 1), random.Next(Form1.height - 1), 10, Color.Black);
-                     snakes.AddSnake(random.Next(Form1.width - 1), random.Next(Form1.height - 1), 0, snakes.snakeColorsList[random.Next(snakes.snakeColorsList.Count)], super: true); ;
+                     Snakes.AddSnake(random.Next(Form1.width - 1), random.Next(Form1.height - 1), 10, Color.Black);
+                     Snakes.AddSnake(random.Next(Form1.width - 1), random.Next(Form1.height - 1), 0, Snakes.snakeColorsList[random.Next(Snakes.snakeColorsList.Count)], super: true); ;
                   }
                   CreateBlocks(Form1.width / 2 + 10, 0, 4, Form1.height);
                   break;
                }
             case 4:
                {
+                  Snakes.AddSnake(random.Next(Form1.width), random.Next(Form1.height), 0, Color.Black);
+                  Snakes.AddSnake(random.Next(Form1.width), random.Next(Form1.height), 0, Color.Indigo);
+                  Snakes.AddSnake(random.Next(Form1.width - 1), random.Next(Form1.height - 1), 42, Color.Indigo, super: true);
+                  Snakes.AddSnake(random.Next(Form1.width - 1), random.Next(Form1.height - 1), 42, Color.IndianRed, inside: true);
+                  Snakes.AddSnake(random.Next(Form1.width - 1), random.Next(Form1.height - 1), 42, Color.IndianRed, inside: true, super: true);
+                  //Snakes.AddSnake(89, 25, 42, colorArr[random.Next(colorArr.Length)], super: true);
                   //passableEdges = false;
-                  snakes.AddSnake(random.Next(Form1.width), random.Next(Form1.height), 0, Color.Black);
-                  snakes.AddSnake(random.Next(Form1.width), random.Next(Form1.height), 0, Color.Indigo);
-                  //snakes.AddSnake(random.Next(Form1.width - 1), random.Next(Form1.height - 1), 42, Color.Indigo, super: true);
-                  //snakes.AddSnake(random.Next(Form1.width - 1), random.Next(Form1.height - 1), 42, Color.IndianRed, inside: true);
-                  //snakes.AddSnake(random.Next(Form1.width - 1), random.Next(Form1.height - 1), 42, Color.IndianRed, inside: true, super: true);
-                  //snakes.AddSnake(89, 25, 42, colorArr[random.Next(colorArr.Length)], super: true);
-                  //AddSnake(25, 40, 0, "down");
-                  //AddSnake(42, 23, 0, "down");
-                  //AddSnake(23, 42, 0, "down");
                   break;
                }
             case 5:
@@ -207,13 +207,13 @@ namespace snake_sandbox01
                   //killOnMyself = false;
                   for (int i = 0; i < 4; i++) //some snakes to game
                   {
-                     snakes.AddSnake(random.Next(Form1.width - 1), random.Next(Form1.height - 1), 10, snakes.snakeColorsList[random.Next(snakes.snakeColorsList.Count)]);
+                     Snakes.AddSnake(random.Next(Form1.width - 1), random.Next(Form1.height - 1), 10, Snakes.snakeColorsList[random.Next(Snakes.snakeColorsList.Count)]);
                   }
                   CreateBlocks(Form1.width / 3 - 5, Form1.height / 3, 42, 2);
                   CreateBlocks(Form1.width / 3 - 5, Form1.height / 3 + 12, 42, 2);
                   break;
                }
-            default: { snakes.AddSnake(random.Next(Form1.width - 1), random.Next(Form1.height - 1), 0, Color.Black, inside: false); } break;
+            default: { Snakes.AddSnake(random.Next(Form1.width - 1), random.Next(Form1.height - 1), 0, Color.Black, inside: false); } break;
          }
       }
 

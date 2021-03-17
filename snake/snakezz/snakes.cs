@@ -5,10 +5,10 @@ using System.Linq;
 
 namespace snake_sandbox01
 {
-	class snakes
+	class Snakes
 	{
-		public static snakes PlayerSnake;
-		public static List<snakes> Snakes = new List<snakes>();
+		public static Snakes PlayerSnake;
+		public static List<Snakes> snakesList = new List<Snakes>();
 
 		public int x, y;
 		public int startX, startY;
@@ -31,7 +31,7 @@ namespace snake_sandbox01
 		static Random random = new Random();
 		public Queue<Point> snakePointQueue = new Queue<Point>(); //for snake movement history delete
 		public static List<Color> snakeColorsList = new List<Color>() { Color.Black, Color.Red, Color.Orange, Color.Yellow, Color.DeepSkyBlue, Color.Brown, Color.Indigo, Color.DarkOrange, Color.DarkOliveGreen, Color.DarkGoldenrod, Color.IndianRed };
-		public int thisStartSnakeLength; //helping variable for have longer snake when food is eaten when snake is growing to startSnakeLength
+		public string snakeType;
 
 		/// <summary>
 		/// snakes constructor
@@ -39,14 +39,13 @@ namespace snake_sandbox01
 		/// <param name="startX">snake starting X position in snakeArr[]</param>
 		/// <param name="startY">snake starting Y position in snakeArr[]</param>
 		/// <param name="number">snake id</param>
-		public snakes(int startX, int startY, int startSnakeLength, Color colour, int number = 1)
+		public Snakes(int startX, int startY, int startSnakeLength, Color colour, int number = 1)
 		{
 			color = colour;
 			snakeNumber = number;
 			this.startX = startX;
 			this.startY = startY;
 			this.startSnakeLength = startSnakeLength;
-			thisStartSnakeLength = startSnakeLength;
 		}
 		
 		/// <summary>
@@ -54,7 +53,7 @@ namespace snake_sandbox01
 		/// </summary>
 		public static void AddPlayerSnake(int startSnakeLength = 20)
 		{
-			snakes.PlayerSnake = new snakes(Form1.width / 2, Form1.height / 2, startSnakeLength, Color.Black)
+			Snakes.PlayerSnake = new Snakes(Form1.width / 2, Form1.height / 2, startSnakeLength, Color.Black)
 			{
 				snakeLength = 0
 			};
@@ -81,9 +80,9 @@ namespace snake_sandbox01
 				case "left":
 					{
 						int testLeft = x != 0 ? x - 1 : Form1.width - 1;
-						if (Form1.blockArr[testLeft, y] != "hardblock" && Form1.snakeArr[testLeft, y] == 0 && (game.passableEdges || x != 0))
+						if (Form1.blockArr[testLeft, y] != "hardblock" && Form1.snakeArr[testLeft, y] == 0 && (Game.passableEdges || x != 0))
 						{ lastDirChanged = direction; direction = "left"; }
-						else if (game.passableEdges || x != Form1.width - 1)
+						else if (Game.passableEdges || x != Form1.width - 1)
 						{ lastDirChanged = direction; direction = "right"; }
 						vectTracking = "x";
 						break;
@@ -91,9 +90,9 @@ namespace snake_sandbox01
 				case "right":
 					{
 						int testRight = x != Form1.width - 1 ? x + 1 : 0;
-						if (Form1.blockArr[testRight, y] != "hardblock" && Form1.snakeArr[testRight, y] == 0 && (game.passableEdges || x != Form1.width - 1))
+						if (Form1.blockArr[testRight, y] != "hardblock" && Form1.snakeArr[testRight, y] == 0 && (Game.passableEdges || x != Form1.width - 1))
 						{ lastDirChanged = direction; direction = "right"; }
-						else if (game.passableEdges || x != 0)
+						else if (Game.passableEdges || x != 0)
 						{ lastDirChanged = direction; direction = "left"; }
 						vectTracking = "x";
 						break;
@@ -101,9 +100,9 @@ namespace snake_sandbox01
 				case "up":
 					{
 						int testUp = y != 0 ? y - 1 : Form1.height - 1;
-						if (Form1.blockArr[x, testUp] != "hardblock" && Form1.snakeArr[x, testUp] == 0 && (game.passableEdges || y != 0))
+						if (Form1.blockArr[x, testUp] != "hardblock" && Form1.snakeArr[x, testUp] == 0 && (Game.passableEdges || y != 0))
 						{ lastDirChanged = direction; direction = "up"; }
-						else if (game.passableEdges || y != Form1.height - 1)
+						else if (Game.passableEdges || y != Form1.height - 1)
 						{ lastDirChanged = direction; direction = "down"; }
 						vectTracking = "y";
 						break;
@@ -111,9 +110,9 @@ namespace snake_sandbox01
 				case "down":
 					{
 						int testDown = y != Form1.height - 1 ? y + 1 : 0;
-						if (Form1.blockArr[x, testDown] != "hardblock" && Form1.snakeArr[x, testDown] == 0 && (game.passableEdges || y != Form1.height - 1))
+						if (Form1.blockArr[x, testDown] != "hardblock" && Form1.snakeArr[x, testDown] == 0 && (Game.passableEdges || y != Form1.height - 1))
 						{ lastDirChanged = direction; direction = "down"; }
-						else if (game.passableEdges || y != 0)
+						else if (Game.passableEdges || y != 0)
 						{ lastDirChanged = direction; direction = "up"; }
 						vectTracking = "y";
 						break;
@@ -132,13 +131,13 @@ namespace snake_sandbox01
 			int testLeft = x > 0 ? x - 1 : Form1.width - 1; //edge positions of array
 			int testRight = x < Form1.width - 1 ? x + 1 : 0;
 			if ((direction == "left" && (Form1.blockArr[testLeft, y] == "hardblock" || //collision with hardblock
-				(Form1.snakeArr[testLeft, y] != 0 && game.killOnMyself && killonItself) || //kill snake on itself
-				(Form1.snakeArr[testLeft, y] != snakeNumber && (!game.killOnMyself || !killonItself)) || //kill snake on other snake
-				(!game.passableEdges && x == 0))) || //collision with edge
+				(Form1.snakeArr[testLeft, y] != 0 && Game.killOnMyself && killonItself) || //kill snake on itself
+				(Form1.snakeArr[testLeft, y] != snakeNumber && (!Game.killOnMyself || !killonItself)) || //kill snake on other snake
+				(!Game.passableEdges && x == 0))) || //collision with edge
 				(direction == "right" && (Form1.blockArr[testRight, y] == "hardblock" ||
-				(Form1.snakeArr[testRight, y] != 0 && game.killOnMyself && killonItself) ||
-				(Form1.snakeArr[testRight, y] != snakeNumber && (!game.killOnMyself || !killonItself)) ||
-				(!game.passableEdges && x == Form1.width - 1))))
+				(Form1.snakeArr[testRight, y] != 0 && Game.killOnMyself && killonItself) ||
+				(Form1.snakeArr[testRight, y] != snakeNumber && (!Game.killOnMyself || !killonItself)) ||
+				(!Game.passableEdges && x == Form1.width - 1))))
 			{
 				changeDirectionList.Add("up");
 				changeDirectionList.Add("down");
@@ -147,13 +146,13 @@ namespace snake_sandbox01
 			int testUp = y > 0 ? y - 1 : Form1.height - 1;
 			int testDown = y < Form1.height - 1 ? y + 1 : 0;
 			if ((direction == "down" && (Form1.blockArr[x, testDown] == "hardblock" ||
-				(Form1.snakeArr[x, testDown] != 0 && (game.killOnMyself || killonItself)) ||
-				(Form1.snakeArr[x, testDown] != snakeNumber && !game.killOnMyself && !killonItself) ||
-				(!game.passableEdges && y == Form1.height - 1))) ||
+				(Form1.snakeArr[x, testDown] != 0 && (Game.killOnMyself || killonItself)) ||
+				(Form1.snakeArr[x, testDown] != snakeNumber && !Game.killOnMyself && !killonItself) ||
+				(!Game.passableEdges && y == Form1.height - 1))) ||
 				(direction == "up" && (Form1.blockArr[x, testUp] == "hardblock" ||
-				(Form1.snakeArr[x, testUp] != 0 && (game.killOnMyself || killonItself)) ||
-				(Form1.snakeArr[x, testUp] != snakeNumber && !game.killOnMyself && !killonItself) ||
-				(!game.passableEdges && y == 0))))
+				(Form1.snakeArr[x, testUp] != 0 && (Game.killOnMyself || killonItself)) ||
+				(Form1.snakeArr[x, testUp] != snakeNumber && !Game.killOnMyself && !killonItself) ||
+				(!Game.passableEdges && y == 0))))
 			{
 				changeDirectionList.Add("right");
 				changeDirectionList.Add("left");
@@ -175,19 +174,19 @@ namespace snake_sandbox01
 			int acrossX = cX >= tX ? Form1.width - 1 - cX + tX : Form1.width - 1 - tX + cX; //distance across-border
 			int acrossY = cY >= tY ? Form1.height - 1 - cY + tY : Form1.height - 1 - tY + cY; //distance across-border
 
-			if (vectTracking == "x" && direction == "right" && cX > tX && (game.passableEdges || insideSnake || acrossX > cX - tX)) //change direction, when going wrong way
+			if (vectTracking == "x" && direction == "right" && cX > tX && (Game.passableEdges || insideSnake || acrossX > cX - tX)) //change direction, when going wrong way
 			{
 				CheckClosestFoodAndGetDirection();
 			}
-			else if (vectTracking == "x" && direction == "left" && cX < tX && (!game.passableEdges || insideSnake || acrossX > tX - cX))
+			else if (vectTracking == "x" && direction == "left" && cX < tX && (!Game.passableEdges || insideSnake || acrossX > tX - cX))
 			{
 				CheckClosestFoodAndGetDirection();
 			}
-			else if (vectTracking == "y" && direction == "down" && cY > tY && (game.passableEdges || insideSnake || acrossY > cY - tY))
+			else if (vectTracking == "y" && direction == "down" && cY > tY && (Game.passableEdges || insideSnake || acrossY > cY - tY))
 			{
 				CheckClosestFoodAndGetDirection();
 			}
-			else if (vectTracking == "y" && direction == "up" && cY < tY && (game.passableEdges || insideSnake || acrossY > tY - cY))
+			else if (vectTracking == "y" && direction == "up" && cY < tY && (Game.passableEdges || insideSnake || acrossY > tY - cY))
 			{
 				CheckClosestFoodAndGetDirection();
 			}
@@ -206,20 +205,21 @@ namespace snake_sandbox01
 		/// </summary>
 		public static void AllBotSnakesCheckClosestFood() //good idea - more alternative or dumb snake types, eg. more types of tracking food in type of snake, switchable
 		{
-			foreach (snakes snake in Snakes.ToList()) //every snakes is checking closest food after spawn of food
+			foreach (Snakes snake in snakesList.ToList()) //every snakes is checking closest food after spawn of food
 			{
 				if (snake != PlayerSnake)//&& lfPoint.X == s.TargetTracker["x"] && lfPoint.Y == s.TargetTracker["y"] - zda bylo sežráno pouze trackovaný jídlo (lepší checkovat každé jídlo, kvůli spawnu nového, teoreticky bližšího)
-				{ 
-					snake.CheckClosestFood();
-					snake.GetDirection();
-				
+				{
+					snake.CheckClosestFoodAndGetDirection();			
 				}
 			}
 		}
 
+		/// <summary>
+		///
+		/// </summary>
 		public static void FoodCountChanged()
 		{
-			foreach (snakes snake in Snakes.ToList()) //every snakes is checking closest food after spawn of food
+			foreach (Snakes snake in snakesList.ToList()) //every snakes is checking closest food after spawn of food
 			{
 				if (snake != PlayerSnake)
 				{
@@ -238,7 +238,7 @@ namespace snake_sandbox01
 		}
 
 		/// <summary>
-		/// bot choose closest food - old function (nevím teď, proč to bylo bool původně)
+		/// Bot choose closest food - old function
 		/// </summary>
 		public void CheckClosestFood()
 		{
@@ -248,7 +248,7 @@ namespace snake_sandbox01
 			int fullCount = 0;
 			foreach (Point p in Form1.foodPointList.ToList())  //for more foods in list
 			{
-				if (!insideSnake && game.passableEdges) //is passable edges and it is not insideSnake (which cannnot pass the edges)
+				if (!insideSnake && Game.passableEdges) //is passable edges and it is not insideSnake (which cannnot pass the edges)
 				{
 					int acrossX = p.X >= x ? Form1.width - 1 - p.X + x : Form1.width - 1 - x + p.X;
 					int acrossY = p.Y >= y ? Form1.height - 1 - p.Y + y : Form1.height - 1 - y + p.Y;
@@ -292,7 +292,7 @@ namespace snake_sandbox01
 				int testRight = x != Form1.width - 1 ? x + 1 : 0;
 				int acrossX = fPoint.X >= x ? Form1.width - 1 - fPoint.X + x : Form1.width - 1 - x + fPoint.X;
 				int noacrossX = fPoint.X >= x ? fPoint.X - x : x - fPoint.X;
-				if (insideSnake || !game.passableEdges || acrossX > noacrossX) //inside snake
+				if (insideSnake || !Game.passableEdges || acrossX > noacrossX) //inside snake
 				{
 					if (x > fPoint.X && Form1.snakeArr[testLeft, y] == 0 && Form1.blockArr[testLeft, y] != "hardblock" && x != 0)
 					{ direction = "left"; vectTracking = "x"; }
@@ -319,7 +319,7 @@ namespace snake_sandbox01
 				int acrossY = fPoint.Y >= y ? Form1.height - 1 - fPoint.Y + y : Form1.height - 1 - y + fPoint.Y;
 				int noacrossY = fPoint.Y >= y ? fPoint.Y - y : y - fPoint.Y;
 
-				if (insideSnake || !game.passableEdges || acrossY > noacrossY) //inside snake
+				if (insideSnake || !Game.passableEdges || acrossY > noacrossY) //inside snake
 				{
 					if (y > fPoint.Y && Form1.snakeArr[x, testUp] == 0 && Form1.blockArr[x, testUp] != "hardblock" && y != 0)
 					{ direction = "up"; vectTracking = "y"; }
@@ -354,20 +354,20 @@ namespace snake_sandbox01
       /// <param name="super">snake travel diagonaly (super-fast, unreal movement)</param>
       public static void AddSnake(int startX, int startY, int startSnakeLength, Color colour, string direction = "", bool inside = false, bool super = false, bool itselfKill = true)
 		{
-			Snakes.Add(new snakes(startX, startY, startSnakeLength, colour, game.snakeCountNumber));
-			Snakes[game.snakeCountNumber - 1].insideSnake = inside;
-			Snakes[game.snakeCountNumber - 1].superSnake = super;
-			Snakes[game.snakeCountNumber - 1].killonItself = itselfKill;
-			game.snakeCountNumber++;
+			snakesList.Add(new Snakes(startX, startY, startSnakeLength, colour, Game.snakeID));
+			snakesList[Game.snakeID - 1].insideSnake = inside;
+			snakesList[Game.snakeID - 1].superSnake = super;
+			snakesList[Game.snakeID - 1].killonItself = itselfKill;
+			Game.snakeID++;
 		}
 
 		/// <summary>
 		/// Remove snake from game and explode him.
 		/// </summary>
 		/// <param name="snake">snake to remove</param>
-		public static void RemoveSnake(snakes snake)
+		public static void RemoveSnake(Snakes snake)
 		{
-			explo.explosions.Add(new explo(4, 150, (snake.x + explo.smerDictX[snake.direction]) * Form1.sizeX, (snake.y + explo.smerDictY[snake.direction]) * Form1.sizeY, Color.OrangeRed));
+			Explode.explosions.Add(new Explode(4, 150, (snake.x + Explode.smerDictX[snake.direction]) * Form1.sizeX, (snake.y + Explode.smerDictY[snake.direction]) * Form1.sizeY, Color.OrangeRed));
 			for (int a = 0; a < Form1.width; a++) //remove snake from array
 			{
 				for (int b = 0; b < Form1.height; b++)
@@ -376,7 +376,7 @@ namespace snake_sandbox01
 					{ Form1.snakeArr[a, b] = 0; }
 				}
 			}
-			Snakes.Remove(snake);
+			snakesList.Remove(snake);
 		}
 
       #endregion

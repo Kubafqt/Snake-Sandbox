@@ -167,7 +167,7 @@
          this.levelpanel.Controls.Add(this.btStartLevel);
          this.levelpanel.Location = new System.Drawing.Point(227, 37);
          this.levelpanel.Name = "levelpanel";
-         this.levelpanel.Size = new System.Drawing.Size(28, 24);
+         this.levelpanel.Size = new System.Drawing.Size(850, 418);
          this.levelpanel.TabIndex = 1;
          this.levelpanel.Visible = false;
          this.levelpanel.Paint += new System.Windows.Forms.PaintEventHandler(this.levelpanel_Paint);

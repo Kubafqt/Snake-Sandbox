@@ -2,7 +2,7 @@
 
 namespace snake_sandbox01
 {
-   class blocks
+   class Blocks
    {
       public static bool clearBlocks;
       public static Point newBlockPoint;
@@ -50,13 +50,13 @@ namespace snake_sandbox01
       }
 
       /// <summary>
-      /// Test if currently assigning block is not across border values.
+      /// Test if currently assigning block is not across gamepanel edge.
       /// </summary>
       /// <param name="x">x position</param>
       /// <param name="y">y position</param>
       /// <param name="testPoint">point of testing</param>
       /// <param name="splitText">splited text from textbox</param>
-      /// <returns>True: it is across borders, False: it is not across borders</returns>
+      /// <returns>True: block is not across edge, False: block is across edge</returns>
       public static bool NotAcrossBorderValues(out int x, ref int y, Point testPoint, string[] splitText)
       {
          if (int.TryParse(splitText[0], out x) && x >= 0 && testPoint.X + x <= Form1.width && int.TryParse(splitText[1], out y) && y >= 0 && testPoint.Y + y <= Form1.height)
@@ -67,13 +67,13 @@ namespace snake_sandbox01
       }
 
       /// <summary>
-      /// Test if currently assigning block have not across border values.
+      /// Test if currently assigning block is across gamepanel edge.
       /// </summary>
       /// <param name="x">x size (width)</param>
       /// <param name="y">y size (height)</param>
       /// <param name="testSize">size of testing</param>
       /// <param name="splitText">splited text from textbox</param>
-      /// <returns>True: its across borders, False: is not across borders</returns>
+      /// <returns>True: block is not across edge, False: block is across edge</returns>
       public static bool NotAcrossBorderValues(out int x, ref int y, Size testSize, string[] splitText)
       {
          if (int.TryParse(splitText[0], out x) && x >= 0 && testSize.Width + x <= Form1.width && int.TryParse(splitText[1], out y) && testSize.Height + y >= 0 && y <= Form1.height)
