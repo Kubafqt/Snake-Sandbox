@@ -167,7 +167,7 @@
          this.levelpanel.Controls.Add(this.btStartLevel);
          this.levelpanel.Location = new System.Drawing.Point(227, 37);
          this.levelpanel.Name = "levelpanel";
-         this.levelpanel.Size = new System.Drawing.Size(850, 418);
+         this.levelpanel.Size = new System.Drawing.Size(35, 27);
          this.levelpanel.TabIndex = 1;
          this.levelpanel.Visible = false;
          this.levelpanel.Paint += new System.Windows.Forms.PaintEventHandler(this.levelpanel_Paint);
@@ -650,6 +650,7 @@
          this.tbSnakePoint.Name = "tbSnakePoint";
          this.tbSnakePoint.Size = new System.Drawing.Size(64, 20);
          this.tbSnakePoint.TabIndex = 6;
+         this.tbSnakePoint.TextChanged += new System.EventHandler(this.tbSnakePoint_TextChanged);
          // 
          // lbSnakePoint
          // 

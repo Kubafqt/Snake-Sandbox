@@ -815,11 +815,19 @@ namespace snake_sandbox01
          TestTextboxValues();
       }
 
+      int lastBlockPointTextLength;
+      int lastBlockSizeTextLength;
       /// <summary>
       /// Test if proper block values is in textboxes.
       /// </summary>
       private void TestTextboxValues()
       {
+         int a;
+         if (lastBlockPointTextLength != 3 &&  tbBlockPoint.Text.Length == 2 && int.TryParse(tbBlockPoint.Text, out a))
+         {
+            tbBlockPoint.Text += ";";
+            tbBlockPoint.SelectionStart = tbBlockPoint.Text.Length;
+         }
          if (Regex.IsMatch(tbBlockPoint.Text, ";")) //block point textbox refresh createpanel
          {
             string[] splitText = tbBlockPoint.Text.Split(';');
@@ -836,6 +844,12 @@ namespace snake_sandbox01
                Blocks.clearBlockPoint = new Point(x, y);
             }
             Refresh();
+         }
+         int b;
+         if (lastBlockSizeTextLength != 3 && tbBlockSize.Text.Length == 2 && int.TryParse(tbBlockSize.Text, out b))
+         {
+            tbBlockSize.Text += ";";
+            tbBlockSize.SelectionStart = tbBlockSize.Text.Length;
          }
          if (Regex.IsMatch(tbBlockSize.Text, ";"))  //block size textbox refresh createpanel
          {
@@ -854,6 +868,8 @@ namespace snake_sandbox01
             }
             Refresh();
          }
+         lastBlockPointTextLength = tbBlockPoint.Text.Length; //basic
+         lastBlockSizeTextLength = tbBlockSize.Text.Length; //basic
       }
 
       /// <summary>
@@ -911,6 +927,22 @@ namespace snake_sandbox01
          Refresh();
       }
 
+      int lastSnakePointTextLength;
+
+      /// <summary>
+      /// Add semicolon after max. 2 int values set
+      /// </summary>
+      private void tbSnakePoint_TextChanged(object sender, EventArgs e)
+      {
+         int a;
+         if (lastSnakePointTextLength != 3 && tbSnakePoint.Text.Length == 2 && int.TryParse(tbSnakePoint.Text.Substring(0, 2), out a))
+         {
+            tbSnakePoint.Text += ";";
+            tbSnakePoint.SelectionStart = tbSnakePoint.Text.Length;
+         }
+         lastSnakePointTextLength = tbSnakePoint.Text.Length; //basic
+      }
+
       //other ui behavior:
       /// <summary>
       /// Mousedown to get location point.
@@ -920,10 +952,12 @@ namespace snake_sandbox01
          if (blockPanel.Visible)
          {
             tbBlockPoint.Text = $"{(e.X) / sizeX};{(e.Y) / sizeY}";
+            tbBlockSize.Focus();
          }
          if (addSnakePanel.Visible)
          {
             tbSnakePoint.Text = $"{(e.X) / sizeX};{(e.Y) / sizeY}";
+            tbStartSnakeLength.Focus();
          }
       }
 
