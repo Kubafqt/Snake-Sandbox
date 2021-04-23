@@ -8,7 +8,4 @@ Soon I will add more new features for better gameplay experience and more sandbo
 
 Other ideas: more snakes types, with some spells (much more OOP, better code readability and OOP patterns)
 
-when I will get some more time, I will spend more time on my more interesting projects than some sandbox game 
-
-[incoming weekend will be much more productive and much more OP]
-
+when I will get some more time, I will spend more time on my more interesting projects than some sandbox game
