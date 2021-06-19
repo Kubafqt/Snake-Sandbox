@@ -24,6 +24,12 @@ namespace snake_sandbox01
 		public Dictionary<string, int> TargetTracker = new Dictionary<string, int>() { { "x", 0 }, { "y", 0 } }; //bot snake food position
 		public int snakeNumber; //snake ID
 		public Color color;
+		public bool slowed = false;
+		public bool stopped = false;
+		public int slowedTime = 0;
+		public int slowedTop = 0;
+		public int speedStep = 1;
+		public int insertedFood = 0;
 
 		public bool killonItself = true;
 		public bool insideSnake = false;
@@ -39,15 +45,56 @@ namespace snake_sandbox01
 		/// <param name="startX">snake starting X position in snakeArr[]</param>
 		/// <param name="startY">snake starting Y position in snakeArr[]</param>
 		/// <param name="number">snake id</param>
-		public Snakes(int startX, int startY, int startSnakeLength, Color colour, int number = 1)
+		public Snakes(int startX, int startY, int startSnakeLength, Color colour, int speedStep = 1, int number = 1)
 		{
 			color = colour;
 			snakeNumber = number;
 			this.startX = startX;
 			this.startY = startY;
 			this.startSnakeLength = startSnakeLength;
+			this.speedStep = speedStep;
 		}
-		
+
+		public void outPoop()
+        {
+			//Point poopPoint = new Point(snakePointQueue.Peek().X, snakePointQueue.Peek().Y);
+			//Form1.blockArr[poopPoint.X, poopPoint.Y] = "poop";
+			//Poops poop = new Poops(40, poopPoint);
+			////Form1.poopPointList.Add(poopPoint);
+			//insertedFood = 0;
+		}
+
+		Point lastPeek;
+		public void LastSnakePeek() //get on timer
+        {
+			//x = snakePointQueue.Peek().X;
+			//y = snakePointQueue.Peek().Y;
+			lastPeek = snakePointQueue.Peek();
+		}
+
+		public void ReverseSnake()
+        {
+			x = lastPeek.X;
+			y = lastPeek.Y;
+			snakePointQueue = new Queue<Point>(snakePointQueue.Reverse());
+		}
+
+		public static void PlayerStopsAllSnakes()
+        {
+			if (!Game.snakesStopped)
+			{
+				Form1.stopTime = 0;
+				foreach (Snakes snake in snakesList)
+				{
+					if (snake != PlayerSnake)
+					{
+						snake.stopped = true;
+					}
+				}
+				Game.snakesStopped = true;
+			}
+		}
+
 		/// <summary>
 		///  Add player snake to game.
 		/// </summary>
@@ -341,9 +388,18 @@ namespace snake_sandbox01
 			}
 		}
 
-      #endregion
+		#endregion
 
-      #region add-remove snakes
+		#region add-remove snakes
+
+		public static VenomSnake vSnake;
+		public static void AddVenomSnake(int startX, int startY, int startSnakeLength, Color colour, string direction = "")
+		{
+			vSnake = new VenomSnake(startX, startY, startSnakeLength, colour, Game.snakeID);
+			snakesList.Add(vSnake);
+			Game.snakeID++;
+		}
+
 
       /// <summary>
       /// add new snake to game (Snakes list)
@@ -361,11 +417,11 @@ namespace snake_sandbox01
 			Game.snakeID++;
 		}
 
-		/// <summary>
+	  /// <summary>
 		/// Remove snake from game and explode him.
 		/// </summary>
 		/// <param name="snake">snake to remove</param>
-		public static void RemoveSnake(Snakes snake)
+	  public static void RemoveSnake(Snakes snake)
 		{
 			Explode.explosions.Add(new Explode(4, 150, (snake.x + Explode.smerDictX[snake.direction]) * Form1.sizeX, (snake.y + Explode.smerDictY[snake.direction]) * Form1.sizeY, Color.OrangeRed));
 			for (int a = 0; a < Form1.width; a++) //remove snake from array

@@ -79,8 +79,12 @@
     <Compile Include="database\CustomLevels.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="snakezz\InterfaceTest.cs" />
     <Compile Include="snakezz\Snakes.cs" />
     <Compile Include="snakezz\VenomSnake.cs" />
+    <Compile Include="spells\BombShot.cs" />
+    <Compile Include="spells\IBombshots.cs" />
+    <Compile Include="spells\Poops.cs" />
     <EmbeddedResource Include="Form1.resx">
       <DependentUpon>Form1.cs</DependentUpon>
     </EmbeddedResource>
