@@ -183,6 +183,14 @@ namespace snake_sandbox01
          {
             stopTime = 0;
          }
+
+         BombMovement();
+         SnakesMovement();
+         Refresh();
+      }
+
+      private void BombMovement()
+      {
          foreach (BombShot bomb in BombShot.bombyShotList.ToList())
          {
             switch (bomb.direction) //snake move
@@ -303,7 +311,10 @@ namespace snake_sandbox01
                   }
             }
          }
+      }
 
+      private void SnakesMovement()
+      {
          foreach (Snakes snake in Snakes.snakesList.ToList())
          {
             //if (snake.stopped && stopTime > 100)
@@ -447,9 +458,9 @@ namespace snake_sandbox01
             //    snake.slowedTime++;
             //}
          }
-         Refresh();
-         //}
       }
+
+
 
       /// <summary>
       /// Snake eated food.
@@ -593,6 +604,8 @@ namespace snake_sandbox01
       }
 
       #endregion
+
+      #region user interface
 
       #region level panel UI
 
@@ -1248,9 +1261,10 @@ namespace snake_sandbox01
             if (panel == createpanel) //it's create panel
             {
                this.Size = new Size(createFormWidth, defaultFormHeight);
+               //panel.Width = 
                createpanelUI.Show();
             }
-            else if (this.Size != new Size(defaultFormWidth, defaultFormHeight)) //clasic program window size (switch everytime switching panel - ez)
+            else if (this.Size != new Size(defaultFormWidth, defaultFormHeight)) //clasic program window size (switch everytime switching panel)
             {
                this.Size = new Size(defaultFormWidth, defaultFormHeight);
             }
@@ -1321,7 +1335,7 @@ namespace snake_sandbox01
       /// </summary>
       private void btnHelp_Click(object sender, EventArgs e)
       {
-         lbHelp.Visible = lbHelp.Visible ? false : true;
+         lbHelp.Visible = lbHelp.Visible ? false : true; //
          lbHelp.Text = lbHelp.Text == "help text" ? "Nápověda:\n\n W / up arrow - nahoru, S / down arrow - dolu\r\nA / left arrow - doleva, D / right arrow - doprava\r\nR - nová hra, P / G - pozastavení hry" : lbHelp.Text;
       }
 
@@ -1333,7 +1347,7 @@ namespace snake_sandbox01
          MessageBox.Show("In development right now!");
       }
 
-      private void cbInserMode_CheckedChanged(object sender, EventArgs e)
+      private void cbInsertMode_CheckedChanged(object sender, EventArgs e)
       {
 
       }
@@ -1375,6 +1389,8 @@ namespace snake_sandbox01
       //}
 
       #endregion open-controls
+
+      #endregion
 
       #region double buffering
       protected override CreateParams CreateParams
