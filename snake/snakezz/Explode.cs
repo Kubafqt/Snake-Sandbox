@@ -11,8 +11,6 @@ namespace snake_sandbox01
       public int fullSize;
       public Color color;
 
-      //
-      //s:
       public static List<Explode> explosions = new List<Explode>();
       public readonly static Dictionary<string, int> smerDictX = new Dictionary<string, int>() { { "left", 1 }, { "right", -1 }, { "up", 0 }, { "down", 0 } }; //směr výbuchu
       public readonly static Dictionary<string, int> smerDictY = new Dictionary<string, int>() { { "left", 0 }, { "right", 0 }, { "up", -1 }, { "down", 1 } }; //směr výbuchu

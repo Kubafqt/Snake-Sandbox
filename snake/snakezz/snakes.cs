@@ -56,7 +56,7 @@ namespace snake_sandbox01
 		}
 
 		public void outPoop()
-        {
+		{
 			//Point poopPoint = new Point(snakePointQueue.Peek().X, snakePointQueue.Peek().Y);
 			//Form1.blockArr[poopPoint.X, poopPoint.Y] = "poop";
 			//Poops poop = new Poops(40, poopPoint);
@@ -66,21 +66,21 @@ namespace snake_sandbox01
 
 		Point lastPeek;
 		public void LastSnakePeek() //get on timer
-        {
+		{
 			//x = snakePointQueue.Peek().X;
 			//y = snakePointQueue.Peek().Y;
 			lastPeek = snakePointQueue.Peek();
 		}
 
 		public void ReverseSnake()
-        {
+		{
 			x = lastPeek.X;
 			y = lastPeek.Y;
 			snakePointQueue = new Queue<Point>(snakePointQueue.Reverse());
 		}
 
 		public static void PlayerStopsAllSnakes()
-        {
+		{
 			if (!Game.snakesStopped)
 			{
 				Form1.stopTime = 0;
@@ -245,7 +245,7 @@ namespace snake_sandbox01
 			{ GetDirection(); }
 
 		}
-	
+
 		/// <summary>
 		/// Bot snake check for closest food around him. - usually called when some food is eaten
 		/// - tested calling only when currently tracked food is eaten, but this is less efective snake type.
@@ -256,7 +256,7 @@ namespace snake_sandbox01
 			{
 				if (snake != PlayerSnake)//&& lfPoint.X == s.TargetTracker["x"] && lfPoint.Y == s.TargetTracker["y"] - zda bylo sežráno pouze trackovaný jídlo (lepší checkovat každé jídlo, kvůli spawnu nového, teoreticky bližšího)
 				{
-					snake.CheckClosestFoodAndGetDirection();			
+					snake.CheckClosestFoodAndGetDirection();
 				}
 			}
 		}
@@ -279,7 +279,7 @@ namespace snake_sandbox01
 		/// Bot check closest food and get direction.
 		/// </summary>
 		public void CheckClosestFoodAndGetDirection()
-      {
+		{
 			CheckClosestFood();
 			GetDirection();
 		}
@@ -320,7 +320,7 @@ namespace snake_sandbox01
 					selectedFood = foodNumber;
 					lastCount = fullCount;
 				}
-				foodNumber++;	
+				foodNumber++;
 			}
 		}
 
@@ -401,14 +401,14 @@ namespace snake_sandbox01
 		}
 
 
-      /// <summary>
-      /// add new snake to game (Snakes list)
-      /// </summary>
-      /// <param name="startX">snake starting X position in snakeArr[]</param>
-      /// <param name="startY">snake starting Y position in snakeArr[]</param>
-      /// <param name="inside">snake travel only inside (not searchin for passsing edges)</param>
-      /// <param name="super">snake travel diagonaly (super-fast, unreal movement)</param>
-      public static void AddSnake(int startX, int startY, int startSnakeLength, Color colour, string direction = "", bool inside = false, bool super = false, bool itselfKill = true)
+		/// <summary>
+		/// add new snake to game (Snakes list)
+		/// </summary>
+		/// <param name="startX">snake starting X position in snakeArr[]</param>
+		/// <param name="startY">snake starting Y position in snakeArr[]</param>
+		/// <param name="inside">snake travel only inside (not searchin for passsing edges)</param>
+		/// <param name="super">snake travel diagonaly (super-fast, unreal movement)</param>
+		public static void AddSnake(int startX, int startY, int startSnakeLength, Color colour, string direction = "", bool inside = false, bool super = false, bool itselfKill = true)
 		{
 			snakesList.Add(new Snakes(startX, startY, startSnakeLength, colour, Game.snakeID));
 			snakesList[Game.snakeID - 1].insideSnake = inside;
@@ -417,11 +417,11 @@ namespace snake_sandbox01
 			Game.snakeID++;
 		}
 
-	  /// <summary>
+		/// <summary>
 		/// Remove snake from game and explode him.
 		/// </summary>
 		/// <param name="snake">snake to remove</param>
-	  public static void RemoveSnake(Snakes snake)
+		public static void RemoveSnake(Snakes snake)
 		{
 			Explode.explosions.Add(new Explode(4, 150, (snake.x + Explode.smerDictX[snake.direction]) * Form1.sizeX, (snake.y + Explode.smerDictY[snake.direction]) * Form1.sizeY, Color.OrangeRed));
 			for (int a = 0; a < Form1.width; a++) //remove snake from array
@@ -435,7 +435,7 @@ namespace snake_sandbox01
 			snakesList.Remove(snake);
 		}
 
-      #endregion
+		#endregion
 
-   }
+	}
 }

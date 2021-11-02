@@ -15,13 +15,13 @@ namespace snake_sandbox01
       public void castSlowingPoison(Snakes target)
       {
          target.slowed = false;
-         
+
       }
 
-    public void speedUpMyselft()
-        {
-            speedStep += 1;
-        }
+      public void speedUpMyself()
+      {
+         speedStep += 1;
+      }
 
       public void StopAllOtherSnakes()
       {
@@ -42,16 +42,6 @@ namespace snake_sandbox01
 
          }
       }
-
-
-      //Kubaf nápady - zásobník na howna (explode howno, timer, on-use, ...), block howno, debuff howno, různá velikost zásobníku
-      //Kubaf nápady - 
-
-      //Sanatan nápady - zastavit ostatní hady, procházet sami sebou, zvětšení objemu hada, umět procházet čímkoliv ("stealth")
-      //Sanatan nápady - mohl by udělat několik kroků zpátky, ukousne jiný hady, had - ovládá ostatní had (prohodí se), ...
-      //Sanatan nápady - hloupější hady (nehledá pořád, zbytečný kroky, nevybere jídlo před tebou, spelly), online gamesa, ...
-      //donnixdonnixdonnix@gmail.com
-
 
    }
 }
