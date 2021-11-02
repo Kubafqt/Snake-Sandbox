@@ -22,19 +22,8 @@ namespace snake_sandbox01
          {
             //check if saved game already exists in database:
             SqlConnection connection = new SqlConnection(Game.connString);
-            string testSaveExistSql = $"SELECT saveGameNameID FROM savegame_info WHERE saveGameNameID = @saveName";
-            SqlCommand cmmd = new SqlCommand(testSaveExistSql, connection);
-            cmmd.Parameters.AddWithValue("@saveName", saveName);
-            connection.Open();
-            bool saveExist = false;
-            SqlDataReader reader = cmmd.ExecuteReader();
-            while (reader.Read())
-            {
-               saveExist = true; //save on this name exists
-               break;
-            }
-            connection.Close();
-            if (saveExist) //check if save game name already exist, then ask if overwrite level or not
+
+            if (SaveExists(connection, saveName)) //check if save game name already exist, then ask if overwrite level or not
             {
                proceed = false;
                DialogResult dialogResult = MessageBox.Show("Uložená hra pod tímto názvem již existuje. Chcete přepsat uloženou hru?", "Přepsat uloženou hru?", MessageBoxButtons.YesNo); //+delete from combobox
@@ -50,51 +39,10 @@ namespace snake_sandbox01
                }
             }
 
-            //save game info:
-            int passableEdges = Game.passableEdges ? 1 : 0;
-            string cmdText = $"INSERT INTO savegame_info " + "(saveGameNameID, levelNameID, foodNumber, passableEdges, interval) " + $"VALUES (@saveName, @levelName, {Game.foodNumber}, {passableEdges}, {Game.interval})";
-            SqlCommand comm = new SqlCommand(cmdText, connection);
-            comm.Parameters.AddWithValue("@saveName", saveName);
-            comm.Parameters.AddWithValue("@levelName", Game.selectedLevelName);
-            connection.Open();
-            comm.ExecuteNonQuery();
+            SaveGameInfo(connection, saveName); //save game info
+            SaveAllSnakeProperties(connection, saveName); //save all snakes properties
+            SaveAllFoodPositions(connection, saveName); //save snakePointQueue inside of snake instance
 
-            //save all snakes properties:
-            foreach (Snakes snake in Snakes.snakesList.ToList())
-            {
-               int superSnake = snake.superSnake ? 1 : 0;
-               int insideSnake = snake.insideSnake ? 1 : 0;
-               int isPlayerSnake = snake == Snakes.PlayerSnake ? 1 : 0;
-               string commandText = "INSERT INTO savegame_snakes " + "(saveGameNameID, snakeID, snakeLength, startSnakeLength, posX, posY, direction, insideSnake, superSnake, snakeColorID, playerSnake)" +
-                  $" VALUES (@saveName, {snake.snakeNumber}, {snake.snakeLength}, {snake.startSnakeLength}, {snake.x}, {snake.y}, @direction, {superSnake}, {insideSnake}, {Snakes.snakeColorsList.IndexOf(snake.color)}, {isPlayerSnake})";
-               SqlCommand command = new SqlCommand(commandText, connection);
-               command.Parameters.AddWithValue("@saveName", saveName);
-               command.Parameters.AddWithValue("@direction", snake.direction);
-               command.ExecuteNonQuery();
-
-               //save snakePointQueue inside of snake instance:
-               int queuePos = 0;
-               foreach (Point p in snake.snakePointQueue.ToList())
-               {
-                  string queueCmdText = $"INSERT INTO savegame_snakesPointQueue" + "(saveGameNameID, snakeID, posX, posY, queuePos)" +
-                     $" VALUES (@saveName, {snake.snakeNumber}, {p.X}, {p.Y}, {queuePos})";
-                  SqlCommand cmd = new SqlCommand(queueCmdText, connection);
-                  cmd.Parameters.AddWithValue("@saveName", saveName);
-                  cmd.ExecuteNonQuery();
-                  queuePos++; //otázka jestli to jde odzadu nebo odpředu (asi ok zatím)
-               }
-            }
-
-            //save all food positions:
-            foreach (Point p in Form1.foodPointList.ToList())
-            {
-               string commandText = $"INSERT INTO savegame_foods " + "(saveGameNameID, blockPosX, blockPosY, foodType)" +
-                  $" VALUES (@saveName, {p.X}, {p.Y}, 'food')";
-               SqlCommand command = new SqlCommand(commandText, connection);
-               command.Parameters.AddWithValue("@saveName", saveName);
-               command.ExecuteNonQuery();
-            }
-            connection.Close();
             proceed = true; //for add it to combobox and other little things
          }
          catch (Exception e)
@@ -103,6 +51,97 @@ namespace snake_sandbox01
             MessageBox.Show($"Vyskytla se chyba při zápisu do DB: {e.GetType()}");
          }
       }
+
+      /// <summary>
+      /// Check if savegame with this name already exists in db.
+      /// </summary>
+      /// <param name="connection">SQLconnection</param>
+      /// <param name="saveName">Save game name (id)</param>
+      /// <returns>True: save with this name exists, False: save with this name is not exists</returns>
+      private static bool SaveExists(SqlConnection connection, string saveName)
+      {
+         string testSaveExistSql = $"SELECT saveGameNameID FROM savegame_info WHERE saveGameNameID = @saveName";
+         SqlCommand cmd = new SqlCommand(testSaveExistSql, connection);
+         cmd.Parameters.AddWithValue("@saveName", saveName);
+         connection.Open();
+         SqlDataReader reader = cmd.ExecuteReader();
+         while (reader.Read())
+         {
+            connection.Close();
+            return true; //save on this name exists
+         }
+         connection.Close();
+         return false;
+      }
+
+      /// <summary>
+      /// Save game info.
+      /// </summary>
+      /// <param name="connection">SQLconnection</param>
+      /// <param name="saveName">Save game name (id)</param>
+      private static void SaveGameInfo(SqlConnection connection, string saveName)
+      {
+         int passableEdges = Game.passableEdges ? 1 : 0;
+         string cmdText = $"INSERT INTO savegame_info " + "(saveGameNameID, levelNameID, foodNumber, passableEdges, interval) " + $"VALUES (@saveName, @levelName, {Game.foodNumber}, {passableEdges}, {Game.interval})";
+         SqlCommand cmd = new SqlCommand(cmdText, connection);
+         cmd.Parameters.AddWithValue("@saveName", saveName);
+         cmd.Parameters.AddWithValue("@levelName", Game.selectedLevelName);
+         connection.Open();
+         cmd.ExecuteNonQuery();
+      }
+
+      /// <summary>
+      /// 
+      /// </summary>
+      /// <param name="connection"></param>
+      /// <param name="saveName"></param>
+      private static void SaveAllSnakeProperties(SqlConnection connection, string saveName)
+      {
+         foreach (Snakes snake in Snakes.snakesList.ToList())
+         {
+            int superSnake = snake.superSnake ? 1 : 0;
+            int insideSnake = snake.insideSnake ? 1 : 0;
+            int isPlayerSnake = snake == Snakes.PlayerSnake ? 1 : 0;
+            string commandText = "INSERT INTO savegame_snakes " + "(saveGameNameID, snakeID, snakeLength, startSnakeLength, posX, posY, direction, insideSnake, superSnake, snakeColorID, playerSnake)" +
+               $" VALUES (@saveName, {snake.snakeNumber}, {snake.snakeLength}, {snake.startSnakeLength}, {snake.x}, {snake.y}, @direction, {superSnake}, {insideSnake}, {Snakes.snakeColorsList.IndexOf(snake.color)}, {isPlayerSnake})";
+            SqlCommand command = new SqlCommand(commandText, connection);
+            command.Parameters.AddWithValue("@saveName", saveName);
+            command.Parameters.AddWithValue("@direction", snake.direction);
+            command.ExecuteNonQuery();
+
+
+            int queuePos = 0;
+            foreach (Point p in snake.snakePointQueue.ToList())
+            {
+               string queueCmdText = $"INSERT INTO savegame_snakesPointQueue" + "(saveGameNameID, snakeID, posX, posY, queuePos)" +
+                  $" VALUES (@saveName, {snake.snakeNumber}, {p.X}, {p.Y}, {queuePos})";
+               SqlCommand cmd = new SqlCommand(queueCmdText, connection);
+               cmd.Parameters.AddWithValue("@saveName", saveName);
+               cmd.ExecuteNonQuery();
+               queuePos++; //otázka jestli to jde odzadu nebo odpředu (asi ok zatím)
+            }
+         }
+      }
+
+      /// <summary>
+      /// 
+      /// </summary>
+      /// <param name="conection"></param>
+      /// <param name="saveName"></param>
+      private static void SaveAllFoodPositions(SqlConnection connection, string saveName)
+      {
+         //save all food positions:
+         foreach (Point p in Form1.foodPointList.ToList())
+         {
+            string commandText = $"INSERT INTO savegame_foods " + "(saveGameNameID, blockPosX, blockPosY, foodType)" +
+               $" VALUES (@saveName, {p.X}, {p.Y}, 'food')";
+            SqlCommand command = new SqlCommand(commandText, connection);
+            command.Parameters.AddWithValue("@saveName", saveName);
+            command.ExecuteNonQuery();
+         }
+         connection.Close();
+      }
+
 
       #endregion
 
@@ -135,7 +174,7 @@ namespace snake_sandbox01
       /// <param name="loadName">saveGameNameID (name ID of saved game)</param>
       /// <param name="connection">MSSQL server connection</param>
       private static void LoadSaveGame_info(string loadName, SqlConnection connection)
-      { 
+      {
          connection.Open();
          string cmdtext = "SELECT * FROM savegame_info WHERE saveGameNameID = @loadName";
          SqlCommand cmd = new SqlCommand(cmdtext, connection);
