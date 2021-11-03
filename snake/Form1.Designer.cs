@@ -169,9 +169,9 @@
          this.levelpanel.Controls.Add(this.lbSelectlevel);
          this.levelpanel.Controls.Add(this.cmbSelectedLevel);
          this.levelpanel.Controls.Add(this.btStartLevel);
-         this.levelpanel.Location = new System.Drawing.Point(227, 37);
+         this.levelpanel.Location = new System.Drawing.Point(227, 35);
          this.levelpanel.Name = "levelpanel";
-         this.levelpanel.Size = new System.Drawing.Size(681, 324);
+         this.levelpanel.Size = new System.Drawing.Size(587, 357);
          this.levelpanel.TabIndex = 1;
          this.levelpanel.Visible = false;
          this.levelpanel.Paint += new System.Windows.Forms.PaintEventHandler(this.levelpanel_Paint);
@@ -253,7 +253,7 @@
          // btnDeleteSave
          // 
          this.btnDeleteSave.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-         this.btnDeleteSave.Location = new System.Drawing.Point(945, 138);
+         this.btnDeleteSave.Location = new System.Drawing.Point(882, 131);
          this.btnDeleteSave.Name = "btnDeleteSave";
          this.btnDeleteSave.Size = new System.Drawing.Size(144, 25);
          this.btnDeleteSave.TabIndex = 15;
@@ -265,7 +265,7 @@
          // 
          this.lbSaveGame.AutoSize = true;
          this.lbSaveGame.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-         this.lbSaveGame.Location = new System.Drawing.Point(693, 76);
+         this.lbSaveGame.Location = new System.Drawing.Point(630, 69);
          this.lbSaveGame.Name = "lbSaveGame";
          this.lbSaveGame.Size = new System.Drawing.Size(88, 16);
          this.lbSaveGame.TabIndex = 14;
@@ -273,7 +273,7 @@
          // 
          // tbSaveGame
          // 
-         this.tbSaveGame.Location = new System.Drawing.Point(787, 75);
+         this.tbSaveGame.Location = new System.Drawing.Point(724, 68);
          this.tbSaveGame.Name = "tbSaveGame";
          this.tbSaveGame.Size = new System.Drawing.Size(144, 20);
          this.tbSaveGame.TabIndex = 13;
@@ -283,7 +283,7 @@
          // 
          this.lbLoadGame.AutoSize = true;
          this.lbLoadGame.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-         this.lbLoadGame.Location = new System.Drawing.Point(725, 110);
+         this.lbLoadGame.Location = new System.Drawing.Point(662, 103);
          this.lbLoadGame.Name = "lbLoadGame";
          this.lbLoadGame.Size = new System.Drawing.Size(55, 16);
          this.lbLoadGame.TabIndex = 12;
@@ -293,7 +293,7 @@
          // 
          this.cmbLoadGame.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
          this.cmbLoadGame.FormattingEnabled = true;
-         this.cmbLoadGame.Location = new System.Drawing.Point(786, 109);
+         this.cmbLoadGame.Location = new System.Drawing.Point(723, 102);
          this.cmbLoadGame.Name = "cmbLoadGame";
          this.cmbLoadGame.Size = new System.Drawing.Size(144, 21);
          this.cmbLoadGame.TabIndex = 11;
@@ -301,7 +301,7 @@
          // btnLoadGame
          // 
          this.btnLoadGame.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-         this.btnLoadGame.Location = new System.Drawing.Point(945, 106);
+         this.btnLoadGame.Location = new System.Drawing.Point(882, 99);
          this.btnLoadGame.Name = "btnLoadGame";
          this.btnLoadGame.Size = new System.Drawing.Size(144, 25);
          this.btnLoadGame.TabIndex = 10;
@@ -313,7 +313,7 @@
          // 
          this.btnSaveGame.Enabled = false;
          this.btnSaveGame.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-         this.btnSaveGame.Location = new System.Drawing.Point(945, 72);
+         this.btnSaveGame.Location = new System.Drawing.Point(882, 65);
          this.btnSaveGame.Name = "btnSaveGame";
          this.btnSaveGame.Size = new System.Drawing.Size(144, 25);
          this.btnSaveGame.TabIndex = 9;

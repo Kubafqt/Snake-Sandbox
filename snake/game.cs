@@ -25,7 +25,7 @@ namespace snake_sandbox01
       public static int snakeID = 2; //snakes ID
       public static string activePanel = "game";
       public static Size gamepanelSize = new Size(1200, 600);
-      public static Size settingsPanelSize = new Size(1200, 600);
+      public static Size settingsPanelSize = new Size(1080, 600);
       public static Point panelLocation = new Point(18, 70);
       public static List<string> defaultLevelNames = new List<string> { "Custom level", "level 1", "level 2", "level 3", "level 4", "level 5" };
       public static bool snakesStopped = false;
