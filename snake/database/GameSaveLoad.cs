@@ -88,6 +88,7 @@ namespace snake_sandbox01
          cmd.Parameters.AddWithValue("@levelName", Game.selectedLevelName);
          connection.Open();
          cmd.ExecuteNonQuery();
+         connection.Close();
       }
 
       /// <summary>
@@ -97,6 +98,7 @@ namespace snake_sandbox01
       /// <param name="saveName"></param>
       private static void SaveAllSnakeProperties(SqlConnection connection, string saveName)
       {
+         connection.Open();
          foreach (Snakes snake in Snakes.snakesList.ToList())
          {
             int superSnake = snake.superSnake ? 1 : 0;
@@ -109,7 +111,6 @@ namespace snake_sandbox01
             command.Parameters.AddWithValue("@direction", snake.direction);
             command.ExecuteNonQuery();
 
-
             int queuePos = 0;
             foreach (Point p in snake.snakePointQueue.ToList())
             {
@@ -121,6 +122,7 @@ namespace snake_sandbox01
                queuePos++; //otázka jestli to jde odzadu nebo odpředu (asi ok zatím)
             }
          }
+         connection.Close();
       }
 
       /// <summary>
@@ -130,6 +132,7 @@ namespace snake_sandbox01
       /// <param name="saveName"></param>
       private static void SaveAllFoodPositions(SqlConnection connection, string saveName)
       {
+         connection.Open();
          //save all food positions:
          foreach (Point p in Form1.foodPointList.ToList())
          {
