@@ -10,6 +10,32 @@ namespace snake_sandbox01
       public static Point clearBlockPoint;
       public static Size clearBlockSize;
 
+
+      /// <summary>
+      /// Create hardblocks to game level - add hardblock to block array and block list.
+      /// </summary>
+      /// <param name="x">x position in array</param>
+      /// <param name="y">y position in array</param>
+      /// <param name="sizeX">x size of array</param>
+      /// <param name="sizeY">y size of array</param>
+      public static void CreateBlocks(int x, int y, int sizeX, int sizeY)
+      {
+         for (int a = x; a < x + sizeX; a++)
+         {
+            for (int b = y; b < y + sizeY; b++)
+            {
+               a = a < Form1.width ? a : a - Form1.width;
+               a = a >= 0 ? a : Form1.width + a;
+               b = b < Form1.height ? b : b - Form1.height;
+               b = b >= 0 ? b : Form1.height + b;
+               Form1.blockArr[a, b] = "hardblock"; //hardblock (type)
+               Form1.blockPointList.Add(new Point(a, b));
+               int i = Form1.blockPointList.IndexOf(new Point(10, 20));
+
+            }
+         }
+      }
+
       /// <summary>
       /// Clear all blocks in selected clearblock rectangle.
       /// </summary>

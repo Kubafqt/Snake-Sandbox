@@ -16,7 +16,7 @@ namespace snake_sandbox01
       public static string[,] blockArr; //foods/blocks
       public static List<Point> foodPointList = new List<Point>(); //list of foods
       public static List<Point> blockPointList = new List<Point>(); //list of blocks
-                                                                    //list of poops
+                                                                     //list of poops
                                                                     //public static List<
       public static string directKeyDown = ""; //player change direction (assign snake.direction in timer)
       private int defaultFormWidth = 1256; //default width of form
@@ -24,9 +24,12 @@ namespace snake_sandbox01
       private int createFormWidth = 1529; //width of form when createpanel is active
       public bool slowed = false;
 
+      
+
 
       Random random; //some element of random
       public static Timer timer; //main game timer
+      public static Timer speedTimer; //special speeded timer
       Font font = new Font("Consolas", 25.0f); //font of game-over announcement
 
       #region Form constructor
@@ -68,6 +71,9 @@ namespace snake_sandbox01
          timer = new Timer();
          timer.Tick += new EventHandler(timer_tick);
          timer.Interval = Game.interval;
+         speedTimer = new Timer();
+         speedTimer.Tick += new EventHandler(speedTimer_tick);
+         speedTimer.Interval = Game.interval / 2;
          lbScore.Text = ""; //reset score label
          tbFoodNumber.MaxLength = 3; //food number textbox
          tbCFoodnumber.MaxLength = 3; //food number textbox in create panel
@@ -135,14 +141,36 @@ namespace snake_sandbox01
             //speed2:
             BombShot.bombyShotList.Add(new BombShot(new Point(Snakes.PlayerSnake.x, Snakes.PlayerSnake.y), Snakes.PlayerSnake.direction, 2));
          }
+         if (key == Keys.Z)
+         {
+            SlowingBombShot.slowingBombShotList.Add(new SlowingBombShot(new Point(Snakes.PlayerSnake.x, Snakes.PlayerSnake.y), Snakes.PlayerSnake.direction, 2, true));
+         }
+         if (key == Keys.T)
+         {
+            if (!BlockShot.blockShotList.Any(shot => shot.snakeid == Snakes.PlayerSnake.snakeNumber)) //shoot blockshot
+            {
+               BlockShot.blockShotList.Add(new BlockShot(new Point(Snakes.PlayerSnake.x, Snakes.PlayerSnake.y), Snakes.PlayerSnake.direction, 2, Snakes.PlayerSnake.snakeNumber));
+            }
+            else //expand blockshot
+            {
+               Random random = new Random();
+               BlockShot shot = BlockShot.blockShotList.First(s => s.snakeid == Snakes.PlayerSnake.snakeNumber);
+               shot.ExpandBlock(BlockShot.expandType[random.Next(BlockShot.expandType.Length)]);
+               BlockShot.blockShotList.Remove(shot);
+            }
+         }
          if (key == Keys.I) //reverse snake
          {
-            Snakes.PlayerSnake.ReverseSnake();
+            Snakes.PlayerSnake.reverseSnake = true;
          }
-         if (key == Keys.V && Game.activePanel == gamepanel.Name)
+         if (key == Keys.J)
          {
-            Snakes.vSnake.StopAllOtherSnakes();
+            Snakes.PlayerSnake.speededTime = 100;
          }
+         //if (key == Keys.V && Game.activePanel == gamepanel.Name)
+         //{
+         //   Snakes.vSnake.StopAllOtherSnakes();
+         //}
          if (key == Keys.C && Game.activePanel == gamepanel.Name)
          {
             Snakes.PlayerStopsAllSnakes();
@@ -178,288 +206,280 @@ namespace snake_sandbox01
          if (Game.snakesStopped)
          {
             stopTime++;
+            if (stopTime > 60)
+            {
+               Game.snakesStopped = false;
+               foreach (Snakes snake in Snakes.snakesList.ToList())
+               {
+                  if (snake != Snakes.PlayerSnake)
+                  {
+                     snake.stopped = false;
+                  }
+               }
+            }
          }
          else
          {
             stopTime = 0;
          }
 
-         BombMovement();
-         SnakesMovement();
-         Refresh();
+         BombsMovement();
+         if (BlockShot.tempBlockShotList.Count > 0)
+         {
+            BlockShotActive();
+         }
+         foreach (Snakes snake in Snakes.snakesList.ToList())
+         {
+            if (snake.speededTime == 0)
+            {
+               SnakesMovement(snake);
+            }
+         }
+         //if (!speedTimer.Enabled)
+         { Refresh(); }
       }
 
-      private void BombMovement()
+
+      private void speedTimer_tick(object s, EventArgs a)
+      {
+         //Remove snake tail after 'bombed':
+         foreach (Snakes snake in Snakes.snakesList.ToList())
+         {
+            if (snake.snakeTailDequeue.ToList().Count != 0)
+            {
+               Point del = snake.snakeTailDequeue.Dequeue();
+               snakeArr[del.X, del.Y] = 0;
+               Refresh();
+            }
+
+            if (snake.speededTime > 0)
+            {
+               SnakesMovement(snake);
+               snake.speededTime--;
+               Refresh();
+            }
+         
+            //else
+            //{
+            //   speedTimer.Stop();
+            //}
+         }
+      }
+
+      private void BlockShotActive()
+      {
+         foreach (BlockShot bs in BlockShot.tempBlockShotList.ToList())
+         {
+            if (bs.size < bs.expandMass)
+            {
+               switch (bs.selectedExpandType)
+               {
+                  case "cross":
+                     {
+                        Blocks.CreateBlocks(bs.x + bs.size, bs.y, 1, 1);
+                        Blocks.CreateBlocks(bs.x - bs.size, bs.y, 1, 1);
+                        Blocks.CreateBlocks(bs.x, bs.y + bs.size, 1, 1);
+                        Blocks.CreateBlocks(bs.x, bs.y - bs.size, 1, 1);
+                        break;
+                     }
+                  case "star":
+                     {
+                        Blocks.CreateBlocks(bs.x + bs.size, bs.y + bs.size, 1, 1);
+                        Blocks.CreateBlocks(bs.x - bs.size, bs.y - bs.size, 1, 1);
+                        Blocks.CreateBlocks(bs.x - bs.size, bs.y + bs.size, 1, 1);
+                        Blocks.CreateBlocks(bs.x + bs.size, bs.y - bs.size, 1, 1);
+                        break;
+                     }
+                  default:
+                     break;
+               }
+               bs.size++;
+            }
+            else
+            {
+               BlockShot.tempBlockShotList.Remove(bs);
+            }
+         }
+      }
+
+      private void BombsMovement()
       {
          foreach (BombShot bomb in BombShot.bombyShotList.ToList())
          {
-            switch (bomb.direction) //snake move
-            {
-               case "left":
-                  {
-                     for (int i = 0; i < bomb.speed; i++)
-                     {
-                        if (bomb.position.X != 0)
-                        {
-                           bomb.position.X--;
-                        }
-                        else if (Game.passableEdges) //edges of gamepanel can be passed
-                        {
-                           if (!bomb.goThroughOnce)
-                           {
-                              bomb.position.X = width - 1;
-                              bomb.goThroughOnce = true;
-                           }
-                           else
-                           {
-                              BombShot.RemoveBomb(bomb);
-                           }
-                        }
-                        else //remove bomb on not passable edges
-                        {
-                           BombShot.RemoveBomb(bomb);
-                        }
-                        BombShot.BombMovement(bomb);
-                     }
-                     break;
-                  }
-               case "right":
-                  {
-                     for (int i = 0; i < bomb.speed; i++)
-                     {
-                        if (bomb.position.X != width - 1)
-                        {
-                           bomb.position.X++;
-                        }
-                        else if (Game.passableEdges) //edges of gamepanel can be passed
-                        {
-                           if (!bomb.goThroughOnce)
-                           {
-                              bomb.position.X = 0;
-                              bomb.goThroughOnce = true;
-                           }
-                           else
-                           {
-                              BombShot.RemoveBomb(bomb);
-                           }
-                        }
-
-                        else //remove bomb on not passable edges
-                        {
-                           BombShot.RemoveBomb(bomb);
-                        }
-                        BombShot.BombMovement(bomb);
-                     }
-                     break;
-                  }
-               case "up":
-                  {
-                     for (int i = 0; i < bomb.speed; i++)
-                     {
-                        if (bomb.position.Y != 0)
-                        {
-                           bomb.position.Y--;
-                        }
-                        else if (Game.passableEdges) //edges of gamepanel can be passed
-                        {
-                           if (!bomb.goThroughOnce)
-                           {
-                              bomb.position.Y = height - 1;
-                              bomb.goThroughOnce = true;
-                           }
-                           else
-                           {
-                              BombShot.RemoveBomb(bomb);
-                           }
-                        }
-
-                        else //remove bomb on not passable edges
-                        {
-                           BombShot.RemoveBomb(bomb);
-                        }
-                        BombShot.BombMovement(bomb);
-                     }
-                     break;
-                  }
-               case "down":
-                  {
-                     for (int i = 0; i < bomb.speed; i++)
-                     {
-                        if (bomb.position.Y != height - 1)
-                        {
-                           bomb.position.Y++;
-                        }
-                        else if (Game.passableEdges) //edges of gamepanel can be passed
-                        {
-                           if (!bomb.goThroughOnce)
-                           {
-                              bomb.position.Y = 0;
-                              bomb.goThroughOnce = true;
-                           }
-                           else
-                           {
-                              BombShot.RemoveBomb(bomb);
-                           }
-                        }
-                        else //remove bomb on not passable edges
-                        {
-                           BombShot.RemoveBomb(bomb);
-                        }
-                        BombShot.BombMovement(bomb);
-                     }
-                     break;
-                  }
-            }
+            bomb.BombsMovement();
          }
-      }
-
-      private void SnakesMovement()
-      {
-         foreach (Snakes snake in Snakes.snakesList.ToList())
+         foreach (BombShot slowBomb in SlowingBombShot.slowingBombShotList.ToList())
          {
-            //if (snake.stopped && stopTime > 100)
-            //{
-            //    snake.stopped = false;
-            //    Game.snakesStopped = false;
-            //}
-            snake.LastSnakePeek();
-            if (snake.direction != "" && !snake.dead && !snake.stopped) //move when not staying or not dead
-            {
-               //bot check free way to change direction:
-               if (snake != Snakes.PlayerSnake)
-               { snake.CheckDirection(); }
-
-               //snake movement on coordinates:
-               //if ((snake.slowed && slowTime) || !snake.slowed)
-               //{
-               switch (snake.direction) //snake move
-               {
-                  case "left": //left
-                     {
-                        if (snake.x != 0)
-                        {
-                           snake.x--;
-                        }
-
-                        else if (Game.passableEdges) //edges of gamepanel can be passed
-                        {
-                           snake.x = width - 1;
-                           if (snake != Snakes.PlayerSnake)// && snake.insideSnake) //check for food after pass the edge
-                           {
-                              snake.CheckClosestFoodAndGetDirection();
-                           }
-                        }
-                        else //game over when not passable edges
-                        {
-                           Game.GameOver(snake);
-                        }
-                        break;
-                     }
-                  case "right": //right
-                     {
-                        if (snake.x != width - 1)
-                        {
-                           snake.x++;
-                        }
-                        else if (Game.passableEdges) //edges of gamepanel can be passed
-                        {
-                           snake.x = 0;
-                           if (snake != Snakes.PlayerSnake) //check for food after pass the edge
-                           {
-                              snake.CheckClosestFoodAndGetDirection();
-                           }
-                        }
-                        else //game over when not passable edges
-                        {
-                           Game.GameOver(snake);
-                        }
-                        break;
-                     }
-                  case "up": //up
-                     {
-                        if (snake.y != 0) { snake.y--; }
-                        else if (Game.passableEdges) //edges of gamepanel can be passed
-                        {
-                           snake.y = height - 1;
-                           if (snake != Snakes.PlayerSnake) //check for food after pass the edge
-                           {
-                              snake.CheckClosestFoodAndGetDirection();
-                           }
-                        }
-                        else
-                        {
-                           Game.GameOver(snake);
-                        }
-                        break;
-                     }
-                  case "down": //down
-                     {
-                        if (snake.y != height - 1) { snake.y++; }
-                        else if (Game.passableEdges) //edges of gamepanel can be passed
-                        {
-                           snake.y = 0;
-                           if (snake != Snakes.PlayerSnake) //check for food after pass the edge
-                           {
-                              snake.CheckClosestFoodAndGetDirection();
-                           }
-                        }
-                        else
-                        {
-                           Game.GameOver(snake);
-                        }
-                        break;
-                     }
-                  default: break;
-               }
-
-               //snake movement in arrays and list:
-               if (snakeArr[snake.x, snake.y] == 0 && blockArr[snake.x, snake.y] != "hardblock") //snake movement
-               {
-                  snakeArr[snake.x, snake.y] = snake.snakeNumber; //add snake to snake array
-                  snake.snakePointQueue.Enqueue(new Point(snake.x, snake.y)); //queue for snake movement history and deleting its tail
-               }
-               else if (Game.killOnMyself || snake.killonItself) //snake collision with himself when killonItself is true (weird condition), game.killOnMyself is global for game
-               {
-                  if (snake.killonItself)
-                  { Game.GameOver(snake); }
-               }
-               else if (snakeArr[snake.x, snake.y] != snake.snakeNumber || blockArr[snake.x, snake.y] == "hardblock") //snake collision with other snake or hardblock
-               { Game.GameOver(snake); }
-
-               if (snake != Snakes.PlayerSnake) //it's bot snake
-               {
-                  if (snake.changedDirection) //bot tracking food after change direction
-                  {
-                     snake.changedDirection = false;
-                     snake.CheckClosestFood();
-                     snake.GetDirection();
-                  }
-                  snake.Moving(); //checking for food
-               }
-
-               //food and snake works:
-               if (blockArr[snake.x, snake.y] != "food" && blockArr[snake.x, snake.y] != "hardblock" && snake.snakeLength >= snake.startSnakeLength) //food not eaten
-               {
-                  Point del = snake.snakePointQueue.Dequeue(); //end position
-                  snakeArr[del.X, del.Y] = 0; //delete end position of snake
-               }
-               else if (blockArr[snake.x, snake.y] != "food" && snake.snakeLength <= snake.startSnakeLength)//snake.thisStartSnakeLength && snake == snakes.PlayerSnake) //snake growth
-               {
-                  snake.snakeLength++;
-                  lbScore.Text = $"SnakeLength : { Snakes.PlayerSnake.snakeLength}";
-               }
-               else
-               {
-                  FoodEaten(snake); //or snake.FoodEaten()
-               }
-            }
-            //else
-            //{
-            //    snake.slowedTime++;
-            //}
+            slowBomb.BombsMovement();
+         }
+         foreach (BombShot blockshot in BlockShot.blockShotList.ToList())
+         {
+            blockshot.BombsMovement();
          }
       }
 
+      private void SnakesMovement(Snakes snake)
+      {
+         //if (snake.stopped && stopTime > 100)
+         //{
+         //    snake.stopped = false;
+         //    Game.snakesStopped = false;
+         //}
+         //snake.LastSnakePeek();
+         if (snake.direction != "" && !snake.dead && !snake.stopped) //move when not staying or not dead
+         {
+            //bot check free way to change direction:
+            if (snake != Snakes.PlayerSnake)
+            { snake.CheckDirection(); }
+
+            if (snake.reverseSnake)
+            {
+               //snake.LastSnakePeek();
+               snake.ReverseSnake();
+            }
+
+            if (snake.slowedTime > 0)
+            {
+               if (snake.slowedTime % 2 == 0 || snake.slowedTime % 3 == 0)
+               {
+                  snake.slowedTime--;
+                  return;
+               }
+               snake.slowedTime--;
+            }
+
+            //snake movement on coordinates:
+            //if ((snake.slowed && slowTime) || !snake.slowed)
+            //{
+            switch (snake.direction) //snake move
+            {
+               case "left": //left
+                  {
+                     if (snake.x != 0)
+                     {
+                        snake.x--;
+                     }
+
+                     else if (Game.passableEdges) //edges of gamepanel can be passed
+                     {
+                        snake.x = width - 1;
+                        if (snake != Snakes.PlayerSnake)// && snake.insideSnake) //check for food after pass the edge
+                        {
+                           snake.CheckClosestFoodAndGetDirection();
+                        }
+                     }
+                     else //game over when not passable edges
+                     {
+                        Game.GameOver(snake);
+                     }
+                     break;
+                  }
+               case "right": //right
+                  {
+                     if (snake.x != width - 1)
+                     {
+                        snake.x++;
+                     }
+                     else if (Game.passableEdges) //edges of gamepanel can be passed
+                     {
+                        snake.x = 0;
+                        if (snake != Snakes.PlayerSnake) //check for food after pass the edge
+                        {
+                           snake.CheckClosestFoodAndGetDirection();
+                        }
+                     }
+                     else //game over when not passable edges
+                     {
+                        Game.GameOver(snake);
+                     }
+                     break;
+                  }
+               case "up": //up
+                  {
+                     if (snake.y != 0) { snake.y--; }
+                     else if (Game.passableEdges) //edges of gamepanel can be passed
+                     {
+                        snake.y = height - 1;
+                        if (snake != Snakes.PlayerSnake) //check for food after pass the edge
+                        {
+                           snake.CheckClosestFoodAndGetDirection();
+                        }
+                     }
+                     else
+                     {
+                        Game.GameOver(snake);
+                     }
+                     break;
+                  }
+               case "down": //down
+                  {
+                     if (snake.y != height - 1) { snake.y++; }
+                     else if (Game.passableEdges) //edges of gamepanel can be passed
+                     {
+                        snake.y = 0;
+                        if (snake != Snakes.PlayerSnake) //check for food after pass the edge
+                        {
+                           snake.CheckClosestFoodAndGetDirection();
+                        }
+                     }
+                     else
+                     {
+                        Game.GameOver(snake);
+                     }
+                     break;
+                  }
+               default: break;
+            }
+            //if (snake != Snakes.PlayerSnake)
+            //{
+            //   Console.WriteLine("lol");
+            //}
+            //snake movement in arrays and list:
+            if (snakeArr[snake.x, snake.y] == 0 && blockArr[snake.x, snake.y] != "hardblock") //snake movement
+            {
+               snakeArr[snake.x, snake.y] = snake.snakeNumber; //add snake to snake array
+               snake.snakePointQueue.Enqueue(new Point(snake.x, snake.y)); //queue for snake movement history and deleting its tail
+            }
+            else if (Game.killOnMyself || snake.killonItself) //snake collision with himself when killonItself is true (weird condition), game.killOnMyself is global for game
+            {
+               if (snake.killonItself)
+               { Game.GameOver(snake); }
+            }
+            else if (snakeArr[snake.x, snake.y] != snake.snakeNumber || blockArr[snake.x, snake.y] == "hardblock") //snake collision with other snake or hardblock
+            { Game.GameOver(snake); }
+
+            if (snake != Snakes.PlayerSnake) //it's bot snake
+            {
+               if (snake.changedDirection) //bot tracking food after change direction
+               {
+                  snake.changedDirection = false;
+                  snake.CheckClosestFood();
+                  snake.GetDirection();
+               }
+               snake.Moving(); //checking for food
+            }
+
+            //food and snake works:
+            if (blockArr[snake.x, snake.y] != "food" && blockArr[snake.x, snake.y] != "hardblock" && snake.snakeLength >= snake.startSnakeLength) //food not eaten
+            {
+               Point del = snake.snakePointQueue.Dequeue(); //end position
+               snakeArr[del.X, del.Y] = 0; //delete end position of snake
+            }
+            else if (blockArr[snake.x, snake.y] != "food" && snake.snakeLength < snake.startSnakeLength)//snake.thisStartSnakeLength && snake == snakes.PlayerSnake) //snake growth
+            {
+               snake.snakeLength++;
+               lbScore.Text = $"SnakeLength : { Snakes.PlayerSnake.snakeLength}";
+            }
+            else if (blockArr[snake.x, snake.y] != "hardblock")
+            {
+               FoodEaten(snake); //or snake.FoodEaten()
+            }
+         }
+         //else
+         //{
+         //    snake.slowedTime++;
+         //}
+      }
 
 
       /// <summary>
@@ -468,6 +488,10 @@ namespace snake_sandbox01
       /// <param name="snake">snake instance</param>
       private void FoodEaten(Snakes snake)
       {
+         if (snake.snakeLength < snake.startSnakeLength)
+         {
+            snake.startSnakeLength++;
+         }
          snake.snakeLength++;
          lbScore.Text = $"SnakeLength : { Snakes.PlayerSnake.snakeLength}";
          //new-food:
@@ -524,9 +548,9 @@ namespace snake_sandbox01
          //paint all snakes:
          foreach (Snakes snake in Snakes.snakesList.ToList()) //all snakes
          {
+            SolidBrush brush = new SolidBrush(snake.color);
             foreach (Point p in snake.snakePointQueue.ToList()) //snakes + array for colors
             {
-               SolidBrush brush = new SolidBrush(snake.color);
                gfx.FillRectangle(brush, p.X * sizeX, p.Y * sizeY, sizeX, sizeY);
                //if (snake == snakes.PlayerSnake) //special animation for PlayerSnake
                //{
@@ -534,6 +558,15 @@ namespace snake_sandbox01
                //   gfx.DrawRectangle(pen, p.X * sizeX, p.Y * sizeY, sizeX, sizeY);
                //}
             }
+            foreach (Point p in snake.snakeTailDequeue.ToList())
+            {
+               gfx.FillRectangle(brush, p.X * sizeX, p.Y * sizeY, sizeX, sizeY);
+            }
+            //foreach (Point p in snake.snakePointUnQueue.ToList()) //Queue To end snake tail after bomb/damage -> faster - another paint + faster timer, ... ; - unqueu timer;
+            //{
+            //   SolidBrush brush = new SolidBrush(snake.color);
+            //   gfx.FillRectangle(brush, p.X * sizeX, p.Y * sizeY, sizeX, sizeY);
+            //}
          }
          //paint all foods:
          foreach (Point p in foodPointList) //foods
@@ -559,6 +592,14 @@ namespace snake_sandbox01
          foreach (BombShot bomb in BombShot.bombyShotList)
          {
             gfx.FillRectangle(Brushes.DarkOrange, bomb.position.X * sizeX, bomb.position.Y * sizeY, sizeX, sizeY);
+         }
+         foreach (BombShot bomb in SlowingBombShot.slowingBombShotList)
+         {
+            gfx.FillRectangle(Brushes.DarkOrchid, bomb.position.X * sizeX, bomb.position.Y * sizeY, sizeX, sizeY);
+         }
+         foreach (BombShot bomb in BlockShot.blockShotList)
+         {
+            gfx.FillRectangle(Brushes.DarkSlateBlue, bomb.position.X * sizeX, bomb.position.Y * sizeY, sizeX, sizeY);
          }
       }
 
@@ -661,7 +702,7 @@ namespace snake_sandbox01
          tbIntervalOpen.Text = Game.interval.ToString(); //change open control interval textbox by new interval
          Game.passableEdges = selectChBoxPassableEdges.Checked; //change passable edges attribute from by checkbox
          Game.insertMode = cbInserMode.Checked;
-         Game.insertSize = int.Parse(tbInsertSize.Text);
+         //Game.insertSize = int.Parse(tbInsertSize.Text);
       }
 
       /// <summary>
@@ -803,6 +844,7 @@ namespace snake_sandbox01
                lbScore.Text = $"SnakeLength : { Snakes.PlayerSnake.snakeLength}";
                Snakes.AllBotSnakesCheckClosestFood();
                timer.Start();
+               speedTimer.Start();
             }
          }
          else //combobox cmbLoadGame is empty
@@ -952,7 +994,7 @@ namespace snake_sandbox01
             }
             else if (Blocks.newBlockPoint != new Point(-1, -1) && Blocks.newBlockSize != Size.Empty) //create block
             {
-               Game.CreateBlocks(Blocks.newBlockPoint.X, Blocks.newBlockPoint.Y, Blocks.newBlockSize.Width, Blocks.newBlockSize.Height);
+               Blocks.CreateBlocks(Blocks.newBlockPoint.X, Blocks.newBlockPoint.Y, Blocks.newBlockSize.Width, Blocks.newBlockSize.Height);
                ResetBlockPointSizeText(out Blocks.newBlockPoint, out Blocks.newBlockSize);
                blockPanel.Hide();
                //Refresh();
