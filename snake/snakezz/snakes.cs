@@ -9,6 +9,8 @@ namespace snake_sandbox01
 	{
 		public static Snakes PlayerSnake;
 		public static List<Snakes> snakesList = new List<Snakes>();
+		public static Dictionary<string, string> AntiDirectionDictionary = new Dictionary<string, string>()
+		{ { "up", "down" }, { "down", "up" }, { "left", "right" }, {"right", "left" }};
 
 		public int x, y;
 		public int startX, startY;
@@ -29,11 +31,16 @@ namespace snake_sandbox01
 		public int slowedTime = 0;
 		public int slowedTop = 0;
 		public int speedStep = 1;
+		//public bool speeded = false;
+		public int speededTime = 0;
 		public int insertedFood = 0;
 
+		//public static List<Queue<Point>> SnakePointDequeueList = new List<Queue<Point>>();
+		public Queue<Point> snakeTailDequeue = new Queue<Point>();
 		public bool killonItself = true;
 		public bool insideSnake = false;
 		public bool superSnake = false;
+		public bool reverseSnake = false;
 		static Random random = new Random();
 		public Queue<Point> snakePointQueue = new Queue<Point>(); //for snake movement history delete
 		public static List<Color> snakeColorsList = new List<Color>() { Color.Black, Color.Red, Color.Orange, Color.Yellow, Color.DeepSkyBlue, Color.Brown, Color.Indigo, Color.DarkOrange, Color.DarkOliveGreen, Color.DarkGoldenrod, Color.IndianRed };
@@ -45,7 +52,7 @@ namespace snake_sandbox01
 		/// <param name="startX">snake starting X position in snakeArr[]</param>
 		/// <param name="startY">snake starting Y position in snakeArr[]</param>
 		/// <param name="number">snake id</param>
-		public Snakes(int startX, int startY, int startSnakeLength, Color colour, int speedStep = 1, int number = 1)
+		public Snakes(int startX, int startY, int startSnakeLength, Color colour, int number = 1, int speedStep = 1)
 		{
 			color = colour;
 			snakeNumber = number;
@@ -64,19 +71,109 @@ namespace snake_sandbox01
 			//insertedFood = 0;
 		}
 
-		Point lastPeek;
+		//Point lastPeek;
 		public void LastSnakePeek() //get on timer
 		{
 			//x = snakePointQueue.Peek().X;
 			//y = snakePointQueue.Peek().Y;
-			lastPeek = snakePointQueue.Peek();
-		}
+			//lastPeek = snakePointQueue.Peek();
+         //if (PlayerSnake.direction == "up")
+         //{
+         //   PlayerSnake.direction = "down";
+         //}
+         //if (PlayerSnake.direction == "left")
+         //{
+         //   PlayerSnake.direction = "right";
+         //}
+         //if ((PlayerSnake.direction == "up" || PlayerSnake.direction == "down") && lastPeek.X == PlayerSnake.x)
+         //{
+         //   lastPeek.Y = PlayerSnake.direction == "up" ? lastPeek.Y + 1 : lastPeek.Y - 1;
+         //}
+         //if ((PlayerSnake.direction == "left" || PlayerSnake.direction == "right") && lastPeek.Y == PlayerSnake.y)
+         //{
+         //   lastPeek.X = PlayerSnake.direction == "left" ? lastPeek.X - 3 : lastPeek.X + 3;
+         //}
+      }
 
 		public void ReverseSnake()
 		{
-			x = lastPeek.X;
-			y = lastPeek.Y;
-			snakePointQueue = new Queue<Point>(snakePointQueue.Reverse());
+			reverseSnake = false;
+			if (snakePointQueue.Count > 1)
+			{
+				List<Point> snakePointQueueList = snakePointQueue.ToList();
+				Point diffInPos = new Point(snakePointQueueList[0].X - snakePointQueueList[1].X, snakePointQueueList[0].Y - snakePointQueueList[1].Y);
+				Point lastPeek = snakePointQueueList[0];
+
+				//if (direction == "up")
+				//{
+				//	Form1.directKeyDown = "down";
+				//}
+				//else if (direction == "down")
+				//      {
+				//	Form1.directKeyDown = "up";
+				//      }
+				//      if (direction == "left")
+				//      {
+				//	Form1.directKeyDown = "right";
+				//      }
+				//else if (direction == "right")
+				//      {
+				//	Form1.directKeyDown = "left";
+				//}
+				//if (PlayerSnake.direction == "up")
+				//{
+				//   PlayerSnake.direction = "down";
+				//}
+				//if (PlayerSnake.direction == "left")
+				//{
+				//   PlayerSnake.direction = "right";
+				//}
+				Form1.snakeArr[lastPeek.X, lastPeek.Y] = 0;
+				snakePointQueue = new Queue<Point>(snakePointQueue.Reverse());
+				//if ((direction == "up" || direction == "down") && lastPeek.X == x)
+				//{
+				//	lastPeek.Y = direction == "up" ? lastPeek.Y + 1 : lastPeek.Y - 1;
+				//}
+				//if ((direction == "left" || direction == "right") && lastPeek.Y == y)
+				//{
+				//	lastPeek.X = direction == "left" ? lastPeek.X + 1 : lastPeek.X - 1;
+				//}
+				if (diffInPos.X == 1 || diffInPos.X == -1)
+				{
+					direction = diffInPos.X == 1 ? "right" : "left";
+				}
+				else if (diffInPos.Y == 1 || diffInPos.Y == -1)
+				{
+					direction = diffInPos.Y == 1 ? "down" : "up";
+				}
+				if (this == PlayerSnake)
+            {
+					Form1.directKeyDown = direction;
+            }
+				x = lastPeek.X;
+				y = lastPeek.Y;
+
+			}
+			else
+			{
+				direction = AntiDirectionDictionary[direction];
+				//if (direction == "up")
+    //        {
+				//	direction = "down";
+    //        }
+				//else if (direction == "down")
+    //        {
+				//	direction = "up";
+    //        }
+				//else if (direction == "left")
+    //        {
+				//	direction = "right";
+    //        }
+				//else if (direction == "right")
+    //        {
+				//	direction = "left";
+    //        }
+			}
 		}
 
 		public static void PlayerStopsAllSnakes()
