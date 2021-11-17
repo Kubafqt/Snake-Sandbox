@@ -112,6 +112,7 @@ namespace snake_sandbox01
             command.ExecuteNonQuery();
 
             int queuePos = 0;
+
             foreach (Point p in snake.snakePointQueue.ToList())
             {
                string queueCmdText = $"INSERT INTO savegame_snakesPointQueue" + "(saveGameNameID, snakeID, posX, posY, queuePos)" +
