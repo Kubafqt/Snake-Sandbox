@@ -89,8 +89,13 @@ namespace snake_sandbox01
             {
                snake.stopped = false;
             }
+            snake.moving = false;
          }
          snakesStopped = false;
+         BombShot.bombyShotList.Clear();
+         SlowingBombShot.slowingBombShotList.Clear();
+         BlockShot.blockShotList.Clear();
+         TeleportShot.teleportShotList.Clear();
 
          gameIsRunning = false;
          Form1.directKeyDown = "";

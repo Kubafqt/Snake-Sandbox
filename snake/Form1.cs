@@ -24,9 +24,6 @@ namespace snake_sandbox01
       private int createFormWidth = 1529; //width of form when createpanel is active
       public bool slowed = false;
 
-      
-
-
       Random random; //some element of random
       public static Timer timer; //main game timer
       public static Timer speedTimer; //special speeded timer
@@ -108,76 +105,122 @@ namespace snake_sandbox01
       {
          Keys key = e.KeyCode;
          //change direction of player snake movement:
-         if ((key == Keys.D || key == Keys.Right) && (Snakes.PlayerSnake.direction != "left" || Snakes.PlayerSnake.snakeLength == 0)) //D - right
+         if (Game.activePanel == gamepanel.Name)
          {
-            directKeyDown = "right";
-            DisablePauseOnMovementKeydown();
-         }
-         if ((key == Keys.A || key == Keys.Left) && (Snakes.PlayerSnake.direction != "right" || Snakes.PlayerSnake.snakeLength == 0)) //A - left
-         {
-            directKeyDown = "left";
-            DisablePauseOnMovementKeydown();
-         }
-         if ((key == Keys.W || key == Keys.Up) && (Snakes.PlayerSnake.direction != "down" || Snakes.PlayerSnake.snakeLength == 0)) //W - up
-         {
-            directKeyDown = "up";
-            DisablePauseOnMovementKeydown();
-         }
-         if ((key == Keys.S || key == Keys.Down) && (Snakes.PlayerSnake.direction != "up" || Snakes.PlayerSnake.snakeLength == 0)) //S - down
-         {
-            directKeyDown = "down";
-            DisablePauseOnMovementKeydown();
-         }
-         if (Game.activePanel == gamepanel.Name && key == Keys.R) //R - new games
-         {
-            if (!Game.levelCreating || !SaveCurrentCreatingLevel()) //ask if save currently creating level, when currently creating level
+            if ((key == Keys.D || key == Keys.Right) && (Snakes.PlayerSnake.direction != "left" || Snakes.PlayerSnake.snakeLength == 0)) //D - right
             {
-               Game.NewGame(Game.defaultLevel);
-               lbScore.Text = $"SnakeLength : { Snakes.PlayerSnake.snakeLength}";
+               Snakes.PlayerSnake.moving = true;
+               directKeyDown = "right";
+               DisablePauseOnMovementKeydown();
+            }
+            if ((key == Keys.A || key == Keys.Left) && (Snakes.PlayerSnake.direction != "right" || Snakes.PlayerSnake.snakeLength == 0)) //A - left
+            {
+               Snakes.PlayerSnake.moving = true;
+               directKeyDown = "left";
+               DisablePauseOnMovementKeydown();
+            }
+            if ((key == Keys.W || key == Keys.Up) && (Snakes.PlayerSnake.direction != "down" || Snakes.PlayerSnake.snakeLength == 0)) //W - up
+            {
+               Snakes.PlayerSnake.moving = true;
+               directKeyDown = "up";
+               DisablePauseOnMovementKeydown();
+            }
+            if ((key == Keys.S || key == Keys.Down) && (Snakes.PlayerSnake.direction != "up" || Snakes.PlayerSnake.snakeLength == 0)) //S - down
+            {
+               Snakes.PlayerSnake.moving = true;
+               directKeyDown = "down";
+               DisablePauseOnMovementKeydown();
+            }
+            if (key == Keys.R) //R - new games
+            {
+               if (!Game.levelCreating || !SaveCurrentCreatingLevel()) //ask if save currently creating level, when currently creating level
+               {
+                  Game.NewGame(Game.defaultLevel);
+                  lbScore.Text = $"SnakeLength : { Snakes.PlayerSnake.snakeLength}";
+               }
+            }
+            if (key == Keys.U && Snakes.PlayerSnake.moving)
+            {
+               //speed2:
+               BombShot.bombyShotList.Add(new BombShot(new Point(Snakes.PlayerSnake.x, Snakes.PlayerSnake.y), Snakes.PlayerSnake.direction, 2));
+            }
+            if (key == Keys.Z && Snakes.PlayerSnake.moving)
+            {
+               SlowingBombShot.slowingBombShotList.Add(new SlowingBombShot(new Point(Snakes.PlayerSnake.x, Snakes.PlayerSnake.y), Snakes.PlayerSnake.direction, 2, true));
+            }
+            if (key == Keys.T && Snakes.PlayerSnake.moving)
+            {
+               if (!BlockShot.blockShotList.Any(shot => shot.snakeid == Snakes.PlayerSnake.snakeNumber)) //shoot blockshot
+               {
+                  BlockShot.blockShotList.Add(new BlockShot(new Point(Snakes.PlayerSnake.x, Snakes.PlayerSnake.y), Snakes.PlayerSnake.direction, 2, Snakes.PlayerSnake.snakeNumber));
+               }
+               else //expand blockshot
+               {
+                  Random random = new Random();
+                  BlockShot shot = BlockShot.blockShotList.First(s => s.snakeid == Snakes.PlayerSnake.snakeNumber);
+                  shot.ExpandBlock(BlockShot.expandType[random.Next(BlockShot.expandType.Length)]);
+                  BlockShot.blockShotList.Remove(shot);
+               }
+            }
+            if (key == Keys.I) //reverse snake
+            {
+               Snakes.PlayerSnake.reverseSnake = true;
+            }
+            if (key == Keys.J)
+            {
+               Snakes.PlayerSnake.speededTime = 100;
+            }
+            //if (key == Keys.V)
+            //{
+            //   Snakes.vSnake.StopAllOtherSnakes();
+            //}
+            if (key == Keys.C)
+            {
+               Snakes.PlayerStopsAllSnakes();
+            }
+            if ((key == Keys.P || key == Keys.G)) //P, G - switch pause game
+            {
+               Game.Pause();
+            }
+            if (key == Keys.X && Snakes.PlayerSnake.moving)
+            {
+               if (!TeleportShot.teleportShotList.Any(shot => shot.snakeid == Snakes.PlayerSnake.snakeNumber - 1)) //shoot blockshot
+               {
+                  TeleportShot ts = new TeleportShot(new Point(Snakes.PlayerSnake.x, Snakes.PlayerSnake.y), Snakes.PlayerSnake.direction, 2, Snakes.PlayerSnake.snakeNumber);
+               }
+               else //teleport to location
+               {
+                  TeleportShot ts = TeleportShot.teleportShotList.First(shot => shot.snakeid == Snakes.PlayerSnake.snakeNumber - 1);
+                  ts.Teleport(Snakes.PlayerSnake.teleportShotType);
+                  TeleportShot.teleportShotList.Remove(ts);
+               }
             }
          }
-         if (key == Keys.U)
+      }
+
+
+      private void gamepanel_MouseDown(object sender, MouseEventArgs e)
+      {
+         if (Game.gameIsRunning && Game.activePanel == gamepanel.Name)
          {
-            //speed2:
-            BombShot.bombyShotList.Add(new BombShot(new Point(Snakes.PlayerSnake.x, Snakes.PlayerSnake.y), Snakes.PlayerSnake.direction, 2));
-         }
-         if (key == Keys.Z)
-         {
-            SlowingBombShot.slowingBombShotList.Add(new SlowingBombShot(new Point(Snakes.PlayerSnake.x, Snakes.PlayerSnake.y), Snakes.PlayerSnake.direction, 2, true));
-         }
-         if (key == Keys.T)
-         {
-            if (!BlockShot.blockShotList.Any(shot => shot.snakeid == Snakes.PlayerSnake.snakeNumber)) //shoot blockshot
-            {
-               BlockShot.blockShotList.Add(new BlockShot(new Point(Snakes.PlayerSnake.x, Snakes.PlayerSnake.y), Snakes.PlayerSnake.direction, 2, Snakes.PlayerSnake.snakeNumber));
-            }
-            else //expand blockshot
-            {
-               Random random = new Random();
-               BlockShot shot = BlockShot.blockShotList.First(s => s.snakeid == Snakes.PlayerSnake.snakeNumber);
-               shot.ExpandBlock(BlockShot.expandType[random.Next(BlockShot.expandType.Length)]);
-               BlockShot.blockShotList.Remove(shot);
-            }
-         }
-         if (key == Keys.I) //reverse snake
-         {
-            Snakes.PlayerSnake.reverseSnake = true;
-         }
-         if (key == Keys.J)
-         {
-            Snakes.PlayerSnake.speededTime = 100;
-         }
-         //if (key == Keys.V && Game.activePanel == gamepanel.Name)
-         //{
-         //   Snakes.vSnake.StopAllOtherSnakes();
-         //}
-         if (key == Keys.C && Game.activePanel == gamepanel.Name)
-         {
-            Snakes.PlayerStopsAllSnakes();
-         }
-         if (Game.activePanel == gamepanel.Name && (key == Keys.P || key == Keys.G)) //P, G - switch pause game
-         {
-            Game.Pause();
+            Point point = gamepanel.PointToClient(Cursor.Position);
+            int x = point.X / sizeX;
+            int y = point.Y / sizeY;
+            Snakes snake = new Snakes(x, y, random.Next(0, 25), Snakes.snakeColorsList[random.Next(Snakes.snakeColorsList.Count)], Game.snakeID);
+            snake.insideSnake = false;
+            snake.superSnake = false;
+            snake.killonItself = false;
+            Game.snakeID++;
+    
+            snake.x = snake.startX;
+            snake.y = snake.startY;
+            snakeArr[snake.x, snake.y] = 1; //snakeLength;
+            snake.snakePointQueue.Enqueue(new Point(snake.x, snake.y));
+            snake.direction = Snakes.directionTypes[random.Next(0, Snakes.directionTypes.Length)];
+            Snakes.snakesList.Add(snake);
+            snake.CheckClosestFood();
+            snake.GetDirection();
+            // snake.CheckClosestFood();
          }
       }
 
@@ -304,6 +347,7 @@ namespace snake_sandbox01
 
       private void BombsMovement()
       {
+         //in all bombshots - even with childs
          foreach (BombShot bomb in BombShot.bombyShotList.ToList())
          {
             bomb.BombsMovement();
@@ -315,6 +359,10 @@ namespace snake_sandbox01
          foreach (BombShot blockshot in BlockShot.blockShotList.ToList())
          {
             blockshot.BombsMovement();
+         }
+         foreach (TeleportShot teleportshot in TeleportShot.teleportShotList.ToList())
+         {
+            teleportshot.BombsMovement();
          }
       }
 
@@ -600,6 +648,10 @@ namespace snake_sandbox01
          foreach (BombShot bomb in BlockShot.blockShotList)
          {
             gfx.FillRectangle(Brushes.DarkSlateBlue, bomb.position.X * sizeX, bomb.position.Y * sizeY, sizeX, sizeY);
+         }
+         foreach (BombShot bomb in TeleportShot.teleportShotList)
+         {
+            gfx.FillRectangle(Brushes.DarkOrange, bomb.position.X * sizeX, bomb.position.Y * sizeY, sizeX, sizeY);
          }
       }
 
