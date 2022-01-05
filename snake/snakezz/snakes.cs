@@ -11,6 +11,7 @@ namespace snake_sandbox01
 		public static List<Snakes> snakesList = new List<Snakes>();
 		public static Dictionary<string, string> AntiDirectionDictionary = new Dictionary<string, string>()
 		{ { "up", "down" }, { "down", "up" }, { "left", "right" }, {"right", "left" }};
+		public static string[] directionTypes = new string[] { "left", "right", "up", "down" };
 
 		public int x, y;
 		public int startX, startY;
@@ -34,6 +35,7 @@ namespace snake_sandbox01
 		//public bool speeded = false;
 		public int speededTime = 0;
 		public int insertedFood = 0;
+		public string teleportShotType = "classic";
 
 		//public static List<Queue<Point>> SnakePointDequeueList = new List<Queue<Point>>();
 		public Queue<Point> snakeTailDequeue = new Queue<Point>();
@@ -45,6 +47,7 @@ namespace snake_sandbox01
 		public Queue<Point> snakePointQueue = new Queue<Point>(); //for snake movement history delete
 		public static List<Color> snakeColorsList = new List<Color>() { Color.Black, Color.Red, Color.Orange, Color.Yellow, Color.DeepSkyBlue, Color.Brown, Color.Indigo, Color.DarkOrange, Color.DarkOliveGreen, Color.DarkGoldenrod, Color.IndianRed };
 		public string snakeType;
+		public bool moving = false;
 
 		/// <summary>
 		/// snakes constructor
@@ -214,6 +217,7 @@ namespace snake_sandbox01
 		public void ChangeDirection() //when hardblock or snake in front of
 		{
 			string change;
+			moving = true; //beta ver.
 			if (lastDirChanged != "" && changeDirectionList.Contains(lastDirChanged)) //ošetření proti "zaklubíčkování se" snaka
 			{
 				change = lastDirChanged;
